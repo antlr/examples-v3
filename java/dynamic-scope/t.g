@@ -2,7 +2,13 @@ grammar T;
 
 method
 scope {
-  /** name is visible to any rule called by method directly or indirectly */
+  /** name is visible to any rule called by method directly or indirectly.
+   *  There is also a stack of these names, one slot for each nested
+   *  invocation of method.  If you have a method nested within another
+   *  method then you have name strings on the stack.  Referencing
+   *  $method.name access the topmost always.  I have no way at the moment
+   *  to access earlier elements on the stack.
+   */
   String name; 
 }
     :   "method" ID '(' ')' {$name=$ID.text;} body
