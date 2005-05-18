@@ -24,7 +24,7 @@ init {
     tokens = (TokenRewriteStream)input;
     Token start = input.LT(1);
 }
-    :   (method)+
+    :   method+
         {
         tokens.insertBefore(start,"public class Wrapper {\n");
         // note the reference to the last token matched for method:
@@ -48,7 +48,7 @@ scope {
 init {
     $decls = new HashSet();
 }
-    :   lcurly='{' (stat)* '}'
+    :   lcurly='{' stat* '}'
         {
         // dump declarations for all identifiers seen in statement list
         Iterator it = $decls.iterator();
