@@ -14,7 +14,7 @@ scope {
     :   "method" ID '(' ')' {$name=$ID.text;} body
     ; 
 
-body:   '{' (stat)* '}'
+body:   '{' stat* '}'
     ;
 
 stat:   ID '=' expr ';'
@@ -38,7 +38,7 @@ atom:   ID  {System.out.println("ref "+$ID.text+" from method "+$method.name);}
 
 ID  :   ('a'..'z'|'A'..'Z')+ ;
 
-INT :   ('0'..'9')+ ;
+INT :   '0'..'9'+ ;
 
 WS  :   (' '|'\t'|'\n')+ {channel=99;}
     ;
