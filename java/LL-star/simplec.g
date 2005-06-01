@@ -15,8 +15,10 @@ program
  */
 declaration
     :   variable
-    |   functionHeader ';'  // declaration
-    |   functionHeader block // definition
+    |   functionHeader ';'
+	{System.out.println($functionHeader.name+" is a declaration");}
+    |   functionHeader block
+	{System.out.println($functionHeader.name+" is a definition");}
     ;
 
 variable
@@ -27,8 +29,12 @@ declarator
     :   ID 
     ;
 
-functionHeader
-    :   type ID '(' ( formalParameter ( ',' formalParameter )* )?  ')'
+functionHeader returns [String name]
+init {
+    name=null; // for now you must init here rather than in "returns"
+}
+    :   type ID '(' ( formalParameter ( ',' formalParameter )* )? ')'
+	{$name = $ID.text;}
     ;
 
 formalParameter

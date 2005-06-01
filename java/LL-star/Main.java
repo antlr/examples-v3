@@ -5,7 +5,7 @@ public class Main {
 		CharStream input = new ANTLRFileStream(args[0]);
 		SimpleCLexer lex = new SimpleCLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
-		System.out.println("tokens="+tokens);
+		//System.out.println("tokens="+tokens);
 		SimpleC parser = new SimpleC(tokens);
 		parser.program();
 	}
