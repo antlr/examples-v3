@@ -1,3 +1,9 @@
+/** A direct copy / modify of the ANTLR 2.x Java grammar.  Still lots
+ *  of ambiguity warnings, but I'm pretty sure they are true ambiguities
+ *  in the grammar.  I will rewrite this completely from the spec when
+ *  I get a chance.  I just slammed this together.
+ *  Terence Parr.
+ */
 grammar JavaParser;
 
 tokens {
