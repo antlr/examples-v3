@@ -21,7 +21,9 @@ TokenRewriteStream tokens; // avoid typecasts all over
 
 program
 init {
-    tokens = (TokenRewriteStream)input;
+	// early access release forces debugging stream for profiling
+	// so we have to ask that object for the underlying stream
+    tokens = (TokenRewriteStream)((DebugTokenStream)input).input; 
     Token start = input.LT(1);
 }
     :   method+
