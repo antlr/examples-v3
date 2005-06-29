@@ -25,7 +25,7 @@ SIMPLE  :   '{'
  *  method comment(), which was called from JAVADOC action in the
  *  Simple parser's lexer.
  */
-END     : "*/" {token = Token.EOFToken;}
+END     : "*/" {token = Token.EOF_TOKEN;}
           {System.out.println("exit javadoc");}
         ;
 
