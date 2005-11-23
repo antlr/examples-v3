@@ -25,11 +25,11 @@ globals
 scope Symbols;
 init {
     level++;
-    $Symbols.names = new ArrayList();
+    $Symbols::names = new ArrayList();
 }
     :   (decl)*
         {
-        System.out.println("globals: "+$Symbols.names);
+        System.out.println("globals: "+$Symbols::names);
         level--;
         }
     ;
@@ -42,11 +42,11 @@ block
 scope Symbols;
 init {
     level++;
-    $Symbols.names = new ArrayList();
+    $Symbols::names = new ArrayList();
 }
     :   '{' (decl)* (stat)* '}'
         {
-        System.out.println("level "+level+" symbols: "+$Symbols.names);
+        System.out.println("level "+level+" symbols: "+$Symbols::names);
         level--;
         }
     ;
@@ -56,7 +56,7 @@ stat:   ID '=' INT ';'
     ;
 
 decl:   "int" ID ';'
-        {$Symbols.names.add($ID);} // add to current symbol table
+        {$Symbols::names.add($ID);} // add to current symbol table
     ;
 
 ID  :   ('a'..'z')+

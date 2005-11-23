@@ -1,5 +1,7 @@
 grammar T;
 
+program : method ;
+
 method
 scope {
   /** name is visible to any rule called by method directly or indirectly.
@@ -11,7 +13,7 @@ scope {
    */
   String name; 
 }
-    :   "method" ID '(' ')' {$name=$ID.text;} body
+    :   "method" ID '(' ')' {$method::name=$ID.text;} body
     ; 
 
 body:   '{' stat* '}'
@@ -32,8 +34,8 @@ mul :   atom ('*' atom)*
  *  the end of the '}'), you'd have to pass the current method name
  *  down through all rules as a parameter.  Ick.  This is much much better.
  */
-atom:   ID  {System.out.println("ref "+$ID.text+" from method "+$method.name);}
-    |   INT {System.out.println("int "+$INT.text+" in method "+$method.name);}
+atom:   ID  {System.out.println("ref "+$ID.text+" from method "+$method::name);}
+    |   INT {System.out.println("int "+$INT.text+" in method "+$method::name);}
     ;
 
 ID  :   ('a'..'z'|'A'..'Z')+ ;

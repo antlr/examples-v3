@@ -7,6 +7,6 @@ public class Main {
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		//System.out.println("tokens="+tokens);
 		T parser = new T(tokens);
-		parser.method();
+		parser.program();
 	}
 }

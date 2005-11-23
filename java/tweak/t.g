@@ -21,9 +21,7 @@ TokenRewriteStream tokens; // avoid typecasts all over
 
 program
 init {
-	// early access release forces debugging stream for profiling
-	// so we have to ask that object for the underlying stream
-    tokens = (TokenRewriteStream)((DebugTokenStream)input).input; 
+    tokens = (TokenRewriteStream)input; 
     Token start = input.LT(1);
 }
     :   method+
@@ -43,24 +41,24 @@ body
 scope {
     // decls is on body's local variable stack but is visible to
     // any rule that body calls such as stat.  From other rules
-    // it is referenced as $body.decls
+    // it is referenced as $body::decls
     // From within rule body, you can use $decls shorthand
     Set decls;
 }
 init {
-    $decls = new HashSet();
+    $body::decls = new HashSet();
 }
     :   lcurly='{' stat* '}'
         {
         // dump declarations for all identifiers seen in statement list
-        Iterator it = $decls.iterator();
+        Iterator it = $body::decls.iterator();
         while ( it.hasNext() ) {
             tokens.insertAfter($lcurly, "\nint "+it.next()+";");
         }
         }
     ;
 
-stat:   ID '=' expr ';' {$body.decls.add($ID.text);} // track left-hand-sides
+stat:   ID '=' expr ';' {$body::decls.add($ID.text);} // track left-hand-sides
     ;
 
 expr:   mul ('+' mul)* 
