@@ -10,21 +10,29 @@ scope slist {
     List stats;
 }
 
+/*
+@slist::init {
+    locals = new ArrayList();
+    stats = new ArrayList();
+}
+*/
+
 program
 scope {
   List globals;
   List functions;
 }
 init {
-  $globals = new ArrayList();
-  $functions = new ArrayList();
+  $program::globals = new ArrayList();
+  $program::functions = new ArrayList();
 }
-    :   declaration+ -> program(globals={$globals},functions={$functions})
+    :   declaration+
+        -> program(globals={$program::globals},functions={$program::functions})
     ;
 
 declaration
-    :   variable   {$program.globals.add($variable.st);}
-    |   f=function {$program.functions.add($f.st);}
+    :   variable   {$program::globals.add($variable.st);}
+    |   f=function {$program::functions.add($f.st);}
     ;
 
 // ack is $function.st ambig?  It can mean the rule's dyn scope or
@@ -32,7 +40,7 @@ declaration
 
 variable
     :   type declarator ';'
-        -> {function_stack.size()>0 && $function.name==null}?
+        -> {$function.size()>0 && $function::name==null}?
            globalVariable(type={$type.st},name={$declarator.st})
         -> variable(type={$type.st},name={$declarator.st})
     ;
@@ -44,17 +52,18 @@ declarator
 function
 scope {
     String name;
-}, slist;
-init {
-  $slist.locals = new ArrayList();
-  $slist.stats = new ArrayList();
 }
-    :   type ID {$name=$ID.text;}
+scope slist;
+init {
+  $slist::locals = new ArrayList();
+  $slist::stats = new ArrayList();
+}
+    :   type ID {$function::name=$ID.text;}
         '(' ( p+=formalParameter ( ',' p+=formalParameter )* )? ')'
         block
-        -> function(type={$type.st}, name={$name},
-                    locals={$slist.locals},
-                    stats={$slist.stats},
+        -> function(type={$type.st}, name={$function::name},
+                    locals={$slist::locals},
+                    stats={$slist::stats},
                     args={toTemplates($p)})
     ;
 
@@ -71,20 +80,20 @@ type
 
 block
     :  '{'
-       ( variable {$slist.locals.add($variable.st);} )*
-       ( stat {$slist.stats.add($stat.st);})*
+       ( variable {$slist::locals.add($variable.st);} )*
+       ( stat {$slist::stats.add($stat.st);})*
        '}'
     ;
 
 stat
 scope slist;
 init {
-  $slist.locals = new ArrayList();
-  $slist.stats = new ArrayList();
+  $slist::locals = new ArrayList();
+  $slist::stats = new ArrayList();
 }
     : forStat -> {$forStat.st}
     | expr ';' -> statement(expr={$expr.st})
-    | block -> statementList(locals={$slist.locals}, stats={$slist.stats})
+    | block -> statementList(locals={$slist::locals}, stats={$slist::stats})
     | assignStat ';' -> {$assignStat.st}
     | ';' -> {new StringTemplate(";")}
     ;
@@ -92,12 +101,12 @@ init {
 forStat
 scope slist;
 init {
-  $slist.locals = new ArrayList();
-  $slist.stats = new ArrayList();
+  $slist::locals = new ArrayList();
+  $slist::stats = new ArrayList();
 }
     :   "for" '(' e1=assignStat ';' e2=expr ';' e3=assignStat ')' block
         -> forLoop(e1={$e1.st},e2={$e2.st},e3={$e3.st},
-                   locals={$slist.locals}, stats={$slist.stats})
+                   locals={$slist::locals}, stats={$slist::stats})
     ;
 
 assignStat
