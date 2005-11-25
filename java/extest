@@ -6,6 +6,8 @@
 # Each dir must have at least one .g file and an input/output pair so
 # the script can check for valid output. [this is my first ruby script]
 #
+# TODO: make stderr go away
+#
 
 def process_example
 	ex = Dir["*.g"]
