@@ -7,11 +7,19 @@ public class Main {
     public static StringTemplateGroup templates;
 
     public static void main(String[] args) throws Exception {
-	String templateFileName = args[0];
+	String templateFileName;
+	int a = 0;
+	if ( args.length<=1 ) {
+		templateFileName = "Java.stg";
+	}
+	else {
+		templateFileName = args[a];
+		a++;
+	}
 	templates = new StringTemplateGroup(new FileReader(templateFileName),
 					    AngleBracketTemplateLexer.class);
 
-	CharStream input = new ANTLRFileStream(args[1]);
+	CharStream input = new ANTLRFileStream(args[a]);
 	CMinusParserLexer lexer = new CMinusParserLexer(input);
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 	CMinusParser parser = new CMinusParser(tokens);
