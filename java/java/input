@@ -39,11 +39,10 @@ class Main {
 		}
 
 		// otherwise, if this is a java file, parse it!
-		else if ( ((f.getName().length()>5) &&
-				f.getName().substring(f.getName().length()-5).equals(".java"))
-			|| f.getName().equals("input") )
-		{
-			// System.err.println("   "+f.getAbsolutePath());
+		else if ((f.getName().length()>5) &&
+				f.getName().substring(f.getName().length()-5).equals(".java")) {
+			System.err.println("   "+f.getAbsolutePath());
+			// parseFile(f.getName(), new FileInputStream(f));
 			parseFile(f.getAbsolutePath());
 		}
 	}
@@ -69,7 +68,7 @@ class Main {
 
 			// start parsing at the compilationUnit rule
 			parser.compilationUnit();
-			System.out.println("finished parsing OK");
+			
 		}
 		catch (Exception e) {
 			System.err.println("parser exception: "+e);

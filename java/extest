@@ -29,13 +29,7 @@ def cleanup
 	File.open("files").each {|line| shiplist.push(line.strip)}
 	# puts "shiplist:"+shiplist.to_s
 	allfiles = Dir["*"]
-	# puts "all files: "+allfiles.to_s
-	allfiles.each {|f|
-		if !shiplist.include?(f)
-			# puts "del "+f
-			File.delete(f)
-		end
-	}
+	killfiles = (allfiles - shiplist).each {|f| File.delete(f)}
 end
 
 # find all examples
