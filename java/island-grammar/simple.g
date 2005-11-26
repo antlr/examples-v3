@@ -1,5 +1,9 @@
 grammar Simple;
 
+tokens {
+	RCURLY="}";
+}
+
 @lexer::members {
 public static final int JAVADOC_CHANNEL = 1;
 public static int nesting = 0;
@@ -37,21 +41,21 @@ public static int nesting = 0;
 program : (variable)*
           (method)+
         ;
-variable: "int" ID ('=' expr)? ';'
+variable: "int" ID ("=" expr)? ";"
         ;
-method  : "method" ID '(' ')' {System.out.println("enter method "+$ID.text);}
+method  : "method" ID "(" ")" {System.out.println("enter method "+$ID.text);}
           block
         ;
 
-block   : '{'
+block   : "{"
             (variable)*
             (statement)+
-          '}'
+          "}"
         ;
 
 statement
-        : ID '=' expr ';' {System.out.println("assignment to "+$ID.text);}
-        | "return" expr ';'
+        : ID "=" expr ";" {System.out.println("assignment to "+$ID.text);}
+        | "return" expr ";"
         | block
         ;
 
@@ -59,17 +63,17 @@ expr    : ID
         | INT
         ;
 
-ID      : ('a'..'z'|'A'..'Z')+ ;
-INT     : ('0'..'9')+ ;
-WS      : (' '|'\t'|'\n')+ {channel=99;}
+ID      : ("a".."z"|"A".."Z")+ ;
+INT     : ("0".."9")+ ;
+WS      : (" "|"\t"|"\n")+ {channel=99;}
         ;
-LCURLY  : '{' {nesting++;}
+LCURLY  : "{" {nesting++;}
         ;
-/** If we have a '}' with nesting level 0 then it must match the '{'
+/** If we have a "}" with nesting level 0 then it must match the "{"
  *  (unseen by this grammar) that started an embedded Simple statement
  *  block within a javadoc comment.
  */
-RCURLY  : '}'
+RCURLY  : "}"
           {
           if ( nesting<=0 ) {
                 token=Token.EOF_TOKEN;

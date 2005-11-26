@@ -35,7 +35,7 @@ scope Symbols;
     ;
 
 method
-    :   "method" ID '(' ')' block
+    :   "method" ID "(" ")" block
     ;
 
 block
@@ -44,26 +44,26 @@ scope Symbols;
     level++;
     $Symbols::names = new ArrayList();
 }
-    :   '{' (decl)* (stat)* '}'
+    :   "{" (decl)* (stat)* "}"
         {
         System.out.println("level "+level+" symbols: "+$Symbols::names);
         level--;
         }
     ;
 
-stat:   ID '=' INT ';'
+stat:   ID "=" INT ";"
     |   block
     ;
 
-decl:   "int" ID ';'
+decl:   "int" ID ";"
         {$Symbols::names.add($ID);} // add to current symbol table
     ;
 
-ID  :   ('a'..'z')+
+ID  :   ("a".."z")+
     ;
 
-INT :   ('0'..'9')+
+INT :   ("0".."9")+
     ;
 
-WS  :   (' '|'\n'|'\r')+ {channel=99;}
+WS  :   (" "|"\n"|"\r")+ {channel=99;}
     ;

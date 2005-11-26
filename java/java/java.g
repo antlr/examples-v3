@@ -836,56 +836,56 @@ constant
 // OPERATORS
 
 
-QUESTION		:	'?'		;
+QUESTION		:	"?"		;
 
 
-LPAREN			:	'('		;
+LPAREN			:	"("		;
 
 
-RPAREN			:	')'		;
+RPAREN			:	")"		;
 
 
-LBRACK			:	'['		;
+LBRACK			:	"["		;
 
 
-RBRACK			:	']'		;
+RBRACK			:	"]"		;
 
 
-LCURLY			:	'{'		;
+LCURLY			:	"{"		;
 
 
-RCURLY			:	'}'		;
+RCURLY			:	"}"		;
 
 
-COLON			:	':'		;
+COLON			:	":"		;
 
 
-COMMA			:	','		;
+COMMA			:	","		;
 
-DOT				:	'.'		;
+DOT				:	"."		;
 
-ASSIGN			:	'='		;
+ASSIGN			:	"="		;
 
 
 EQUAL			:	"=="	;
 
 
-LNOT			:	'!'		;
+LNOT			:	"!"		;
 
 
-BNOT			:	'~'		;
+BNOT			:	"~"		;
 
 
 NOT_EQUAL		:	"!="	;
 
 
-DIV				:	'/'		;
+DIV				:	"/"		;
 
 
 DIV_ASSIGN		:	"/="	;
 
 
-PLUS			:	'+'		;
+PLUS			:	"+"		;
 
 
 PLUS_ASSIGN		:	"+="	;
@@ -894,7 +894,7 @@ PLUS_ASSIGN		:	"+="	;
 INC				:	"++"	;
 
 
-MINUS			:	'-'		;
+MINUS			:	"-"		;
 
 
 MINUS_ASSIGN	:	"-="	;
@@ -903,13 +903,13 @@ MINUS_ASSIGN	:	"-="	;
 DEC				:	"--"	;
 
 
-STAR			:	'*'		;
+STAR			:	"*"		;
 
 
 STAR_ASSIGN		:	"*="	;
 
 
-MOD				:	'%'		;
+MOD				:	"%"		;
 
 
 MOD_ASSIGN		:	"%="	;
@@ -942,16 +942,16 @@ SL_ASSIGN		:	"<<="	;
 LE				:	"<="	;
 
 
-LT				:	'<'		;
+LT				:	"<"		;
 
 
-BXOR			:	'^'		;
+BXOR			:	"^"		;
 
 
 BXOR_ASSIGN		:	"^="	;
 
 
-BOR				:	'|'		;
+BOR				:	"|"		;
 
 
 BOR_ASSIGN		:	"|="	;
@@ -960,7 +960,7 @@ BOR_ASSIGN		:	"|="	;
 LOR				:	"||"	;
 
 
-BAND			:	'&'		;
+BAND			:	"&"		;
 
 
 BAND_ASSIGN		:	"&="	;
@@ -969,19 +969,19 @@ BAND_ASSIGN		:	"&="	;
 LAND			:	"&&"	;
 
 
-SEMI			:	';'		;
+SEMI			:	";"		;
 
 
 // Whitespace -- ignored
 
 
-WS	:	(	' '
-		|	'\t'
-		|	'\f'
+WS	:	(	" "
+		|	"\t"
+		|	"\f"
 			// handle newlines
 		|	(	"\r\n"  // Evil DOS
-			|	'\r'    // Macintosh
-			|	'\n'    // Unix (the right way)
+			|	"\r"    // Macintosh
+			|	"\n"    // Unix (the right way)
 			)
 		)+
 		{ channel=99; /*token = JavaParser.IGNORE_TOKEN;*/ }
@@ -991,7 +991,7 @@ WS	:	(	' '
 
 
 SL_COMMENT
-	:	"//" (options {greedy=false;} : .)* ('\r')? '\n'
+	:	"//" (options {greedy=false;} : .)* ("\r")? "\n"
 		{channel=99; /*token = JavaParser.IGNORE_TOKEN;*/}
 	;
 
@@ -1006,7 +1006,7 @@ ML_COMMENT
 	;
 
 IDENT
-	:	('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')*
+	:	("a".."z"|"A".."Z"|"_"|"$") ("a".."z"|"A".."Z"|"_"|"0".."9"|"$")*
 	;
 
 // From the java language spec
@@ -1018,76 +1018,81 @@ NUM_INT
     ;
 
 fragment
-DECIMAL_LITERAL: '1'..'9' ('0'..'9')* ('l'|'L')? ;
+DECIMAL_LITERAL: "1".."9" ("0".."9")* ("l"|"L")? ;
 
 fragment
-HEX_LITERAL: '0' ('x'|'X') ('0'..'9'|'a'..'f'|'A'..'F')+ ('l'|'L')? ;
+HEX_LITERAL: "0" ("x"|"X") ("0".."9"|"a".."f"|"A".."F")+ ("l"|"L")? ;
 
 fragment
-OCTAL_LITERAL: '0' ('0'..'7')* ('l'|'L')? ;
+OCTAL_LITERAL: "0" ("0".."7")* ("l"|"L")? ;
 
 NUM_FLOAT
-    :     DIGITS '.' (DIGITS)? (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
-    | '.' DIGITS (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
+    :     DIGITS "." (DIGITS)? (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
+    | "." DIGITS (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
     |     DIGITS EXPONENT_PART FLOAT_TYPE_SUFFIX
     |     DIGITS EXPONENT_PART
     |     DIGITS FLOAT_TYPE_SUFFIX
     ;
 
 fragment
-DIGITS : ('0'..'9')+ ;
+DIGITS : ("0".."9")+ ;
+
+/*
+fragment
+EXPONENT_PART: ("e"|"E") ("+"|"-")? DIGITS ;
+*/
 
 fragment
-EXPONENT_PART: ('e'|'E') ('+'|'-')? DIGITS ;
+EXPONENT_PART: ("e"|"E") ("+"|"-")? DIGITS ;
 
 fragment
-FLOAT_TYPE_SUFFIX :   ('f'|'F'|'d'|'D') ;
+FLOAT_TYPE_SUFFIX :   ("f"|"F"|"d"|"D") ;
 
 CHAR_LITERAL
     :
-      '\''
-      ( ~('\''|'\\')
+      "\'"
+      ( ~("\'"|"\\")
       | ESCAPE_SEQUENCE
       )
-      '\''
+      "\'"
     ;
 
 STRING_LITERAL
     :
-      '\"'
-      ( ~('"'|'\\')
+      "\""
+      ( ~("\""|"\\")
       | ESCAPE_SEQUENCE
       )*
-      '\"'
+      "\""
         ;
 
 fragment
 ESCAPE_SEQUENCE
-    :	'\\' 'b'
-    |   '\\' 't'
-    |   '\\' 'n'
-    |   '\\' 'f'
-    |   '\\' 'r'
-    |   '\\' '"'
-    |   '\\' '\''
-    |   '\\' '\\'
-    |	'\\' '0'..'3' OCTAL_DIGIT OCTAL_DIGIT
-    |   '\\' OCTAL_DIGIT OCTAL_DIGIT
-    |   '\\' OCTAL_DIGIT
+    :	"\\" "b"
+    |   "\\" "t"
+    |   "\\" "n"
+    |   "\\" "f"
+    |   "\\" "r"
+    |   "\\" "\'"
+    |   "\\" "\""
+    |   "\\" "\\"
+    |	"\\" "0".."3" OCTAL_DIGIT OCTAL_DIGIT
+    |   "\\" OCTAL_DIGIT OCTAL_DIGIT
+    |   "\\" OCTAL_DIGIT
 	|	UNICODE_CHAR
 	;
 
 fragment
 UNICODE_CHAR
-	:	'\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+	:	"\\" "u" HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
 	;
 
 fragment
 HEX_DIGIT
-	:	'0'..'9'|'a'..'f'|'A'..'F'
+	:	"0".."9"|"a".."f"|"A".."F"
 	;
 
 fragment
 OCTAL_DIGIT
-	:	'0'..'7'
+	:	"0".."7"
 	;

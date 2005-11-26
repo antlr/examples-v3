@@ -23,10 +23,10 @@ fragment DOCTYPE
         ( dtd=INTERNAL_DTD
             { System.out.println("INTERNAL DTD: "+dtd.getText()); }   
         )?
-		'>'
+		">"
 	;
 
-fragment INTERNAL_DTD : '[' (options {greedy=false;} : .)* ']' ;
+fragment INTERNAL_DTD : "[" (options {greedy=false;} : .)* "]" ;
 
 fragment PI :
         "<?" target=GENERIC_ID WS? 
@@ -35,7 +35,7 @@ fragment PI :
 	;
 
 fragment XMLDECL :
-        "<?" ('x'|'X') ('m'|'M') ('l'|'L') WS? 
+        "<?" ("x"|"X") ("m"|"M") ("l"|"L") WS? 
           { System.out.println("XML declaration"); }
         ( ATTRIBUTE WS? )*  "?>"
 	;
@@ -58,24 +58,24 @@ fragment ELEMENT
     ;
 
 fragment START_TAG 
-    : '<' WS? name=GENERIC_ID WS?
+    : "<" WS? name=GENERIC_ID WS?
           { System.out.println("Start Tag: "+name.getText()); }
-        ( ATTRIBUTE WS? )* '>'
+        ( ATTRIBUTE WS? )* ">"
     ;
 
 fragment EMPTY_ELEMENT 
-    : '<' WS? name=GENERIC_ID WS?
+    : "<" WS? name=GENERIC_ID WS?
           { System.out.println("Empty Element: "+name.getText()); }
         ( ATTRIBUTE WS? )* "/>"
     ;
 
 fragment ATTRIBUTE 
-    : name=GENERIC_ID WS? '=' WS? value=VALUE
+    : name=GENERIC_ID WS? "=" WS? value=VALUE
         { System.out.println("Attr: "+name.getText()+"="+value.getText()); }
     ;
 
 fragment END_TAG 
-    : "</" WS? name=GENERIC_ID WS? '>'
+    : "</" WS? name=GENERIC_ID WS? ">"
         { System.out.println("End Tag: "+name.getText()); }
     ;
 
@@ -87,30 +87,30 @@ fragment CDATA
 	:	"<![CDATA["! (options {greedy=false;} : .)* "]]>"!
 	;
 
-fragment PCDATA : (~'<')+ ; 
+fragment PCDATA : (~"<")+ ; 
 
 fragment VALUE : 
-        ( '"'! (~'"')* '"'!
-        | '\''! (~'\'')* '\''!
+        ( "\'"! (~"\'")* "\'"!
+        | "\""! (~"\"")* "\""!
         )
 	;
 
 fragment GENERIC_ID 
-    : ( LETTER | '_' | ':') 
-        ( options {greedy=true;} : LETTER | '0'..'9' | '.' | '-' | '_' | ':' )*
+    : ( LETTER | "_" | ":") 
+        ( options {greedy=true;} : LETTER | "0".."9" | "." | "-" | "_" | ":" )*
 	;
 
 fragment LETTER
-	: 'a'..'z' 
-	| 'A'..'Z'
+	: "a".."z" 
+	| "A".."Z"
 	;
 
 fragment WS  :
-        (   ' '
-        |   '\t'
-        |  ( '\n'
+        (   " "
+        |   "\t"
+        |  ( "\n"
             |	"\r\n"
-            |	'\r'
+            |	"\r"
             )
         )+
     ;    

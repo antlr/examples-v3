@@ -26,16 +26,16 @@ enumAsKeyword : {enableEnum}? "enum" ;
 
 enumAsID : {!enableEnum}? "enum" ;
 
-ID  :   ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+ID  :   ("a".."z"|"A".."Z"|"_") ("a".."z"|"A".."Z"|"0".."9"|"_")*
     ;
 
-INT :	('0'..'9')+
+INT :	("0".."9")+
     ;
 
-WS  :   (   ' '
-        |   '\t'
-        |   '\r'
-        |   '\n'
+WS  :   (   " "
+        |   "\t"
+        |   "\r"
+        |   "\n"
         )+
         { channel=99; }
     ;    

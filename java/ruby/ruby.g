@@ -50,31 +50,31 @@ stmt		: ALIAS fitem  fitem
 		    
 		| LBEGIN
 		    
-		  '{' compstmt '}'
+		  "{" compstmt "}"
 		    
-		| LEND '{' compstmt '}'
+		| LEND "{" compstmt "}"
 		    
-		| lhs '=' command_call
+		| lhs "=" command_call
 		    
-		| mlhs '=' command_call
+		| mlhs "=" command_call
 		    
 		| var_lhs tOP_ASGN command_call
 		    
-		| primary_value '[' aref_args ']' tOP_ASGN command_call
+		| primary_value "[" aref_args "]" tOP_ASGN command_call
 		    
-		| primary_value '.' tIDENTIFIER tOP_ASGN command_call
+		| primary_value "." tIDENTIFIER tOP_ASGN command_call
 		    
-		| primary_value '.' tCONSTANT tOP_ASGN command_call
+		| primary_value "." tCONSTANT tOP_ASGN command_call
 		    
 		| primary_value tCOLON2 tIDENTIFIER tOP_ASGN command_call
 		    
 		| backref tOP_ASGN command_call
 		    
-		| lhs '=' mrhs
+		| lhs "=" mrhs
 		    
-		| mlhs '=' arg_value
+		| mlhs "=" arg_value
 		    
-		| mlhs '=' mrhs
+		| mlhs "=" mrhs
 		    
 		| expr
 		;
@@ -86,7 +86,7 @@ expr		: command_call
 		    
 		| kNOT expr
 		    
-		| '!' command_call
+		| "!" command_call
 		    
 		| arg
 		;
@@ -106,7 +106,7 @@ command_call	: command
 		;
 
 block_command	: block_call
-		| block_call '.' operation2 command_args
+		| block_call "." operation2 command_args
 		    
 		| block_call tCOLON2 operation2 command_args
 		    
@@ -116,7 +116,7 @@ cmd_brace_block	: tLBRACE_ARG
 		    
 		  opt_block_var 
 		  compstmt
-		  '}'
+		  "}"
 		    
 		;
 
@@ -124,9 +124,9 @@ command		: operation command_args
 		    
 		| operation command_args cmd_brace_block
 		    
-		| primary_value '.' operation2 command_args
+		| primary_value "." operation2 command_args
 		    
-		| primary_value '.' operation2 command_args cmd_brace_block
+		| primary_value "." operation2 command_args cmd_brace_block
 		    
 		| primary_value tCOLON2 operation2 command_args
 		    
@@ -139,12 +139,12 @@ command		: operation command_args
 		;
 
 mlhs		: mlhs_basic
-		| tLPAREN mlhs_entry ')'
+		| tLPAREN mlhs_entry ")"
 		    
 		;
 
 mlhs_entry	: mlhs_basic
-		| tLPAREN mlhs_entry ')'
+		| tLPAREN mlhs_entry ")"
 		    
 		;
 
@@ -160,19 +160,19 @@ mlhs_basic	: mlhs_head
 		;
 
 mlhs_item	: mlhs_node
-		| tLPAREN mlhs_entry ')'
+		| tLPAREN mlhs_entry ")"
 		;
 
-mlhs_head	: mlhs_item ','
-		| mlhs_head mlhs_item ','
+mlhs_head	: mlhs_item ","
+		| mlhs_head mlhs_item ","
 		;
 
 mlhs_node	: variable
-		| primary_value '[' aref_args ']'
-		| primary_value '.' tIDENTIFIER
+		| primary_value "[" aref_args "]"
+		| primary_value "." tIDENTIFIER
 		| primary_value tCOLON2 tIDENTIFIER
 
-		| primary_value '.' tCONSTANT
+		| primary_value "." tCONSTANT
 		| primary_value tCOLON2 tCONSTANT
 
 		| tCOLON3 tCONSTANT
@@ -181,10 +181,10 @@ mlhs_node	: variable
 		;
 
 lhs		: variable
-		| primary_value '[' aref_args ']'
-		| primary_value '.' tIDENTIFIER
+		| primary_value "[" aref_args "]"
+		| primary_value "." tIDENTIFIER
 		| primary_value tCOLON2 tIDENTIFIER
-		| primary_value '.' tCONSTANT
+		| primary_value "." tCONSTANT
 		| primary_value tCOLON2 tCONSTANT
 		| tCOLON3 tCONSTANT
 
@@ -215,35 +215,35 @@ fitem		: fname
 		;
 
 undef_list	: fitem
-		| undef_list ','  fitem
+		| undef_list ","  fitem
 		;
 
-op		: '|'		
-		| '^'		
-		| '&'		
+op		: "|"		
+		| "^"		
+		| "&"		
 		| tCMP		
 		| tEQ		
 		| tEQQ		
 		| tMATCH	
-		| '>'		
+		| ">"		
 		| tGEQ		
-		| '<'		
+		| "<"		
 		| tLEQ		
 		| tLSHFT	
 		| tRSHFT	
-		| '+'		
-		| '-'		
-		| '*'		
+		| "+"		
+		| "-"		
+		| "*"		
 		| tSTAR		
-		| '/'		
-		| '%'		
+		| "/"		
+		| "%"		
 		| tPOW		
-		| '~'		
+		| "~"		
 		| tUPLUS	
 		| tUMINUS	
 		| tAREF		
 		| tASET		
-		| '`'		
+		| "`"		
 		;
 
 reswords	: LINE | k__FILE__  | LBEGIN | LEND
@@ -255,14 +255,14 @@ reswords	: LINE | k__FILE__  | LBEGIN | LEND
 		| kIF_MOD | kUNLESS_MOD | kWHILE_MOD | kUNTIL_MOD | kRESCUE_MOD
 		;
 
-arg		: lhs '=' arg
-		| lhs '=' arg kRESCUE_MOD arg
+arg		: lhs "=" arg
+		| lhs "=" arg kRESCUE_MOD arg
 		| var_lhs tOP_ASGN arg
-		| primary_value '[' aref_args ']' tOP_ASGN arg
+		| primary_value "[" aref_args "]" tOP_ASGN arg
 		    
-		| primary_value '.' tIDENTIFIER tOP_ASGN arg
+		| primary_value "." tIDENTIFIER tOP_ASGN arg
 		    
-		| primary_value '.' tCONSTANT tOP_ASGN arg
+		| primary_value "." tCONSTANT tOP_ASGN arg
 		    
 		| primary_value tCOLON2 tIDENTIFIER tOP_ASGN arg
 		    
@@ -276,40 +276,40 @@ arg		: lhs '=' arg
 		    
 		| arg tDOT3 arg
 		    
-		| arg '+' arg
+		| arg "+" arg
 		    
-		| arg '-' arg
+		| arg "-" arg
 		    
-		| arg '*' arg
+		| arg "*" arg
 		    
-		| arg '/' arg
-		| arg '%' arg
+		| arg "/" arg
+		| arg "%" arg
 		| arg tPOW arg
 		| tUMINUS_NUM tINTEGER tPOW arg
 		| tUMINUS_NUM tFLOAT tPOW arg
 		| tUPLUS arg
 		| tUMINUS arg
-		| arg '|' arg
-		| arg '^' arg
-		| arg '&' arg
+		| arg "|" arg
+		| arg "^" arg
+		| arg "&" arg
 		| arg tCMP arg
-		| arg '>' arg
+		| arg ">" arg
 		| arg tGEQ arg
-		| arg '<' arg
+		| arg "<" arg
 		| arg tLEQ arg
 		| arg tEQ arg
 		| arg tEQQ arg
 		| arg tNEQ arg
 		| arg tMATCH arg
 		| arg tNMATCH arg
-		| '!' arg
-		| '~' arg
+		| "!" arg
+		| "~" arg
 		| arg tLSHFT arg
 		| arg tRSHFT arg
 		| arg tANDOP arg
 		| arg tOROP arg
 		| kDEFINED opt_nl  arg
-		| arg '?' arg ':' arg
+		| arg "?" arg ":" arg
 		| primary
 		;
 
@@ -319,20 +319,20 @@ arg_value	: arg
 aref_args	: none
 		| command opt_nl
 		| args trailer
-		| args ',' tSTAR arg opt_nl
+		| args "," tSTAR arg opt_nl
 		| assocs trailer
 		    
 		| tSTAR arg opt_nl
 		    
 		;
 
-paren_args	: '(' none ')'
+paren_args	: "(" none ")"
 		    
-		| '(' call_args opt_nl ')'
+		| "(" call_args opt_nl ")"
 		    
-		| '(' block_call opt_nl ')'
+		| "(" block_call opt_nl ")"
 		    
-		| '(' args ',' block_call opt_nl ')'
+		| "(" args "," block_call opt_nl ")"
 		    
 		;
 
@@ -344,40 +344,40 @@ call_args	: command
 		    
 		| args opt_block_arg
 		    
-		| args ',' tSTAR arg_value opt_block_arg
+		| args "," tSTAR arg_value opt_block_arg
 		    
 		| assocs opt_block_arg
 		    
-		| assocs ',' tSTAR arg_value opt_block_arg
+		| assocs "," tSTAR arg_value opt_block_arg
 		    
-		| args ',' assocs opt_block_arg
+		| args "," assocs opt_block_arg
 		    
-		| args ',' assocs ',' tSTAR arg opt_block_arg
+		| args "," assocs "," tSTAR arg opt_block_arg
 		    
 		| tSTAR arg_value opt_block_arg
 		    
 		| block_arg
 		;
 
-call_args2	: arg_value ',' args opt_block_arg
+call_args2	: arg_value "," args opt_block_arg
 		    
-		| arg_value ',' block_arg
+		| arg_value "," block_arg
 		    
-		| arg_value ',' tSTAR arg_value opt_block_arg
+		| arg_value "," tSTAR arg_value opt_block_arg
 		    
-		| arg_value ',' args ',' tSTAR arg_value opt_block_arg
+		| arg_value "," args "," tSTAR arg_value opt_block_arg
 		    
 		| assocs opt_block_arg
 		    
-		| assocs ',' tSTAR arg_value opt_block_arg
+		| assocs "," tSTAR arg_value opt_block_arg
 		    
-		| arg_value ',' assocs opt_block_arg
+		| arg_value "," assocs opt_block_arg
 		    
-		| arg_value ',' args ',' assocs opt_block_arg
+		| arg_value "," args "," assocs opt_block_arg
 		    
-		| arg_value ',' assocs ',' tSTAR arg_value opt_block_arg
+		| arg_value "," assocs "," tSTAR arg_value opt_block_arg
 		    
-		| arg_value ',' args ',' assocs ',' tSTAR arg_value opt_block_arg
+		| arg_value "," args "," assocs "," tSTAR arg_value opt_block_arg
 		    
 		| tSTAR arg_value opt_block_arg
 		    
@@ -390,9 +390,9 @@ command_args	:
 		;
 
 open_args	: call_args
-		| tLPAREN_ARG   ')'
+		| tLPAREN_ARG   ")"
 		    
-		| tLPAREN_ARG call_args2  ')'
+		| tLPAREN_ARG call_args2  ")"
 		    
 		;
 
@@ -400,20 +400,20 @@ block_arg	: tAMPER arg_value
 		    
 		;
 
-opt_block_arg	: ',' block_arg
+opt_block_arg	: "," block_arg
 		    
 		| none
 		;
 
 args 		: arg_value
 		    
-		| args ',' arg_value
+		| args "," arg_value
 
 		;
 
-mrhs		: args ',' arg_value
+mrhs		: args "," arg_value
 		    
-		| args ',' tSTAR arg_value
+		| args "," tSTAR arg_value
 		    
 		| tSTAR arg_value
 		    
@@ -434,29 +434,29 @@ primary		: literal
 		  bodystmt
 		  kEND
 		    
-		| tLPAREN_ARG expr  opt_nl ')'
+		| tLPAREN_ARG expr  opt_nl ")"
 		    
-		| tLPAREN compstmt ')'
+		| tLPAREN compstmt ")"
 		    
 		| primary_value tCOLON2 tCONSTANT
 		    
 		| tCOLON3 tCONSTANT
 		    
-		| primary_value '[' aref_args ']'
+		| primary_value "[" aref_args "]"
 		    
-		| tLBRACK aref_args ']'
+		| tLBRACK aref_args "]"
 		    
-		| tLBRACE assoc_list '}'
+		| tLBRACE assoc_list "}"
 		    
 		| kRETURN
 		    
-		| kYIELD '(' call_args ')'
+		| kYIELD "(" call_args ")"
 		    
-		| kYIELD '(' ')'
+		| kYIELD "(" ")"
 		    
 		| kYIELD
 		    
-		| kDEFINED opt_nl '('  expr ')'
+		| kDEFINED opt_nl "("  expr ")"
 		    
 		| operation brace_block
 		    
@@ -537,13 +537,13 @@ primary_value 	: primary
 		;
 
 then		: term
-		| ':'
+		| ":"
 		| kTHEN
 		| term kTHEN
 		;
 
 do		: term
-		| ':'
+		| ":"
 		| kDO_COND
 		;
 
@@ -564,11 +564,11 @@ block_var	: lhs
 		;
 
 opt_block_var	: none
-		| '|' /* none */ '|'
+		| "|" /* none */ "|"
 		    
 		| tOROP
 		    
-		| '|' block_var '|'
+		| "|" block_var "|"
 		    
 		;
 
@@ -582,7 +582,7 @@ do_block	: kDO_BLOCK
 
 block_call	: command do_block
 		    
-		| block_call '.' operation2 opt_paren_args
+		| block_call "." operation2 opt_paren_args
 		    
 		| block_call tCOLON2 operation2 opt_paren_args
 		    
@@ -590,7 +590,7 @@ block_call	: command do_block
 
 method_call	: operation paren_args
 		    
-		| primary_value '.' operation2 opt_paren_args
+		| primary_value "." operation2 opt_paren_args
 		| primary_value tCOLON2 operation2 paren_args
 		| primary_value tCOLON2 operation3
 		| kSUPER paren_args
@@ -598,9 +598,9 @@ method_call	: operation paren_args
 		| kSUPER
 		;
 
-brace_block	: '{'
+brace_block	: "{"
 		  opt_block_var 
-		  compstmt '}'
+		  compstmt "}"
 		| kDO
 		  opt_block_var 
 		  compstmt kEND
@@ -611,7 +611,7 @@ case_body	: kWHEN when_args then
 		  cases
 		;
 when_args	: args
-		| args ',' tSTAR arg_value
+		| args "," tSTAR arg_value
 		| tSTAR arg_value
 		;
 
@@ -669,7 +669,7 @@ regexp		: tREGEXP_BEG xstring_contents tREGEXP_END
 		    
 		;
 
-words		: tWORDS_BEG ' ' tSTRING_END
+words		: tWORDS_BEG " " tSTRING_END
 		    
 		| tWORDS_BEG word_list tSTRING_END
 		    
@@ -677,7 +677,7 @@ words		: tWORDS_BEG ' ' tSTRING_END
 
 word_list	: /* none */
 		    
-		| word_list word ' '
+		| word_list word " "
 		    
 		;
 
@@ -686,7 +686,7 @@ word		: string_content
 		    
 		;
 
-qwords		: tQWORDS_BEG ' ' tSTRING_END
+qwords		: tQWORDS_BEG " " tSTRING_END
 		    
 		| tQWORDS_BEG qword_list tSTRING_END
 		    
@@ -694,7 +694,7 @@ qwords		: tQWORDS_BEG ' ' tSTRING_END
 
 qword_list	: /* none */
 		    
-		| qword_list tSTRING_CONTENT ' '
+		| qword_list tSTRING_CONTENT " "
 		    
 		;
 
@@ -717,7 +717,7 @@ string_content	: tSTRING_CONTENT
 		    
 		| tSTRING_DBEG
 		    
-		  compstmt '}'
+		  compstmt "}"
 		    
 		;
 
@@ -776,28 +776,28 @@ backref		: tNTH_REF
 
 superclass	: term
 		    
-		| '<'
+		| "<"
 		    
 		  expr_value term
 		    
 		| error term 
 		;
 
-f_arglist	: '(' f_args opt_nl ')'
+f_arglist	: "(" f_args opt_nl ")"
 		    
 		| f_args term
 		    
 		;
 
-f_args		: f_arg ',' f_optarg ',' f_rest_arg opt_f_block_arg
+f_args		: f_arg "," f_optarg "," f_rest_arg opt_f_block_arg
 		    
-		| f_arg ',' f_optarg opt_f_block_arg
+		| f_arg "," f_optarg opt_f_block_arg
 		    
-		| f_arg ',' f_rest_arg opt_f_block_arg
+		| f_arg "," f_rest_arg opt_f_block_arg
 		    
 		| f_arg opt_f_block_arg
 		    
-		| f_optarg ',' f_rest_arg opt_f_block_arg
+		| f_optarg "," f_rest_arg opt_f_block_arg
 		    
 		| f_optarg opt_f_block_arg
 		    
@@ -830,21 +830,21 @@ f_norm_arg	: tCONSTANT
 		;
 
 f_arg		: f_norm_arg
-		| f_arg ',' f_norm_arg
+		| f_arg "," f_norm_arg
 
 		;
 
-f_opt		: tIDENTIFIER '=' arg_value
+f_opt		: tIDENTIFIER "=" arg_value
 		    
 		;
 
 f_optarg	: f_opt
 		    
-		| f_optarg ',' f_opt
+		| f_optarg "," f_opt
 		    
 		;
 
-restarg_mark	: '*'
+restarg_mark	: "*"
 		| tSTAR
 		;
 
@@ -854,7 +854,7 @@ f_rest_arg	: restarg_mark tIDENTIFIER
 		 
 		;
 
-blkarg_mark	: '&'
+blkarg_mark	: "&"
 		| tAMPER
 		;
 
@@ -862,14 +862,14 @@ f_block_arg	: blkarg_mark tIDENTIFIER
 		 
 		;
 
-opt_f_block_arg	: ',' f_block_arg
+opt_f_block_arg	: "," f_block_arg
 		 
 		| none
 		;
 
 singleton	: var_ref
 		 
-		| '('  expr opt_nl ')'
+		| "("  expr opt_nl ")"
 		 
 		;
 
@@ -881,7 +881,7 @@ assoc_list	: none
 		;
 
 assocs		: assoc
-		| assocs ',' assoc
+		| assocs "," assoc
 		 
 		;
 
@@ -905,7 +905,7 @@ operation3	: tIDENTIFIER
 		| op
 		;
 
-dot_or_colon	: '.'
+dot_or_colon	: "."
 		| tCOLON2
 		;
 
@@ -914,20 +914,20 @@ opt_terms	: /* none */
 		;
 
 opt_nl		: /* none */
-		| '\n'
+		| "\n"
 		;
 
 trailer		: /* none */
-		| '\n'
-		| ','
+		| "\n"
+		| ","
 		;
 
-term		: ';' 
-		| '\n'
+term		: ";" 
+		| "\n"
 		;
 
 terms		: term
-		| terms ';' 
+		| terms ";" 
 		;
 
 none		: /* none */ 
