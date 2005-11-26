@@ -30,7 +30,7 @@ declarator
     ;
 
 functionHeader returns [String name]
-init {
+@init {
     name=null; // for now you must init here rather than in "returns"
 }
     :   type ID '(' ( formalParameter ( ',' formalParameter )* )? ')'

@@ -1,7 +1,3 @@
-header {
-import org.antlr.stringtemplate.*;
-}
-
 grammar CMinusParser;
 options {output=template;}
 
@@ -17,12 +13,16 @@ scope slist {
 }
 */
 
+@header {
+import org.antlr.stringtemplate.*;
+}
+
 program
 scope {
   List globals;
   List functions;
 }
-init {
+@init {
   $program::globals = new ArrayList();
   $program::functions = new ArrayList();
 }
@@ -54,7 +54,7 @@ scope {
     String name;
 }
 scope slist;
-init {
+@init {
   $slist::locals = new ArrayList();
   $slist::stats = new ArrayList();
 }
@@ -87,7 +87,7 @@ block
 
 stat
 scope slist;
-init {
+@init {
   $slist::locals = new ArrayList();
   $slist::stats = new ArrayList();
 }
@@ -100,7 +100,7 @@ init {
 
 forStat
 scope slist;
-init {
+@init {
   $slist::locals = new ArrayList();
   $slist::stats = new ArrayList();
 }

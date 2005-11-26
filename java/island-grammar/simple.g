@@ -1,11 +1,7 @@
 grammar Simple;
 
-{
+@lexer::members {
 public static final int JAVADOC_CHANNEL = 1;
-
-// TJP: I define here but current ANTLR v3 doesn't know how to
-// let me specify actions for the lexer.  This is only used in
-// the lexer so it's weird for now.
 public static int nesting = 0;
 }
 
@@ -67,7 +63,7 @@ ID      : ('a'..'z'|'A'..'Z')+ ;
 INT     : ('0'..'9')+ ;
 WS      : (' '|'\t'|'\n')+ {channel=99;}
         ;
-LCURLY  : '{' {Simple.nesting++;}
+LCURLY  : '{' {nesting++;}
         ;
 /** If we have a '}' with nesting level 0 then it must match the '{'
  *  (unseen by this grammar) that started an embedded Simple statement
@@ -75,12 +71,12 @@ LCURLY  : '{' {Simple.nesting++;}
  */
 RCURLY  : '}'
           {
-          if ( Simple.nesting<=0 ) {
+          if ( nesting<=0 ) {
                 token=Token.EOF_TOKEN;
                 System.out.println("exiting embedded simple");
           }
           else {
-                Simple.nesting--;
+                nesting--;
           }
           }
         ;
@@ -97,6 +93,6 @@ JAVADOC : "/**"
             // returns a JAVADOC token to the java parser but on a
             // different channel than the normal token stream so it
             // doesn't get in the way.
-            channel = Simple.JAVADOC_CHANNEL;
+            channel = JAVADOC_CHANNEL;
           }
         ;

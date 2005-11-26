@@ -1,9 +1,3 @@
-header {
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-}
-
 /** Convert the simple input to be java code; wrap in a class,
  *  convert method with "public void", add decls.  This shows how to insert
  *  extra text into a stream of tokens and how to replace a token
@@ -15,12 +9,18 @@ import java.util.Iterator;
  */
 grammar T;
 
-{
+@header {
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+}
+
+@members {
 TokenRewriteStream tokens; // avoid typecasts all over
 }
 
 program
-init {
+@init {
     tokens = (TokenRewriteStream)input; 
     Token start = input.LT(1);
 }
@@ -45,7 +45,7 @@ scope {
     // From within rule body, you can use $decls shorthand
     Set decls;
 }
-init {
+@init {
     $body::decls = new HashSet();
 }
     :   lcurly='{' stat* '}'

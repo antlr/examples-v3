@@ -1,8 +1,3 @@
-header {
-import java.util.List;
-import java.util.ArrayList;
-}
-
 grammar SymtabTestParser;
 
 /* Scope of symbol names.  Both globals and block rules need to push a new
@@ -14,7 +9,12 @@ scope Symbols {
   List names;
 }
 
-{
+@header {
+import java.util.List;
+import java.util.ArrayList;
+}
+
+@members {
 int level = 0;
 }
 
@@ -23,7 +23,7 @@ prog:   globals (method)*
 
 globals
 scope Symbols;
-init {
+@init {
     level++;
     $Symbols::names = new ArrayList();
 }
@@ -40,7 +40,7 @@ method
 
 block
 scope Symbols;
-init {
+@init {
     level++;
     $Symbols::names = new ArrayList();
 }

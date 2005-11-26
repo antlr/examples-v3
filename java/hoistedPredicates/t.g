@@ -8,7 +8,7 @@
  */
 grammar T;
 
-{
+@members {
 /** With this true, enum is seen as a keyword.  False, it's an identifier */
 boolean enableEnum = false;
 }

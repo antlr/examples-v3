@@ -16,7 +16,7 @@ tokens {
 	FOR_ITERATOR; EMPTY_STAT; SUPER_CTOR_CALL; CTOR_CALL;
 }
 
-{
+@members {
 public static final CommonToken IGNORE_TOKEN = new CommonToken(null,0,99,0,0);
 }
 
