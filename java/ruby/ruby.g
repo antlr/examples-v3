@@ -4,9 +4,7 @@
 grammar RubyParser;
 
 
-program		:  
-		  compstmt
-;
+program	:   compstmt ;
 
 bodystmt	: compstmt
 		  opt_rescue
@@ -18,77 +16,38 @@ bodystmt	: compstmt
 compstmt	: stmts opt_terms
 		    
 		;
-
-stmts		: none
-		| stmt
-		    
-		| stmts terms stmt
-		    
-		| error stmt
-		    
+stmts		: stmt (terms stmt)*
+		;
+stmt
+	: (ALIAS fitem  fitem
+    | ALIAS GVAR GVAR
+    | ALIAS GVAR BACK_REF
+    | ALIAS GVAR NTH_REF
+    | UNDEF undef_list
+    | LBEGIN "{" compstmt "}"
+    | LEND "{" compstmt "}"
+    | lhs "=" command_call
+    | mlhs "=" command_call
+    | var_lhs OP_ASGN command_call
+    | primary_value "[" aref_args "]" OP_ASGN command_call
+    | primary_value "." IDENTIFIER OP_ASGN command_call
+    | primary_value "." CONSTANT OP_ASGN command_call
+    | primary_value COLON2 IDENTIFIER OP_ASGN command_call
+    | backref OP_ASGN command_call
+    | lhs "=" mrhs
+    | mlhs "=" arg_value
+    | mlhs "=" mrhs
+    | expr
+    )
+        (IF_MOD expr_value
+        | UNLESS_MOD expr_value
+        | WHILE_MOD expr_value
+        | UNTIL_MOD expr_value
+        | RESCUE_MOD stmt
+        )*
 		;
 
-stmt		: ALIAS fitem  fitem
-		    
-		| ALIAS tGVAR tGVAR
-		    
-		| ALIAS tGVAR tBACK_REF
-		    
-		| ALIAS tGVAR tNTH_REF
-		    
-		| kUNDEF undef_list
-		    
-		| stmt kIF_MOD expr_value
-		    
-		| stmt kUNLESS_MOD expr_value
-		    
-		| stmt kWHILE_MOD expr_value
-		    
-		| stmt kUNTIL_MOD expr_value
-		    
-		| stmt kRESCUE_MOD stmt
-		    
-		| LBEGIN
-		    
-		  "{" compstmt "}"
-		    
-		| LEND "{" compstmt "}"
-		    
-		| lhs "=" command_call
-		    
-		| mlhs "=" command_call
-		    
-		| var_lhs tOP_ASGN command_call
-		    
-		| primary_value "[" aref_args "]" tOP_ASGN command_call
-		    
-		| primary_value "." tIDENTIFIER tOP_ASGN command_call
-		    
-		| primary_value "." tCONSTANT tOP_ASGN command_call
-		    
-		| primary_value tCOLON2 tIDENTIFIER tOP_ASGN command_call
-		    
-		| backref tOP_ASGN command_call
-		    
-		| lhs "=" mrhs
-		    
-		| mlhs "=" arg_value
-		    
-		| mlhs "=" mrhs
-		    
-		| expr
-		;
-
-expr		: command_call
-		| expr AND expr
-		    
-		| expr kOR expr
-		    
-		| kNOT expr
-		    
-		| "!" command_call
-		    
-		| arg
+expr		: (command_call | NOT expr | "!" command_call | arg) (AND expr | OR expr)*
 		;
 
 expr_value	: expr
@@ -97,22 +56,22 @@ expr_value	: expr
 
 command_call	: command
 		| block_command
-		| kRETURN call_args
+		| RETURN call_args
 		    
 		| BREAK call_args
 		    
-		| kNEXT call_args
+		| NEXT call_args
 		    
 		;
 
 block_command	: block_call
 		| block_call "." operation2 command_args
 		    
-		| block_call tCOLON2 operation2 command_args
+		| block_call COLON2 operation2 command_args
 		    
 		;
 
-cmd_brace_block	: tLBRACE_ARG
+cmd_brace_block	: LBRACE_ARG
 		    
 		  opt_block_var 
 		  compstmt
@@ -128,23 +87,23 @@ command		: operation command_args
 		    
 		| primary_value "." operation2 command_args cmd_brace_block
 		    
-		| primary_value tCOLON2 operation2 command_args
+		| primary_value COLON2 operation2 command_args
 		    
-		| primary_value tCOLON2 operation2 command_args cmd_brace_block
+		| primary_value COLON2 operation2 command_args cmd_brace_block
 		    
-		| kSUPER command_args
+		| SUPER command_args
 		    
-		| kYIELD command_args
+		| YIELD command_args
 		    
 		;
 
 mlhs		: mlhs_basic
-		| tLPAREN mlhs_entry ")"
+		| LPAREN mlhs_entry ")"
 		    
 		;
 
 mlhs_entry	: mlhs_basic
-		| tLPAREN mlhs_entry ")"
+		| LPAREN mlhs_entry ")"
 		    
 		;
 
@@ -152,60 +111,59 @@ mlhs_basic	: mlhs_head
 		    
 		| mlhs_head mlhs_item
 		    
-		| mlhs_head tSTAR mlhs_node
+		| mlhs_head STAR mlhs_node
 		    
-		| mlhs_head tSTAR
-		| tSTAR mlhs_node
-		| tSTAR
+		| mlhs_head STAR
+		| STAR mlhs_node
+		| STAR
 		;
 
 mlhs_item	: mlhs_node
-		| tLPAREN mlhs_entry ")"
+		| LPAREN mlhs_entry ")"
 		;
 
-mlhs_head	: mlhs_item ","
-		| mlhs_head mlhs_item ","
+mlhs_head	: (mlhs_item ",") (mlhs_item ",")*
 		;
 
 mlhs_node	: variable
 		| primary_value "[" aref_args "]"
-		| primary_value "." tIDENTIFIER
-		| primary_value tCOLON2 tIDENTIFIER
+		| primary_value "." IDENTIFIER
+		| primary_value COLON2 IDENTIFIER
 
-		| primary_value "." tCONSTANT
-		| primary_value tCOLON2 tCONSTANT
+		| primary_value "." CONSTANT
+		| primary_value COLON2 CONSTANT
 
-		| tCOLON3 tCONSTANT
+		| COLON3 CONSTANT
 
 		| backref
 		;
 
 lhs		: variable
 		| primary_value "[" aref_args "]"
-		| primary_value "." tIDENTIFIER
-		| primary_value tCOLON2 tIDENTIFIER
-		| primary_value "." tCONSTANT
-		| primary_value tCOLON2 tCONSTANT
-		| tCOLON3 tCONSTANT
+		| primary_value "." IDENTIFIER
+		| primary_value COLON2 IDENTIFIER
+		| primary_value "." CONSTANT
+		| primary_value COLON2 CONSTANT
+		| COLON3 CONSTANT
 
 		| backref
 		;
 
-cname		: tIDENTIFIER
+cname		: IDENTIFIER
 		    {
 			//yyerror("class/module name must be CONSTANT");
 		    }
-		| tCONSTANT
+		| CONSTANT
 		;
 
-cpath		: tCOLON3 cname
+cpath		: COLON3 cname
 		| cname
-		| primary_value tCOLON2 cname
+		| primary_value COLON2 cname
 		;
 
-fname		: tIDENTIFIER
-		| tCONSTANT
-		| tFID
+fname		: IDENTIFIER
+		| CONSTANT
+		| FID
 		| op
 		| reswords
 		;
@@ -214,119 +172,62 @@ fitem		: fname
 		| symbol
 		;
 
-undef_list	: fitem
-		| undef_list ","  fitem
+undef_list	: (fitem) (","  fitem)*
 		;
 
 op		: "|"		
 		| "^"		
 		| "&"		
-		| tCMP		
-		| tEQ		
-		| tEQQ		
-		| tMATCH	
+		| CMP		
+		| EQ		
+		| EQQ		
+		| MATCH	
 		| ">"		
-		| tGEQ		
+		| GEQ		
 		| "<"		
-		| tLEQ		
-		| tLSHFT	
-		| tRSHFT	
+		| LEQ		
+		| LSHFT	
+		| RSHFT	
 		| "+"		
 		| "-"		
 		| "*"		
-		| tSTAR		
+		| STAR		
 		| "/"		
 		| "%"		
-		| tPOW		
+		| POW		
 		| "~"		
-		| tUPLUS	
-		| tUMINUS	
-		| tAREF		
-		| tASET		
+		| UPLUS	
+		| UMINUS	
+		| AREF		
+		| ASET		
 		| "`"		
 		;
 
-reswords	: LINE | k__FILE__  | LBEGIN | LEND
-		| ALIAS | AND | BEGIN | BREAK | CASE | kCLASS | kDEF
-		| kDEFINED | kDO | kELSE | kELSIF | kEND | kENSURE | kFALSE
-		| kFOR | kIN | kMODULE | kNEXT | kNIL | kNOT
-		| kOR | kREDO | kRESCUE | kRETRY | kRETURN | kSELF | kSUPER
-		| kTHEN | kTRUE | kUNDEF | kWHEN | kYIELD
-		| kIF_MOD | kUNLESS_MOD | kWHILE_MOD | kUNTIL_MOD | kRESCUE_MOD
+reswords	: LINE | K__FILE__  | LBEGIN | LEND
+		| ALIAS | AND | BEGIN | BREAK | CASE | CLASS | DEF
+		| DEFINED | DO | ELSE | ELSIF | END | ENSURE | FALSE
+		| FOR | IN | MODULE | NEXT | NIL | NOT
+		| OR | REDO | RESCUE | RETRY | RETURN | SELF | SUPER
+		| THEN | TRUE | UNDEF | WHEN | YIELD
+		| IF_MOD | UNLESS_MOD | WHILE_MOD | UNTIL_MOD | RESCUE_MOD
 		;
 
-arg		: lhs "=" arg
-		| lhs "=" arg kRESCUE_MOD arg
-		| var_lhs tOP_ASGN arg
-		| primary_value "[" aref_args "]" tOP_ASGN arg
-		    
-		| primary_value "." tIDENTIFIER tOP_ASGN arg
-		    
-		| primary_value "." tCONSTANT tOP_ASGN arg
-		    
-		| primary_value tCOLON2 tIDENTIFIER tOP_ASGN arg
-		    
-		| primary_value tCOLON2 tCONSTANT tOP_ASGN arg
-		    
-		| tCOLON3 tCONSTANT tOP_ASGN arg
-		    
-		| backref tOP_ASGN arg
-		    
-		| arg tDOT2 arg
-		    
-		| arg tDOT3 arg
-		    
-		| arg "+" arg
-		    
-		| arg "-" arg
-		    
-		| arg "*" arg
-		    
-		| arg "/" arg
-		| arg "%" arg
-		| arg tPOW arg
-		| tUMINUS_NUM tINTEGER tPOW arg
-		| tUMINUS_NUM tFLOAT tPOW arg
-		| tUPLUS arg
-		| tUMINUS arg
-		| arg "|" arg
-		| arg "^" arg
-		| arg "&" arg
-		| arg tCMP arg
-		| arg ">" arg
-		| arg tGEQ arg
-		| arg "<" arg
-		| arg tLEQ arg
-		| arg tEQ arg
-		| arg tEQQ arg
-		| arg tNEQ arg
-		| arg tMATCH arg
-		| arg tNMATCH arg
-		| "!" arg
-		| "~" arg
-		| arg tLSHFT arg
-		| arg tRSHFT arg
-		| arg tANDOP arg
-		| arg tOROP arg
-		| kDEFINED opt_nl  arg
-		| arg "?" arg ":" arg
-		| primary
+arg		: (lhs "=" arg | lhs "=" arg RESCUE_MOD arg | var_lhs OP_ASGN arg | primary_value "[" aref_args "]" OP_ASGN arg | primary_value "." IDENTIFIER OP_ASGN arg | primary_value "." CONSTANT OP_ASGN arg | primary_value COLON2 IDENTIFIER OP_ASGN arg | primary_value COLON2 CONSTANT OP_ASGN arg | COLON3 CONSTANT OP_ASGN arg | backref OP_ASGN arg | UMINUS_NUM INTEGER POW arg | UMINUS_NUM FLOAT POW arg | UPLUS arg | UMINUS arg | "!" arg | "~" arg | DEFINED opt_nl  arg | primary) (DOT2 arg | DOT3 arg | "+" arg | "-" arg | "*" arg | "/" arg | "%" arg | POW arg | "|" arg | "^" arg | "&" arg | CMP arg | ">" arg | GEQ arg | "<" arg | LEQ arg | EQ arg | EQQ arg | NEQ arg | MATCH arg | NMATCH arg | LSHFT arg | RSHFT arg | ANDOP arg | OROP arg | "?" arg ":" arg)*
 		;
 
 arg_value	: arg
 		;
 
-aref_args	: none
-		| command opt_nl
-		| args trailer
-		| args "," tSTAR arg opt_nl
-		| assocs trailer
-		    
-		| tSTAR arg opt_nl
-		    
-		;
+aref_args
+    : command opt_nl
+    | args trailer
+    | args "," STAR arg opt_nl
+    | assocs trailer
+    | STAR arg opt_nl
+	|	    
+    ;
 
-paren_args	: "(" none ")"
+paren_args	: "(" ")"
 		    
 		| "(" call_args opt_nl ")"
 		    
@@ -336,25 +237,26 @@ paren_args	: "(" none ")"
 		    
 		;
 
-opt_paren_args	: none
-		| paren_args
-		;
+opt_paren_args
+	: paren_args
+    | 
+    ;
 
 call_args	: command
 		    
 		| args opt_block_arg
 		    
-		| args "," tSTAR arg_value opt_block_arg
+		| args "," STAR arg_value opt_block_arg
 		    
 		| assocs opt_block_arg
 		    
-		| assocs "," tSTAR arg_value opt_block_arg
+		| assocs "," STAR arg_value opt_block_arg
 		    
 		| args "," assocs opt_block_arg
 		    
-		| args "," assocs "," tSTAR arg opt_block_arg
+		| args "," assocs "," STAR arg opt_block_arg
 		    
-		| tSTAR arg_value opt_block_arg
+		| STAR arg_value opt_block_arg
 		    
 		| block_arg
 		;
@@ -363,23 +265,23 @@ call_args2	: arg_value "," args opt_block_arg
 		    
 		| arg_value "," block_arg
 		    
-		| arg_value "," tSTAR arg_value opt_block_arg
+		| arg_value "," STAR arg_value opt_block_arg
 		    
-		| arg_value "," args "," tSTAR arg_value opt_block_arg
+		| arg_value "," args "," STAR arg_value opt_block_arg
 		    
 		| assocs opt_block_arg
 		    
-		| assocs "," tSTAR arg_value opt_block_arg
+		| assocs "," STAR arg_value opt_block_arg
 		    
 		| arg_value "," assocs opt_block_arg
 		    
 		| arg_value "," args "," assocs opt_block_arg
 		    
-		| arg_value "," assocs "," tSTAR arg_value opt_block_arg
+		| arg_value "," assocs "," STAR arg_value opt_block_arg
 		    
-		| arg_value "," args "," assocs "," tSTAR arg_value opt_block_arg
+		| arg_value "," args "," assocs "," STAR arg_value opt_block_arg
 		    
-		| tSTAR arg_value opt_block_arg
+		| STAR arg_value opt_block_arg
 		    
 		| block_arg
 		;
@@ -390,32 +292,30 @@ command_args	:
 		;
 
 open_args	: call_args
-		| tLPAREN_ARG   ")"
+		| LPAREN_ARG   ")"
 		    
-		| tLPAREN_ARG call_args2  ")"
+		| LPAREN_ARG call_args2  ")"
 		    
 		;
 
-block_arg	: tAMPER arg_value
+block_arg	: AMPER arg_value
 		    
 		;
 
 opt_block_arg	: "," block_arg
 		    
-		| none
+		|
 		;
 
-args 		: arg_value
-		    
-		| args "," arg_value
+args 		: (arg_value) ("," arg_value)*
 
 		;
 
 mrhs		: args "," arg_value
 		    
-		| args "," tSTAR arg_value
+		| args "," STAR arg_value
 		    
-		| tSTAR arg_value
+		| STAR arg_value
 		    
 		;
 
@@ -427,108 +327,108 @@ primary		: literal
 		| qwords
 		| var_ref
 		| backref
-		| tFID
+		| FID
 		    
 		| BEGIN
 		    
 		  bodystmt
-		  kEND
+		  END
 		    
-		| tLPAREN_ARG expr  opt_nl ")"
+		| LPAREN_ARG expr  opt_nl ")"
 		    
-		| tLPAREN compstmt ")"
+		| LPAREN compstmt ")"
 		    
-		| primary_value tCOLON2 tCONSTANT
+		| primary_value COLON2 CONSTANT
 		    
-		| tCOLON3 tCONSTANT
+		| COLON3 CONSTANT
 		    
 		| primary_value "[" aref_args "]"
 		    
-		| tLBRACK aref_args "]"
+		| LBRACK aref_args "]"
 		    
-		| tLBRACE assoc_list "}"
+		| LBRACE assoc_list "}"
 		    
-		| kRETURN
+		| RETURN
 		    
-		| kYIELD "(" call_args ")"
+		| YIELD "(" call_args ")"
 		    
-		| kYIELD "(" ")"
+		| YIELD "(" ")"
 		    
-		| kYIELD
+		| YIELD
 		    
-		| kDEFINED opt_nl "("  expr ")"
+		| DEFINED opt_nl "("  expr ")"
 		    
 		| operation brace_block
 		    
 		| method_call
 		| method_call brace_block
 		    
-		| kIF expr_value then
+		| IF expr_value then
 		  compstmt
 		  if_tail
-		  kEND
+		  END
 		    
-		| kUNLESS expr_value then
+		| UNLESS expr_value then
 		  compstmt
 		  opt_else
-		  kEND
+		  END
 		    
-		| kWHILE  expr_value do
+		| WHILE  expr_value do
 		  compstmt
-		  kEND
+		  END
 		    
-		| kUNTIL  expr_value do
+		| UNTIL  expr_value do
 		  compstmt
-		  kEND
+		  END
 		    
 		| CASE expr_value opt_terms
 		  case_body
-		  kEND
+		  END
 		    
-		| CASE opt_terms case_body kEND
+		| CASE opt_terms case_body END
 		    
-		| CASE opt_terms kELSE compstmt kEND
+		| CASE opt_terms ELSE compstmt END
 		    
-		| kFOR block_var kIN {COND_PUSH(1);} expr_value do {COND_POP();}
+		| FOR block_var IN {COND_PUSH(1);} expr_value do {COND_POP();}
 		  compstmt
-		  kEND
+		  END
 		    
-		| kCLASS cpath superclass
+		| CLASS cpath superclass
 		    
 		  bodystmt
-		  kEND
+		  END
 		    
-		| kCLASS tLSHFT expr
+		| CLASS LSHFT expr
 		    
 		  term
 		    
 		  bodystmt
-		  kEND
+		  END
 		    
-		| kMODULE cpath
+		| MODULE cpath
 		    
 		  bodystmt
-		  kEND
+		  END
 		    
-		| kDEF fname
+		| DEF fname
 		    
 		  f_arglist
 		  bodystmt
-		  kEND
+		  END
 		    
-		| kDEF singleton dot_or_colon  fname
+		| DEF singleton dot_or_colon  fname
 		    
 		  f_arglist
 		  bodystmt
-		  kEND
+		  END
 		    
 		| BREAK
 		    
-		| kNEXT
+		| NEXT
 		    
-		| kREDO
+		| REDO
 		    
-		| kRETRY
+		| RETRY
 		    
 		;
 
@@ -538,24 +438,24 @@ primary_value 	: primary
 
 then		: term
 		| ":"
-		| kTHEN
-		| term kTHEN
+		| THEN
+		| term THEN
 		;
 
 do		: term
 		| ":"
-		| kDO_COND
+		| DO_COND
 		;
 
 if_tail		: opt_else
-		| kELSIF expr_value then
+		| ELSIF expr_value then
 		  compstmt
 		  if_tail
 		    
 		;
 
-opt_else	: none
-		| kELSE compstmt
+opt_else	:
+		| ELSE compstmt
 		    
 		;
 
@@ -563,83 +463,77 @@ block_var	: lhs
 		| mlhs
 		;
 
-opt_block_var	: none
-		| "|" /* none */ "|"
+opt_block_var	:
+		| "|"  "|"
 		    
-		| tOROP
+		| OROP
 		    
 		| "|" block_var "|"
 		    
 		;
 
-do_block	: kDO_BLOCK
+do_block	: DO_BLOCK
 		    
 		  opt_block_var 
 		  compstmt
-		  kEND
+		  END
 		    
 		;
 
-block_call	: command do_block
-		    
-		| block_call "." operation2 opt_paren_args
-		    
-		| block_call tCOLON2 operation2 opt_paren_args
+block_call	: (command do_block) ("." operation2 opt_paren_args | COLON2 operation2 opt_paren_args)*
 		    
 		;
 
 method_call	: operation paren_args
 		    
 		| primary_value "." operation2 opt_paren_args
-		| primary_value tCOLON2 operation2 paren_args
-		| primary_value tCOLON2 operation3
-		| kSUPER paren_args
+		| primary_value COLON2 operation2 paren_args
+		| primary_value COLON2 operation3
+		| SUPER paren_args
 
-		| kSUPER
+		| SUPER
 		;
 
 brace_block	: "{"
 		  opt_block_var 
 		  compstmt "}"
-		| kDO
+		| DO
 		  opt_block_var 
-		  compstmt kEND
+		  compstmt END
 		;
 
-case_body	: kWHEN when_args then
+case_body	: WHEN when_args then
 		  compstmt
 		  cases
 		;
 when_args	: args
-		| args "," tSTAR arg_value
-		| tSTAR arg_value
+		| args "," STAR arg_value
+		| STAR arg_value
 		;
 
 cases		: opt_else
 		| case_body
 		;
 
-opt_rescue	: kRESCUE exc_list exc_var then
+opt_rescue	: RESCUE exc_list exc_var then
 		  compstmt
 		  opt_rescue
 		    
-		| none
+		|
 		;
 
 exc_list	: arg_value
-		    
 		| mrhs
-		| none
+		|
 		;
 
-exc_var		: tASSOC lhs
-		    
-		| none
+exc_var		: ASSOC lhs
+		| 
 		;
 
-opt_ensure	: kENSURE compstmt
+opt_ensure	: ENSURE compstmt
 		    
-		| none
+		| 
 		;
 
 literal		: numeric
@@ -652,113 +546,103 @@ strings		: string
 		    
 		;
 
-string		: string1
-		| string string1
+string		: (string1) (string1)*
 		    
 		;
 
-string1		: tSTRING_BEG string_contents tSTRING_END
+string1		: STRING_BEG string_contents STRING_END
 		    
 		;
 
-xstring		: tXSTRING_BEG xstring_contents tSTRING_END
+xstring		: XSTRING_BEG xstring_contents STRING_END
 		    
 		;
 
-regexp		: tREGEXP_BEG xstring_contents tREGEXP_END
+regexp		: REGEXP_BEG xstring_contents REGEXP_END
 		    
 		;
 
-words		: tWORDS_BEG " " tSTRING_END
+words		: WORDS_BEG " " STRING_END
 		    
-		| tWORDS_BEG word_list tSTRING_END
-		    
-		;
-
-word_list	: /* none */
-		    
-		| word_list word " "
+		| WORDS_BEG word_list STRING_END
 		    
 		;
 
-word		: string_content
-		| word string_content
+word_list	:  (word " ")*
 		    
 		;
 
-qwords		: tQWORDS_BEG " " tSTRING_END
-		    
-		| tQWORDS_BEG qword_list tSTRING_END
+word		: (string_content) (string_content)*
 		    
 		;
 
-qword_list	: /* none */
+qwords		: QWORDS_BEG " " STRING_END
 		    
-		| qword_list tSTRING_CONTENT " "
-		    
-		;
-
-string_contents : /* none */
-		    
-		| string_contents string_content
+		| QWORDS_BEG qword_list STRING_END
 		    
 		;
 
-xstring_contents: /* none */
-		    
-		| xstring_contents string_content
+qword_list	: (STRING_CONTENT " ")*
 		    
 		;
 
-string_content	: tSTRING_CONTENT
-		| tSTRING_DVAR
+string_contents :  (string_content)*
+		    
+		;
+
+xstring_contents: (string_content)*
+		    
+		;
+
+string_content	: STRING_CONTENT
+		| STRING_DVAR
 		    
 		  string_dvar
 		    
-		| tSTRING_DBEG
+		| STRING_DBEG
 		    
 		  compstmt "}"
 		    
 		;
 
-string_dvar	: tGVAR 
-		| tIVAR 
-		| tCVAR 
+string_dvar	: GVAR 
+		| IVAR 
+		| CVAR 
 		| backref
 		;
 
-symbol		: tSYMBEG sym
+symbol		: SYMBEG sym
 		    
 		;
 
 sym		: fname
-		| tIVAR
-		| tGVAR
-		| tCVAR
+		| IVAR
+		| GVAR
+		| CVAR
 		;
 
-dsym		: tSYMBEG xstring_contents tSTRING_END
+dsym		: SYMBEG xstring_contents STRING_END
 		    
 		;
 
-numeric		: tINTEGER
-		| tFLOAT
-		| tUMINUS_NUM tINTEGER
+numeric		: INTEGER
+		| FLOAT
+		| UMINUS_NUM INTEGER
 		    
-		| tUMINUS_NUM tFLOAT
+		| UMINUS_NUM FLOAT
 		    
 		;
 
-variable	: tIDENTIFIER
-		| tIVAR
-		| tGVAR
-		| tCONSTANT
-		| tCVAR
-		| kNIL 
-		| kSELF 
-		| kTRUE 
-		| kFALSE 
-		| k__FILE__ 
+variable	: IDENTIFIER
+		| IVAR
+		| GVAR
+		| CONSTANT
+		| CVAR
+		| NIL 
+		| SELF 
+		| TRUE 
+		| FALSE 
+		| K__FILE__ 
 		| LINE 
 		;
 
@@ -770,8 +654,8 @@ var_lhs		: variable
 		    
 		;
 
-backref		: tNTH_REF
-		| tBACK_REF
+backref		: NTH_REF
+		| BACK_REF
 		;
 
 superclass	: term
@@ -780,7 +664,7 @@ superclass	: term
 		    
 		  expr_value term
 		    
-		| error term 
+//		| error term 
 		;
 
 f_arglist	: "(" f_args opt_nl ")"
@@ -805,66 +689,63 @@ f_args		: f_arg "," f_optarg "," f_rest_arg opt_f_block_arg
 		    
 		| f_block_arg
 		    
-		| /* none */
+		|
 		    
 		;
 
-f_norm_arg	: tCONSTANT
+f_norm_arg	: CONSTANT
 		    {
 			//yyerror("formal argument cannot be a constant");
 		    }
-                | tIVAR
+                | IVAR
 		    {
 //              yyerror("formal argument cannot be an instance variable");
 		    }
-                | tGVAR
+                | GVAR
 	        {
 //                yyerror("formal argument cannot be a global variable");
 		    }
-                | tCVAR
+                | CVAR
 		    {
          //      yyerror("formal argument cannot be a class variable");
 		    }
-		| tIDENTIFIER
+		| IDENTIFIER
 
 		;
 
-f_arg		: f_norm_arg
-		| f_arg "," f_norm_arg
+f_arg		: (f_norm_arg) ("," f_norm_arg)*
 
 		;
 
-f_opt		: tIDENTIFIER "=" arg_value
+f_opt		: IDENTIFIER "=" arg_value
 		    
 		;
 
-f_optarg	: f_opt
-		    
-		| f_optarg "," f_opt
+f_optarg	: (f_opt) ("," f_opt)*
 		    
 		;
 
 restarg_mark	: "*"
-		| tSTAR
+		| STAR
 		;
 
-f_rest_arg	: restarg_mark tIDENTIFIER
+f_rest_arg	: restarg_mark IDENTIFIER
 		 
 		| restarg_mark
 		 
 		;
 
 blkarg_mark	: "&"
-		| tAMPER
+		| AMPER
 		;
 
-f_block_arg	: blkarg_mark tIDENTIFIER
+f_block_arg	: blkarg_mark IDENTIFIER
 		 
 		;
 
 opt_f_block_arg	: "," f_block_arg
 		 
-		| none
+		|
 		;
 
 singleton	: var_ref
@@ -873,51 +754,50 @@ singleton	: var_ref
 		 
 		;
 
-assoc_list	: none
+assoc_list	:
 		| assocs trailer
 		 
 		| args trailer
 		 
 		;
 
-assocs		: assoc
-		| assocs "," assoc
+assocs		: (assoc) ("," assoc)*
 		 
 		;
 
-assoc		: arg_value tASSOC arg_value
+assoc		: arg_value ASSOC arg_value
 		 
 		;
 
-operation	: tIDENTIFIER
-		| tCONSTANT
-		| tFID
+operation	: IDENTIFIER
+		| CONSTANT
+		| FID
 		;
 
-operation2	: tIDENTIFIER
-		| tCONSTANT
-		| tFID
+operation2	: IDENTIFIER
+		| CONSTANT
+		| FID
 		| op
 		;
 
-operation3	: tIDENTIFIER
-		| tFID
+operation3	: IDENTIFIER
+		| FID
 		| op
 		;
 
 dot_or_colon	: "."
-		| tCOLON2
+		| COLON2
 		;
 
-opt_terms	: /* none */
+opt_terms	:
 		| terms
 		;
 
-opt_nl		: /* none */
+opt_nl		:
 		| "\n"
 		;
 
-trailer		: /* none */
+trailer		:
 		| "\n"
 		| ","
 		;
@@ -926,9 +806,5 @@ term		: ";"
 		| "\n"
 		;
 
-terms		: term
-		| terms ";" 
-		;
-
-none		: /* none */ 
+terms		: term (";")* 
 		;
