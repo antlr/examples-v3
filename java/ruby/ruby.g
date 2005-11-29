@@ -8,7 +8,30 @@
 grammar Ruby;
 
 program
-    :   compstmt
+    :   compoundstmt
+    |   classdef
+    |   method
+    ;
+
+classdef
+    :   "class" ID
+        ( method | assignmentexpr )*
+        "end"
+    ;
+
+method
+    :   methodhead bodystmt
+    ;
+
+methodhead
+    :   "def" (expr ".")? ID ( "(" formalargs ")" | formalargs )? terminator
+    ;
+
+formalargs
+    :   arg ("," arg)* ("," "*" arg)? ("," "&" expr)?
+    ;
+
+arg :   ID ("=" expr)?
     ;
 
 bodystmt
@@ -18,26 +41,26 @@ bodystmt
         ("else" slist)?
     ;
 
-compstmt
+compoundstmt
     :   slist terminator?
     ;
 
 slist
-    :   stmt (terminator* stmt)*
+    :   stmt (terminator stmt)*
     ;
 
-stmt: simplestmt stmtmodifier*
+stmt: simplestmt terminator //stmtmodifier*
     ;
 
 simplestmt
-    :   multiexpr "=" multiexpr
+    :   expr terminator
 /*   "alias" fitem  fitem
     |   "alias" GVAR GVAR
     |   "alias" GVAR BACK_REF
     |   "alias" GVAR NTH_REF
     |   UNDEF undef_list
-    |   "BEGIN" "{" compstmt "}"
-    |   "END" "{" compstmt "}"
+    |   "BEGIN" "{" compoundstmt "}"
+    |   "END" "{" compoundstmt "}"
     |   lhs "=" command_call
     |   mlhs "=" command_call
     |   var_lhs OP_ASGN command_call
@@ -53,6 +76,11 @@ simplestmt
 */
     ;
 
+block
+    :   "{" compoundstmt "}"
+    |   "do" compoundstmt "end"
+    ;
+
 stmtmodifier
     :   "if" expr
     |   "unless" expr
@@ -61,33 +89,52 @@ stmtmodifier
     |   "rescue" stmt
     ;
 
-/*
-lhs :   variable
-	| primary_value "[" aref_args "]"
-    | primary_value "." IDENTIFIER
-    | primary_value COLON2 IDENTIFIER
-    | primary_value "." CONSTANT
-    | primary_value COLON2 CONSTANT
-    | COLON3 CONSTANT
-    | backref
-    ;
-*/
-
-multiexpr
-    :   exprlist ("," "*" expr)?
+actualargs
+    :   expr ("," expr)* ("," "*" expr)?
     |   "*" expr
+    ;
+
+lhs :   slot ( "[" exprlist "]")?
+    ;
+
+multilhs
+    :   lhs ("," lhs)* ("," "*" expr)?
+    |   "*" lhs
     ;
 
 exprlist
     :   expr ("," expr)*
     ;
 
-expr:   atom
+expr:   assignmentexpr
+    ;
+
+assignmentexpr
+    :   primary ("," primary)* ("=" primary ("," primary)* )?
+    ;
+
+primary
+    :   slot ( "(" actualargs ")" | "[" exprlist "]" | actualargs )?
+    |   aggregate
+    ;
+
+slot:   atom
+        (   "." (ID|CONSTANT)
+        |   "::" (ID|CONSTANT)
+        |   ":::" CONSTANT
+        )?
+    ;
+
+aggregate
+    :   "[" exprlist "]"
+//    |   "{" exprlist "}"
     ;
 
 atom:   variable
     |   INT
     |   FLOAT
+    |   DOUBLE_STRING
+    |   "(" expr ")"
     ;
 
 variable
@@ -106,7 +153,7 @@ variable
 
 terminator
     : ";" 
-    | "\n"
+    | NL
     ;
 
 
@@ -134,5 +181,12 @@ FLOAT
     |   "." INT
     ;
 
-WS  :   (" "|"\t"|"\n")+ {channel=99;}
+DOUBLE_STRING
+    :   "\"" (options {greedy=false;}: .)* "\""
+    ;
+
+NL  :   "\n"
+    ;
+
+WS  :   (" "|"\t")+ {channel=99;}
     ;
