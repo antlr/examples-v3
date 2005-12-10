@@ -6,14 +6,14 @@ options {
 
 tokens {DECL;} // an imaginary node
 
-decl : type ID ";" -> ^(DECL type ID)
+decl : type ID ';' -> ^(DECL type ID)
      ;
 type : INTTYPE  // automatic tree construction builds a node for this rule
      | FLOATTYPE
      ;
 
-INTTYPE : "int" ;
-FLOATTYPE : "float" ;
-ID : "a".."z"+ ;
-INT : "0".."9"+ ;
-WS : (" "|"\n") {channel=99;} ;
+INTTYPE : 'int' ;
+FLOATTYPE : 'float' ;
+ID : 'a'..'z'+ ;
+INT : '0'..'9'+ ;
+WS : (' '|'\n') {channel=99;} ;

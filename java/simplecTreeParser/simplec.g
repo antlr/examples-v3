@@ -18,12 +18,12 @@ program
 
 declaration
     :   variable
-    |   functionHeader ";" -> ^(FUNC_DECL functionHeader)
+    |   functionHeader ';' -> ^(FUNC_DECL functionHeader)
     |   functionHeader block -> ^(FUNC_DEF functionHeader block)
     ;
 
 variable
-    :   type declarator ";" -> ^(VAR_DEF type declarator)
+    :   type declarator ';' -> ^(VAR_DEF type declarator)
     ;
 
 declarator
@@ -31,7 +31,7 @@ declarator
     ;
 
 functionHeader
-    :   type ID "(" ( formalParameter ( "," formalParameter )* )? ")"
+    :   type ID '(' ( formalParameter ( ',' formalParameter )* )? ')'
         -> ^(FUNC_HDR type ID formalParameter+)
     ;
 
@@ -40,30 +40,30 @@ formalParameter
     ;
 
 type
-    :   "int"   
-    |   "char"  
-    |   "void"
+    :   'int'   
+    |   'char'  
+    |   'void'
     |   ID        
     ;
 
 block
-    :   lc="{"
+    :   lc='{'
             variable*
             stat*
-        "}"
+        '}'
         -> ^(BLOCK[$lc,"BLOCK"] variable* stat*)
     ;
 
 stat: forStat
-    | expr ";"!
+    | expr ';'!
     | block
-    | assignStat ";"!
-    | ";"!
+    | assignStat ';'!
+    | ';'!
     ;
 
 forStat
-    :   "for" "(" start=assignStat ";" expr ";" next=assignStat ")" block
-        -> ^("for" $start expr $next block)
+    :   'for' '(' start=assignStat ';' expr ';' next=assignStat ')' block
+        -> ^('for' $start expr $next block)
     ;
 
 assignStat
@@ -74,39 +74,39 @@ expr:   condExpr
     ;
 
 condExpr
-    :   aexpr ( ("=="^^ | "<"^^) aexpr )?
+    :   aexpr ( ('=='^^ | '<'^^) aexpr )?
     ;
 
 aexpr
-    :   atom ( "+"^^ atom )*
+    :   atom ( '+'^^ atom )*
     ;
 
 atom
     : ID      
     | INT      
-    | "(" expr ")" -> expr
+    | '(' expr ')' -> expr
     ; 
 
-FOR : "for" ;
-INT_TYPE : "int" ;
-CHAR: "char";
-VOID: "void";
+FOR : 'for' ;
+INT_TYPE : 'int' ;
+CHAR: 'char';
+VOID: 'void';
 
-ID  :   ("a".."z"|"A".."Z"|"_") ("a".."z"|"A".."Z"|"0".."9"|"_")*
+ID  :   ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
-INT :	("0".."9")+
+INT :	('0'..'9')+
     ;
 
-EQ   : "=" ;
-EQEQ : "==" ;
-LT   : "<" ;
-PLUS : "+" ;
+EQ   : '=' ;
+EQEQ : '==' ;
+LT   : '<' ;
+PLUS : '+' ;
 
-WS  :   (   " "
-        |   "\t"
-        |   "\r"
-        |   "\n"
+WS  :   (   ' '
+        |   '\t'
+        |   '\r'
+        |   '\n'
         )+
         { channel=99; }
     ;    

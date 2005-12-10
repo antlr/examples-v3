@@ -33,13 +33,13 @@ program
     ;
 
 method
-    :   m="method" ID "(" ")" body
+    :   m='method' ID '(' ')' body
         {tokens.replace($m, "public void");}
     ; 
 
 body
 scope {
-    // decls is on body"s local variable stack but is visible to
+    // decls is on body's local variable stack but is visible to
     // any rule that body calls such as stat.  From other rules
     // it is referenced as $body::decls
     // From within rule body, you can use $decls shorthand
@@ -48,7 +48,7 @@ scope {
 @init {
     $body::decls = new HashSet();
 }
-    :   lcurly="{" stat* "}"
+    :   lcurly='{' stat* '}'
         {
         // dump declarations for all identifiers seen in statement list
         Iterator it = $body::decls.iterator();
@@ -58,22 +58,22 @@ scope {
         }
     ;
 
-stat:   ID "=" expr ";" {$body::decls.add($ID.text);} // track left-hand-sides
+stat:   ID '=' expr ';' {$body::decls.add($ID.text);} // track left-hand-sides
     ;
 
-expr:   mul ("+" mul)* 
+expr:   mul ('+' mul)* 
     ;
 
-mul :   atom ("*" atom)*
+mul :   atom ('*' atom)*
     ;
 
 atom:   ID
     |   INT
     ;
 
-ID  :   ("a".."z"|"A".."Z")+ ;
+ID  :   ('a'..'z'|'A'..'Z')+ ;
 
-INT :   ("0".."9")+ ;
+INT :   ('0'..'9')+ ;
 
-WS  :   (" "|"\t"|"\n")+ {channel=99;}
+WS  :   (' '|'\t'|'\n')+ {channel=99;}
     ;

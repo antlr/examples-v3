@@ -7,7 +7,7 @@ program
 /** In this rule, the functionHeader left prefix on the last two
  *  alternatives is not LL(k) for a fixed k.  However, it is
  *  LL(*).  The LL(*) algorithm simply scans ahead until it sees
- *  either the ";" or the "{" of the block and then it picks
+ *  either the ';' or the '{' of the block and then it picks
  *  the appropriate alternative.  Lookhead can be arbitrarily
  *  long in theory, but is <=10 in most cases.  Works great.
  *  Use ANTLRWorks to see the lookahead use (step by Location)
@@ -15,14 +15,14 @@ program
  */
 declaration
     :   variable
-    |   functionHeader ";"
+    |   functionHeader ';'
 	{System.out.println($functionHeader.name+" is a declaration");}
     |   functionHeader block
 	{System.out.println($functionHeader.name+" is a definition");}
     ;
 
 variable
-    :   type declarator ";"
+    :   type declarator ';'
     ;
 
 declarator
@@ -31,9 +31,9 @@ declarator
 
 functionHeader returns [String name]
 @init {
-    name=null; // for now you must init here rather than in "returns"
+    name=null; // for now you must init here rather than in 'returns'
 }
-    :   type ID "(" ( formalParameter ( "," formalParameter )* )? ")"
+    :   type ID '(' ( formalParameter ( ',' formalParameter )* )? ')'
 	{$name = $ID.text;}
     ;
 
@@ -42,61 +42,61 @@ formalParameter
     ;
 
 type
-    :   "int"   
-    |   "char"  
-    |   "void"
+    :   'int'   
+    |   'char'  
+    |   'void'
     |   ID        
     ;
 
 block
-    :   "{"
+    :   '{'
             variable*
             stat*
-        "}"
+        '}'
     ;
 
 stat: forStat
-    | expr ";"      
+    | expr ';'      
     | block
-    | assignStat ";"
-    | ";"
+    | assignStat ';'
+    | ';'
     ;
 
 forStat
-    :   "for" "(" assignStat ";" expr ";" assignStat ")" block        
+    :   'for' '(' assignStat ';' expr ';' assignStat ')' block        
     ;
 
 assignStat
-    :   ID "=" expr        
+    :   ID '=' expr        
     ;
 
 expr:   condExpr
     ;
 
 condExpr
-    :   aexpr ( ("==" | "<") aexpr )?
+    :   aexpr ( ('==' | '<') aexpr )?
     ;
 
 aexpr
-    :   atom ( "+" atom )*
+    :   atom ( '+' atom )*
     ;
 
 atom
     : ID      
     | INT      
-    | "(" expr ")"
+    | '(' expr ')'
     ; 
 
-ID  :   ("a".."z"|"A".."Z"|"_") ("a".."z"|"A".."Z"|"0".."9"|"_")*
+ID  :   ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
-INT :	("0".."9")+
+INT :	('0'..'9')+
     ;
 
-WS  :   (   " "
-        |   "\t"
-        |   "\r"
-        |   "\n"
+WS  :   (   ' '
+        |   '\t'
+        |   '\r'
+        |   '\n'
         )+
         { channel=99; }
     ;    
