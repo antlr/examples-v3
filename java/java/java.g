@@ -39,15 +39,15 @@ compilationUnit
 	;
 
 
-// Package statement: "package" followed by an identifier.
+// Package statement: 'package' followed by an identifier.
 packageDefinition
-	:	"package"  identifier SEMI
+	:	'package'  identifier SEMI
 	;
 
 
 // Import statement: import followed by a package or class name
 importDefinition
-	:	"import"  identifierStar SEMI
+	:	'import'  identifierStar SEMI
 	;
 
 // A type definition in a file is either a class or interface definition.
@@ -95,15 +95,15 @@ type
 
 // The primitive types.
 builtInType
-	:	"void"
-	|	"boolean"
-	|	"byte"
-	|	"char"
-	|	"short"
-	|	"int"
-	|	"float"
-	|	"long"
-	|	"double"
+	:	'void'
+	|	'boolean'
+	|	'byte'
+	|	'char'
+	|	'short'
+	|	'int'
+	|	'float'
+	|	'long'
+	|	'double'
 	;
 
 // A (possibly-qualified) java identifier.  We start with the first IDENT
@@ -129,24 +129,24 @@ modifiers
 
 // modifiers for Java classes, interfaces, class/instance vars and methods
 modifier
-	:	"private"
-	|	"public"
-	|	"protected"
-	|	"static"
-	|	"transient"
-	|	"final"
-	|	"abstract"
-	|	"native"
-	|	"threadsafe"
-	|	"synchronized"
-//	|	"const"			// reserved word, but not valid
-	|	"volatile"
-	|	"strictfp"
+	:	'private'
+	|	'public'
+	|	'protected'
+	|	'static'
+	|	'transient'
+	|	'final'
+	|	'abstract'
+	|	'native'
+	|	'threadsafe'
+	|	'synchronized'
+//	|	'const'			// reserved word, but not valid
+	|	'volatile'
+	|	'strictfp'
 	;
 
 // Definition of a Java class
 classDefinition
-	:	"class" IDENT
+	:	'class' IDENT
 		// it _might_ have a superclass...
 		superClassClause
 		// it might implement some interfaces...
@@ -156,13 +156,13 @@ classDefinition
 	;
 
 superClassClause
-	:	( "extends" identifier )?
+	:	( 'extends' identifier )?
 		
 	;
 
 // Definition of a Java Interface
 interfaceDefinition
-	:	"interface" IDENT
+	:	'interface' IDENT
 		// it might extend some other interfaces
 		interfaceExtends
 		// now parse the body of the interface (looks like a class...)
@@ -182,7 +182,7 @@ classBlock
 // An interface can extend several other interfaces...
 interfaceExtends
 	:	(
-		"extends"
+		'extends'
 		identifier ( COMMA identifier )*
 		)?
 	;
@@ -190,7 +190,7 @@ interfaceExtends
 // A class can implement several interfaces...
 implementsClause
 	:	(
-			"implements" identifier ( COMMA identifier )*
+			'implements' identifier ( COMMA identifier )*
 		)?
 	;
 
@@ -229,11 +229,11 @@ field
 			)
 		)
 
-    // "static { ... }" class initializer
-	|	"static" compoundStatement
+    // 'static { ... }' class initializer
+	|	'static' compoundStatement
 		
 
-    // "{ ... }" instance initializer
+    // '{ ... }' instance initializer
 	|	compoundStatement
 		
 	;
@@ -247,9 +247,9 @@ constructorBody
 
 /** Catch obvious constructor calls, but not the expr.super(...) calls */
 explicitConstructorInvocation
-    :   "this" LPAREN argList RPAREN SEMI
+    :   'this' LPAREN argList RPAREN SEMI
 		
-    |   "super" LPAREN argList RPAREN SEMI
+    |   'super' LPAREN argList RPAREN SEMI
 		
     ;
 
@@ -295,7 +295,7 @@ arrayInitializer
 	;
 
 
-// The two "things" that can initialize an array element are an expression
+// The two 'things' that can initialize an array element are an expression
 //   and another (nested) array initializer.
 initializer
 	:	expression
@@ -304,7 +304,7 @@ initializer
 
 // This is the header of a method.  It includes the name and parameters
 //   for the method.
-//   This also watches for a list of exception classes in a "throws" clause.
+//   This also watches for a list of exception classes in a 'throws' clause.
 ctorHead
 	:	IDENT  // the name of the method
 
@@ -317,7 +317,7 @@ ctorHead
 
 // This is a list of exception classes that the method is declared to throw
 throwsClause
-	:	"throws" identifier ( COMMA identifier )*
+	:	'throws' identifier ( COMMA identifier )*
 	;
 
 
@@ -333,14 +333,14 @@ parameterDeclaration
 	;
 
 parameterModifier
-	:	("final")?
+	:	('final')?
 		
 	;
 
 // Compound statement.  This is used in many contexts:
-//   Inside a class definition prefixed with "static":
+//   Inside a class definition prefixed with 'static':
 //      it is a class initializer
-//   Inside a class definition without "static":
+//   Inside a class definition without 'static':
 //      it is an instance initializer
 //   As the body of a method
 //   As a completely indepdent braced block of code inside a method
@@ -358,7 +358,7 @@ statement
 	// A list of statements in curly braces -- start a new scope
 	:	compoundStatement
 
-	// declarations are ambiguous with "ID DOT" relative to expression
+	// declarations are ambiguous with 'ID DOT' relative to expression
 	// statements.  Must backtrack to be sure.  Could use a semantic
 	// predicate to test symbol table to see what the type was coming
 	// up, but that's pretty hard without a symbol table ;)
@@ -377,16 +377,16 @@ statement
 	|	IDENT COLON  statement
 
 	// If-else statement
-	|	"if" LPAREN expression RPAREN statement
+	|	'if' LPAREN expression RPAREN statement
 		(
 			// CONFLICT: the old "dangling-else" problem...
 			//           ANTLR generates proper code matching
 			//			 as soon as possible.  Hush warning.
-			"else" statement
+			'else' statement
 		)?
 
 	// For statement
-	|	"for"
+	|	'for'
 			LPAREN
 				forInit SEMI   // initializer
 				forCond	SEMI   // condition test
@@ -395,22 +395,22 @@ statement
 			statement                     // statement to loop over
 
 	// While statement
-	|	"while" LPAREN expression RPAREN statement
+	|	'while' LPAREN expression RPAREN statement
 
 	// do-while statement
-	|	"do" statement "while" LPAREN expression RPAREN SEMI
+	|	'do' statement 'while' LPAREN expression RPAREN SEMI
 
 	// get out of a loop (or switch)
-	|	"break" (IDENT)? SEMI
+	|	'break' (IDENT)? SEMI
 
 	// do next iteration of a loop
-	|	"continue" (IDENT)? SEMI
+	|	'continue' (IDENT)? SEMI
 
 	// Return an expression
-	|	"return" (expression)? SEMI
+	|	'return' (expression)? SEMI
 
 	// switch/case statement
-	|	"switch" LPAREN expression RPAREN LCURLY
+	|	'switch' LPAREN expression RPAREN LCURLY
 			( casesGroup )*
 		RCURLY
 
@@ -418,13 +418,13 @@ statement
 	|	tryBlock
 
 	// throw an exception
-	|	"throw" expression SEMI
+	|	'throw' expression SEMI
 
 	// synchronize a statement
-	|	"synchronized" LPAREN expression RPAREN compoundStatement
+	|	'synchronized' LPAREN expression RPAREN compoundStatement
 
 	// asserts (uncomment if you want 1.4 compatibility)
-	// |	"assert" expression ( COLON expression )? SEMI
+	// |	'assert' expression ( COLON expression )? SEMI
 
 	// empty statement
 	|	SEMI 
@@ -433,7 +433,7 @@ statement
 casesGroup
 	:	(	// CONFLICT: to which case group do the statements bind?
 			//           ANTLR generates proper code: it groups the
-			//           many "case"/"default" labels together then
+			//           many 'case'/'default' labels together then
 			//           follows them with the statements
 				options {greedy=true;}
 			:
@@ -444,7 +444,7 @@ casesGroup
 	;
 
 aCase
-	:	("case" expression | "default") COLON
+	:	('case' expression | 'default') COLON
 	;
 
 caseSList
@@ -475,18 +475,18 @@ forIter
 
 // an exception handler try/catch block
 tryBlock
-	:	"try" compoundStatement
+	:	'try' compoundStatement
 		(handler)*
 		( finallyClause )?
 	;
 
 finallyClause
-	:	"finally" compoundStatement
+	:	'finally' compoundStatement
 	;
 
 // an exception handler
 handler
-	:	"catch" LPAREN parameterDeclaration RPAREN compoundStatement
+	:	'catch' LPAREN parameterDeclaration RPAREN compoundStatement
 	;
 
 
@@ -612,7 +612,7 @@ relationalExpression
 				)
 				shiftExpression
 			)*
-		|	"instanceof" typeSpec
+		|	'instanceof' typeSpec
 		)
 	;
 
@@ -651,7 +651,7 @@ unaryExpressionNotPlusMinus
 
         // Have to backtrack to see if operator follows.  If no operator
         // follows, it's a typecast.  No semantic checking needed to parse.
-        // if it _looks_ like a cast, it _is_ a cast; else it's a "(expr)"
+        // if it _looks_ like a cast, it _is_ a cast; else it's a '(expr)'
     |	LPAREN classTypeSpec RPAREN
         unaryExpressionNotPlusMinus
 
@@ -666,9 +666,9 @@ postfixExpression
 				argList
 				RPAREN
 			)?
-		|	DOT "this"
+		|	DOT 'this'
 
-		|	DOT "super"
+		|	DOT 'super'
             (   // (new Outer()).super()  (create enclosing instance)
                 LPAREN argList RPAREN
                 
@@ -691,19 +691,19 @@ postfixExpression
 
 // the basic element of an expression
 primaryExpression
-	:	identPrimary ( options {greedy=true;}: DOT "class" )?
+	:	identPrimary ( options {greedy=true;}: DOT 'class' )?
     |   constant
-	|	"true"
-	|	"false"
-	|	"null"
+	|	'true'
+	|	'false'
+	|	'null'
     |   newExpression
-	|	"this"
-	|	"super"
+	|	'this'
+	|	'super'
 	|	LPAREN assignmentExpression RPAREN
 		// look for int.class and int[].class
 	|	builtInType
 		( LBRACK  RBRACK )*
-		DOT "class"
+		DOT 'class'
 	;
 
 /** Match a, a.b.c refs, a.b.c(...) refs, a.b.c[], a.b.c[].class,
@@ -781,7 +781,7 @@ identPrimary
  *
  */
 newExpression
-	:	"new" type
+	:	'new' type
 		(	LPAREN argList RPAREN (classBlock)?
 
 			//java 1.1
@@ -836,152 +836,152 @@ constant
 // OPERATORS
 
 
-QUESTION		:	"?"		;
+QUESTION		:	'?'		;
 
 
-LPAREN			:	"("		;
+LPAREN			:	'('		;
 
 
-RPAREN			:	")"		;
+RPAREN			:	')'		;
 
 
-LBRACK			:	"["		;
+LBRACK			:	'['		;
 
 
-RBRACK			:	"]"		;
+RBRACK			:	']'		;
 
 
-LCURLY			:	"{"		;
+LCURLY			:	'{'		;
 
 
-RCURLY			:	"}"		;
+RCURLY			:	'}'		;
 
 
-COLON			:	":"		;
+COLON			:	':'		;
 
 
-COMMA			:	","		;
+COMMA			:	','		;
 
-DOT				:	"."		;
+DOT				:	'.'		;
 
-ASSIGN			:	"="		;
+ASSIGN			:	'='		;
 
 
-EQUAL			:	"=="	;
+EQUAL			:	'=='	;
 
 
-LNOT			:	"!"		;
+LNOT			:	'!'		;
 
 
-BNOT			:	"~"		;
+BNOT			:	'~'		;
 
 
-NOT_EQUAL		:	"!="	;
+NOT_EQUAL		:	'!='	;
 
 
-DIV				:	"/"		;
+DIV				:	'/'		;
 
 
-DIV_ASSIGN		:	"/="	;
+DIV_ASSIGN		:	'/='	;
 
 
-PLUS			:	"+"		;
+PLUS			:	'+'		;
 
 
-PLUS_ASSIGN		:	"+="	;
+PLUS_ASSIGN		:	'+='	;
 
 
-INC				:	"++"	;
+INC				:	'++'	;
 
 
-MINUS			:	"-"		;
+MINUS			:	'-'		;
 
 
-MINUS_ASSIGN	:	"-="	;
+MINUS_ASSIGN	:	'-='	;
 
 
-DEC				:	"--"	;
+DEC				:	'--'	;
 
 
-STAR			:	"*"		;
+STAR			:	'*'		;
 
 
-STAR_ASSIGN		:	"*="	;
+STAR_ASSIGN		:	'*='	;
 
 
-MOD				:	"%"		;
+MOD				:	'%'		;
 
 
-MOD_ASSIGN		:	"%="	;
+MOD_ASSIGN		:	'%='	;
 
 
-SR				:	">>"	;
+SR				:	'>>'	;
 
 
-SR_ASSIGN		:	">>="	;
+SR_ASSIGN		:	'>>='	;
 
 
-BSR				:	">>>"	;
+BSR				:	'>>>'	;
 
 
-BSR_ASSIGN		:	">>>="	;
+BSR_ASSIGN		:	'>>>='	;
 
 
-GE				:	">="	;
+GE				:	'>='	;
 
 
-GT				:	">"		;
+GT				:	'>'		;
 
 
-SL				:	"<<"	;
+SL				:	'<<'	;
 
 
-SL_ASSIGN		:	"<<="	;
+SL_ASSIGN		:	'<<='	;
 
 
-LE				:	"<="	;
+LE				:	'<='	;
 
 
-LT				:	"<"		;
+LT				:	'<'		;
 
 
-BXOR			:	"^"		;
+BXOR			:	'^'		;
 
 
-BXOR_ASSIGN		:	"^="	;
+BXOR_ASSIGN		:	'^='	;
 
 
-BOR				:	"|"		;
+BOR				:	'|'		;
 
 
-BOR_ASSIGN		:	"|="	;
+BOR_ASSIGN		:	'|='	;
 
 
-LOR				:	"||"	;
+LOR				:	'||'	;
 
 
-BAND			:	"&"		;
+BAND			:	'&'		;
 
 
-BAND_ASSIGN		:	"&="	;
+BAND_ASSIGN		:	'&='	;
 
 
-LAND			:	"&&"	;
+LAND			:	'&&'	;
 
 
-SEMI			:	";"		;
+SEMI			:	';'		;
 
 
 // Whitespace -- ignored
 
 
-WS	:	(	" "
-		|	"\t"
-		|	"\f"
+WS	:	(	' '
+		|	'\t'
+		|	'\f'
 			// handle newlines
-		|	(	"\r\n"  // Evil DOS
-			|	"\r"    // Macintosh
-			|	"\n"    // Unix (the right way)
+		|	(	'\r\n'  // Evil DOS
+			|	'\r'    // Macintosh
+			|	'\n'    // Unix (the right way)
 			)
 		)+
 		{ channel=99; /*token = JavaParser.IGNORE_TOKEN;*/ }
@@ -991,7 +991,7 @@ WS	:	(	" "
 
 
 SL_COMMENT
-	:	"//" (options {greedy=false;} : .)* ("\r")? "\n"
+	:	'//' (options {greedy=false;} : .)* ('\r')? '\n'
 		{channel=99; /*token = JavaParser.IGNORE_TOKEN;*/}
 	;
 
@@ -999,14 +999,14 @@ SL_COMMENT
 
 
 ML_COMMENT
-	:	"/*"
+	:	'/*'
 		( options {greedy=false;} : . )*
-		"*/"
+		'*/'
 		{channel=99;/*token = JavaParser.IGNORE_TOKEN;*/}
 	;
 
 IDENT
-	:	("a".."z"|"A".."Z"|"_"|"$") ("a".."z"|"A".."Z"|"_"|"0".."9"|"$")*
+	:	('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')*
 	;
 
 // From the java language spec
@@ -1018,81 +1018,81 @@ NUM_INT
     ;
 
 fragment
-DECIMAL_LITERAL: "1".."9" ("0".."9")* ("l"|"L")? ;
+DECIMAL_LITERAL: '1'..'9' ('0'..'9')* ('l'|'L')? ;
 
 fragment
-HEX_LITERAL: "0" ("x"|"X") ("0".."9"|"a".."f"|"A".."F")+ ("l"|"L")? ;
+HEX_LITERAL: '0' ('x'|'X') ('0'..'9'|'a'..'f'|'A'..'F')+ ('l'|'L')? ;
 
 fragment
-OCTAL_LITERAL: "0" ("0".."7")* ("l"|"L")? ;
+OCTAL_LITERAL: '0' ('0'..'7')* ('l'|'L')? ;
 
 NUM_FLOAT
-    :     DIGITS "." (DIGITS)? (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
-    | "." DIGITS (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
+    :     DIGITS '.' (DIGITS)? (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
+    | '.' DIGITS (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
     |     DIGITS EXPONENT_PART FLOAT_TYPE_SUFFIX
     |     DIGITS EXPONENT_PART
     |     DIGITS FLOAT_TYPE_SUFFIX
     ;
 
 fragment
-DIGITS : ("0".."9")+ ;
+DIGITS : ('0'..'9')+ ;
 
 /*
 fragment
-EXPONENT_PART: ("e"|"E") ("+"|"-")? DIGITS ;
+EXPONENT_PART: ('e'|'E') ('+'|'-')? DIGITS ;
 */
 
 fragment
-EXPONENT_PART: ("e"|"E") ("+"|"-")? DIGITS ;
+EXPONENT_PART: ('e'|'E') ('+'|'-')? DIGITS ;
 
 fragment
-FLOAT_TYPE_SUFFIX :   ("f"|"F"|"d"|"D") ;
+FLOAT_TYPE_SUFFIX :   ('f'|'F'|'d'|'D') ;
 
 CHAR_LITERAL
     :
-      "\'"
-      ( ~("\'"|"\\")
+      '\''
+      ( ~('\''|'\\')
       | ESCAPE_SEQUENCE
       )
-      "\'"
+      '\''
     ;
 
 STRING_LITERAL
     :
-      "\""
-      ( ~("\""|"\\")
+      '\"'
+      ( ~('\"'|'\\')
       | ESCAPE_SEQUENCE
       )*
-      "\""
+      '\"'
         ;
 
 fragment
 ESCAPE_SEQUENCE
-    :	"\\" "b"
-    |   "\\" "t"
-    |   "\\" "n"
-    |   "\\" "f"
-    |   "\\" "r"
-    |   "\\" "\'"
-    |   "\\" "\""
-    |   "\\" "\\"
-    |	"\\" "0".."3" OCTAL_DIGIT OCTAL_DIGIT
-    |   "\\" OCTAL_DIGIT OCTAL_DIGIT
-    |   "\\" OCTAL_DIGIT
+    :	'\\' 'b'
+    |   '\\' 't'
+    |   '\\' 'n'
+    |   '\\' 'f'
+    |   '\\' 'r'
+    |   '\\' '\"'
+    |   '\\' '\''
+    |   '\\' '\\'
+    |	'\\' '0'..'3' OCTAL_DIGIT OCTAL_DIGIT
+    |   '\\' OCTAL_DIGIT OCTAL_DIGIT
+    |   '\\' OCTAL_DIGIT
 	|	UNICODE_CHAR
 	;
 
 fragment
 UNICODE_CHAR
-	:	"\\" "u" HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+	:	'\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
 	;
 
 fragment
 HEX_DIGIT
-	:	"0".."9"|"a".."f"|"A".."F"
+	:	'0'..'9'|'a'..'f'|'A'..'F'
 	;
 
 fragment
 OCTAL_DIGIT
-	:	"0".."7"
+	:	'0'..'7'
 	;
