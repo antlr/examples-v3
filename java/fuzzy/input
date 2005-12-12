@@ -1,0 +1,12 @@
+Token nextToken() {
+        token=null;
+retry:
+        while (true) {
+        return token;
+    }
+
+    public void mPROGRAM() {
+        int type = PROGRAM;
+        int start = getCharIndex();
+    }
+}
