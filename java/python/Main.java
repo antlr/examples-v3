@@ -9,8 +9,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	CharStream input = new ANTLRFileStream(args[0]);
 	PythonParserLexer lexer = new PythonParserLexer(input);
-	PythonTokenSource indentedSource = new PythonTokenSource(lexer);
-	CommonTokenStream tokens = new CommonTokenStream(indentedSource);
+	CommonTokenStream tokens = new CommonTokenStream(lexer);
+	tokens.discardOffChannelTokens(true);
+	PythonTokenSource indentedSource = new PythonTokenSource(tokens);
+	tokens = new CommonTokenStream(indentedSource);
+	System.out.println("tokens="+tokens);
 	PythonParser parser = new PythonParser(tokens);
 	parser.file_input();
     }

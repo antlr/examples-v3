@@ -37,7 +37,7 @@ import java.util.*;
 
  a=1
  if a>1:
- print a
+     print a
  b=3
 
  Here the "b" token on the left edge signals that a DEDENT is needed
@@ -82,10 +82,13 @@ public class PythonTokenSource implements TokenSource {
 	Vector tokens = new Vector();
 
 	/** We pull real tokens from this lexer */
-	PythonParserLexer lexer;
+	TokenStream stream;
 
 	public PythonTokenSource(PythonParserLexer lexer) {
-		this.lexer = lexer;
+	}
+
+	public PythonTokenSource(TokenStream stream) {
+		this.stream = stream;
 		// "state" of indent level is FIRST_CHAR_POSITION
 		push(FIRST_CHAR_POSITION);
 	}
@@ -128,31 +131,39 @@ public class PythonTokenSource implements TokenSource {
 
 	protected void insertImaginaryIndentDedentTokens()
 	{
-		Token t = lexer.nextToken();
+		Token t = stream.LT(1);
+		stream.consume();
 
 		// if not a NEWLINE, doesn't signal indent/dedent work; just enqueue
 		if ( t.getType()!=PythonParserLexer.NEWLINE ) {
 			tokens.addElement(t);
 			return;
 		}
+
 		// save NEWLINE in the queue
+		System.out.println("found newline: "+t+" stack is "+stackString());
 		tokens.addElement(t);
 		// grab first token of next line
-		t = lexer.nextToken();
+		t = stream.LT(1);
+		stream.consume();
 
 		// compute cpos as the char pos of next non-WS token in line
 		int cpos = t.getCharPositionInLine(); // column dictates indent/dedent
 		if ( t.getType()==Token.EOF ) {
-			cpos = 0; // pretend EOF always happens at left edge
+			cpos = -1; // pretend EOF always happens at left edge
 		}
 		else if ( t.getType()==PythonParserLexer.LEADING_WS ) {
-			cpos = t.getText().length() + 1; // cpos is 1 spot after size
+			cpos = t.getText().length();
 		}
+
+		System.out.println("next token is: "+t);
 
 		// compare to last indent level
 		int lastIndent = peek();
+		System.out.println("cpos, lastIndent = "+cpos+", "+lastIndent);
 		if ( cpos > lastIndent ) { // they indented; track and gen INDENT
 			push(cpos);
+			System.out.println("push("+cpos+"): "+stackString());
 			Token indent = new ClassicToken(PythonParser.INDENT,"");
 			indent.setCharPositionInLine(t.getCharPositionInLine());
 			indent.setLine(t.getLine());
@@ -161,6 +172,7 @@ public class PythonTokenSource implements TokenSource {
 		else if ( cpos < lastIndent ) { // they dedented
 			// how far back did we dedent?
 			int prevIndex = findPreviousIndent(cpos);
+			System.out.println("dedented; prevIndex of cpos="+cpos+" is "+prevIndex);
 			// generate DEDENTs for each indent level we backed up over
 			for (int d=sp-1; d>=prevIndex; d--) {
 				Token dedent = new ClassicToken(PythonParser.DEDENT,"");
@@ -205,7 +217,16 @@ public class PythonTokenSource implements TokenSource {
 				return j;
 			}
 		}
-		return -1;
+		return FIRST_CHAR_POSITION;
+	}
+
+	public String stackString() {
+		StringBuffer buf = new StringBuffer();
+		for (int j=sp; j>=0; j--) {
+			buf.append(" ");
+			buf.append(indentStack[j]);
+		}
+		return buf.toString();
 	}
 
 }
@@ -213,38 +234,38 @@ public class PythonTokenSource implements TokenSource {
 /* More example input / output pairs with code simplified to single chars
 ------- t1 -------
 a a
-b b
-c
+        b b
+        c
 d
-a a \n INDENT b b \n c \n DEDENT d \n EOF
+a a \n INDENT b b \n c \n DEDENT d \n EOF 
 ------- t2 -------
 a  c
-b
+ b
 c
-a c \n INDENT b \n DEDENT c \n EOF
+a c \n INDENT b \n DEDENT c \n EOF 
 ------- t3 -------
 a
-b
-c
+        b
+                c
 d
-a \n INDENT b \n INDENT c \n DEDENT DEDENT d \n EOF
+a \n INDENT b \n INDENT c \n DEDENT DEDENT d \n EOF 
 ------- t4 -------
 a
-c
-d
-e
-f
-g
-h
-i
-j
-k
-a \n INDENT c \n INDENT d \n DEDENT e \n f \n INDENT g \n h \n i \n INDENT j \n DEDENT DEDENT k \n DEDENT EOF
+    c
+                  d
+    e
+    f
+             g
+             h
+             i
+              j
+    k
+a \n INDENT c \n INDENT d \n DEDENT e \n f \n INDENT g \n h \n i \n INDENT j \n DEDENT DEDENT k \n DEDENT EOF 
 ------- t5 -------
 a
-b
-c
-d
-e
-a \n INDENT b \n c \n INDENT d \n e \n DEDENT DEDENT EOF
+        b
+        c
+                d
+                e
+a \n INDENT b \n c \n INDENT d \n e \n DEDENT DEDENT EOF 
 */

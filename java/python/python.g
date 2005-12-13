@@ -365,7 +365,7 @@ dictmaker
 classdef: 'class' NAME (LPAREN testlist RPAREN)? COLON suite
 	;
 
-arglist: argument (options {k=1;}:COMMA argument)*
+arglist: argument (COMMA argument)*
         ( COMMA
           ( STAR test (COMMA DOUBLESTAR test)?
           | DOUBLESTAR test
@@ -515,10 +515,10 @@ NAME:	( 'a' .. 'z' | 'A' .. 'Z' | '_')
  */
 STRING
     :   ('r'|'u'|'ur')?
-        (   '\'\'\'' (options {greedy=false;}:ESC|.)* '\'\'\''
-        |   ''' ''' ''' (options {greedy=false;}:ESC|.)* ''' ''' '''
+        (   '\'\'\'' (options {greedy=false;}:.)* '\'\'\''
+        |   '"""' (options {greedy=false;}:.)* '"""'
+        |   '"' (ESC|~('\\'|'\n'|'"'))* '"'
         |   '\'' (ESC|~('\\'|'\n'|'\''))* '\''
-        |   ''' (ESC|~('\\'|'\n'|'''))* '''
         )
 	;
 
@@ -591,14 +591,16 @@ LEADING_WS
     int spaces = 0;
     int startPos = getCharPositionInLine();
 }
-    :   // match spaces or tabs, tracking indentation count
+    :   {getCharPositionInLine()>0}?=> (' '|'\t')+ {channel=99;}
+    |   {getCharPositionInLine()==0}?=>
+        // match spaces or tabs, tracking indentation count
         ( 	' '  { spaces++; }
         |	'\t' { spaces += 8; spaces -= (spaces % 8); }
         |   '\014' // formfeed is ok
         )+
         {
-            if ( implicitLineJoiningLevel>0 || startPos>0 ) {
-                // ignore ws if nested or not at start of line
+            if ( implicitLineJoiningLevel>0 ) {
+                // ignore ws if nested
                 channel=99;
             }
             else {
@@ -608,20 +610,18 @@ LEADING_WS
                     indentation[i] = ' ';
                 }
                 String s = new String(indentation);
-                //emit(new ClassicToken(LEADING_WS,new String(indentation)));
-                channel=99;
+                emit(new ClassicToken(LEADING_WS,new String(indentation)));
             }
         }
 
         // kill trailing newline or comment
-        (   {implicitLineJoiningLevel==0 && startPos==0 }?=> ('\r')? '\n'
-            {channel=99;}
+        (   {implicitLineJoiningLevel==0}?=> ('\r')? '\n'
+            {token.setChannel(99);}
 
-        |   {startPos==0}?=>
-            // if comment, then only thing on a line; kill so we
+        |   // if comment, then only thing on a line; kill so we
             // ignore totally also wack any following newlines as
             // they cannot be terminating a statement
             '#' (~'\n')* ('\n')+ 
-            {channel=99;}
+            {if (token!=null) token.setChannel(99); else channel=99;}
         )?
     ;
