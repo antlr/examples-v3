@@ -350,16 +350,16 @@ sliceop: COLON (test)?
 	;
 
 exprlist
-    :   expr (options {k=1;}:COMMA expr)* (options {k=1;}:COMMA)?
+    :   expr (options {k=2;}:COMMA expr)* (COMMA)?
 	;
 
 testlist
-    :   test (options {k=1;}:COMMA test)* (options {k=1;}:COMMA)?
+    :   test (options {k=2;}: COMMA test)* (COMMA)?
     ;
 
 dictmaker
     :   test COLON test
-        (options {k=1;}:COMMA test COLON test)* (options {k=1;}:COMMA)?
+        (options {k=2;}:COMMA test COLON test)* (COMMA)?
     ;
 
 classdef: 'class' NAME (LPAREN testlist RPAREN)? COLON suite
@@ -478,7 +478,7 @@ DOT : '.' ;
 
 FLOAT
 	:	'.' DIGITS (Exponent)?
-    |   DIGITS ('.' DIGITS (Exponent)? | Exponent)
+    |   DIGITS ('.' (DIGITS (Exponent)?)? | Exponent)
     ;
 
 LONGINT
