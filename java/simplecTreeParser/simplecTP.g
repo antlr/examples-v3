@@ -30,9 +30,9 @@ formalParameter
     ;
 
 type
-    :   INT_TYPE  // i have to use token names not "int" for now;
-    |   CHAR      // the .tokens file can't handle literals yet
-    |   VOID
+    :   'int'
+    |   'char'
+    |   'void'
     |   ID        
     ;
 
@@ -46,7 +46,7 @@ stat: forStat
     ;
 
 forStat
-    :   ^(FOR expr expr expr block)
+    :   ^('for' expr expr expr block)
     ;
 
 expr:   ^(EQEQ expr expr)
