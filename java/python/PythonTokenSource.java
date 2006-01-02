@@ -82,12 +82,14 @@ public class PythonTokenSource implements TokenSource {
 	Vector tokens = new Vector();
 
 	/** We pull real tokens from this lexer */
-	TokenStream stream;
+	CommonTokenStream stream;
+
+	int lastTokenAddedIndex = -1;
 
 	public PythonTokenSource(PythonParserLexer lexer) {
 	}
 
-	public PythonTokenSource(TokenStream stream) {
+	public PythonTokenSource(CommonTokenStream stream) {
 		this.stream = stream;
 		// "state" of indent level is FIRST_CHAR_POSITION
 		push(FIRST_CHAR_POSITION);
@@ -136,16 +138,33 @@ public class PythonTokenSource implements TokenSource {
 
 		// if not a NEWLINE, doesn't signal indent/dedent work; just enqueue
 		if ( t.getType()!=PythonParserLexer.NEWLINE ) {
+			List hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1);
+			if ( hiddenTokens!=null ) {
+				tokens.addAll(hiddenTokens);
+			}
+			lastTokenAddedIndex = t.getTokenIndex();
 			tokens.addElement(t);
 			return;
 		}
 
 		// save NEWLINE in the queue
 		//System.out.println("found newline: "+t+" stack is "+stackString());
+		List hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1);
+		if ( hiddenTokens!=null ) {
+			tokens.addAll(hiddenTokens);
+		}
+		lastTokenAddedIndex = t.getTokenIndex();
 		tokens.addElement(t);
+
 		// grab first token of next line
 		t = stream.LT(1);
 		stream.consume();
+
+		hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1);
+		if ( hiddenTokens!=null ) {
+			tokens.addAll(hiddenTokens);
+		}
+		lastTokenAddedIndex = t.getTokenIndex();
 
 		// compute cpos as the char pos of next non-WS token in line
 		int cpos = t.getCharPositionInLine(); // column dictates indent/dedent
@@ -237,7 +256,7 @@ a a
         b b
         c
 d
-a a \n INDENT b b \n c \n DEDENT d \n EOF 
+a a \n INDENT b b \n c \n DEDENT d \n EOF
 ------- t2 -------
 a  c
  b
