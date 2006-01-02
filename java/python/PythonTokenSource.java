@@ -141,7 +141,7 @@ public class PythonTokenSource implements TokenSource {
 		}
 
 		// save NEWLINE in the queue
-		System.out.println("found newline: "+t+" stack is "+stackString());
+		//System.out.println("found newline: "+t+" stack is "+stackString());
 		tokens.addElement(t);
 		// grab first token of next line
 		t = stream.LT(1);
@@ -156,14 +156,14 @@ public class PythonTokenSource implements TokenSource {
 			cpos = t.getText().length();
 		}
 
-		System.out.println("next token is: "+t);
+		//System.out.println("next token is: "+t);
 
 		// compare to last indent level
 		int lastIndent = peek();
-		System.out.println("cpos, lastIndent = "+cpos+", "+lastIndent);
+		//System.out.println("cpos, lastIndent = "+cpos+", "+lastIndent);
 		if ( cpos > lastIndent ) { // they indented; track and gen INDENT
 			push(cpos);
-			System.out.println("push("+cpos+"): "+stackString());
+			//System.out.println("push("+cpos+"): "+stackString());
 			Token indent = new ClassicToken(PythonParser.INDENT,"");
 			indent.setCharPositionInLine(t.getCharPositionInLine());
 			indent.setLine(t.getLine());
@@ -172,7 +172,7 @@ public class PythonTokenSource implements TokenSource {
 		else if ( cpos < lastIndent ) { // they dedented
 			// how far back did we dedent?
 			int prevIndex = findPreviousIndent(cpos);
-			System.out.println("dedented; prevIndex of cpos="+cpos+" is "+prevIndex);
+			//System.out.println("dedented; prevIndex of cpos="+cpos+" is "+prevIndex);
 			// generate DEDENTs for each indent level we backed up over
 			for (int d=sp-1; d>=prevIndex; d--) {
 				Token dedent = new ClassicToken(PythonParser.DEDENT,"");

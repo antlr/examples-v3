@@ -69,6 +69,7 @@ tokens {
  *       4]
  */
 int implicitLineJoiningLevel = 0;
+int startPos=-1;
 
 public int foo() {
     System.out.println("line:pos = "+getLine()+":"+getCharPositionInLine());
@@ -532,8 +533,60 @@ CONTINUED_LINE
 	:	'\\' ('\r')? '\n' (' '|'\t')* { channel=99; }
 	;
 
-/** Comments not on line by themselves are turned into newlines because
-    sometimes they are newlines like
+/** Treat a sequence of blank lines as a single blank line.  If
+ *  nested within a (..), {..}, or [..], then ignore newlines.
+ *  If the first newline starts in column one, they are to be ignored.
+ */
+NEWLINE
+    :   (('\r')? '\n' )+
+        {if ( startPos==0 || implicitLineJoiningLevel>0 )
+            channel=99;
+        }
+    ;
+
+WS	:	{startPos>0}?=> (' '|'\t')+ {channel=99;}
+	;
+	
+/** Grab everything before a real symbol.  Then if newline, kill it
+ *  as this is a blank line.  If whitespace followed by comment, kill it
+ *  as it's a comment on a line by itself.
+ *
+ *  Ignore leading whitespace when nested in [..], (..), {..}.
+ */
+LEADING_WS
+@init {
+    int spaces = 0;
+}
+    :   {startPos==0}?=>
+    	(   {implicitLineJoiningLevel>0}? ( ' ' | '\t' )+ {channel=99;}
+       	|	( 	' '  { spaces++; }
+        	|	'\t' { spaces += 8; spaces -= (spaces % 8); }
+       		)+
+        	{
+            // make a string of n spaces where n is column number - 1
+            char[] indentation = new char[spaces];
+            for (int i=0; i<spaces; i++) {
+                indentation[i] = ' ';
+            }
+            String s = new String(indentation);
+            emit(new ClassicToken(LEADING_WS,new String(indentation)));
+        	}
+        	// kill trailing newline if present and then ignore
+        	( ('\r')? '\n' {if (token!=null) token.setChannel(99); else channel=99;})*
+           // {token.setChannel(99); }
+        )
+
+/*
+        |   // if comment, then only thing on a line; kill so we
+            // ignore totally also wack any following newlines as
+            // they cannot be terminating a statement
+            '#' (~'\n')* ('\n')+ 
+            {if (token!=null) token.setChannel(99); else channel=99;}
+        )?
+        */
+    ;
+
+/** Comments not on line by themselves are turned into newlines.
 
     b = a # end of line comment
 
@@ -545,83 +598,15 @@ CONTINUED_LINE
     This rule is invoked directly by nextToken when the comment is in
     first column or when comment is on end of nonwhitespace line.
 
-    The problem is that then we have lots of newlines heading to
-    the parser.  To fix that, pos==0 implies we should kill whole line.
-
-    Consume any newlines following this comment as they are not statement
-    terminators.  Don't let NEWLINE token handle them.
+	Only match \n here if we didn't start on left edge; let NEWLINE return that.
+	Kill if newlines if we live on a line by ourselves
+	
+	Consume any leading whitespace if it starts on left edge.
  */
-
 COMMENT
 @init {
-    int startPos = getCharPositionInLine();
+    channel = 99;
 }
-    :   '#' (~'\n')* // let NEWLINE handle \n unless char pos==0 for '#'
-        { channel=99; }
-        ( {startPos==0}?=> ('\n')+ )?
-    ;
-
-/** Treat a sequence of blank lines as a single blank line.  If
- *  nested within a (..), {..}, or [..], then ignore newlines.
- *  If the first newline starts in column one, they are to be ignored.
- */
-NEWLINE
-@init {
-    int startPos = getCharPositionInLine();
-}
-    :   (('\r')? '\n' )+
-        {if ( startPos==0 || implicitLineJoiningLevel>0 )
-            channel=99;
-        }
-    ;
-
-/*
-WS  :   (' '|'\t')+ {channel=99;}
-    ;
-*/
-
-/** Grab everything before a real symbol.  Then if newline, kill it
- *  as this is a blank line.  If whitespace followed by comment, kill it
- *  as it's a comment on a line by itself.
- *
- *  Ignore leading whitespace when nested in [..], (..), {..}.
- */
-LEADING_WS
-@init {
-    int spaces = 0;
-    int startPos = getCharPositionInLine();
-}
-    :   {getCharPositionInLine()>0}?=> (' '|'\t')+ {channel=99;}
-    |   {getCharPositionInLine()==0}?=>
-        // match spaces or tabs, tracking indentation count
-        ( 	' '  { spaces++; }
-        |	'\t' { spaces += 8; spaces -= (spaces % 8); }
-        |   '\014' // formfeed is ok
-        )+
-        {
-            if ( implicitLineJoiningLevel>0 ) {
-                // ignore ws if nested
-                channel=99;
-            }
-            else {
-                // make a string of n spaces where n is column number - 1
-                char[] indentation = new char[spaces];
-                for (int i=0; i<spaces; i++) {
-                    indentation[i] = ' ';
-                }
-                String s = new String(indentation);
-                emit(new ClassicToken(LEADING_WS,new String(indentation)));
-            }
-        }
-
-        // kill trailing newline or comment
-        (   {implicitLineJoiningLevel==0}?=> ('\r')? '\n'
-            {token.setChannel(99);}
-
-        |   // if comment, then only thing on a line; kill so we
-            // ignore totally also wack any following newlines as
-            // they cannot be terminating a statement
-            '#' (~'\n')* ('\n')+ 
-            {if (token!=null) token.setChannel(99); else channel=99;}
-        )?
+    :	{startPos==0}?=> (' '|'\t')* '#' (~'\n')* '\n'+
+    |	{startPos>0}?=> '#' (~'\n')* // let NEWLINE handle \n unless char pos==0 for '#'
     ;
