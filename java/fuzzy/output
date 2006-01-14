@@ -1,6 +1,5 @@
 found class Main
 found method main
-found call for
 found var i
 found var input
 found call ANTLRFileStream
