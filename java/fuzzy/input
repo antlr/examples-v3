@@ -1,12 +1,13 @@
-Token nextToken() {
-        token=null;
-retry:
-        while (true) {
-        return token;
-    }
+import org.antlr.runtime.*;
 
-    public void mPROGRAM() {
-        int type = PROGRAM;
-        int start = getCharIndex();
-    }
+public class Main {
+	public static void main(String[] args) throws Exception {
+	    for (int i=0; i<args.length; i++) {
+		CharStream input = new ANTLRFileStream(args[i]);
+		FuzzyJava lex = new FuzzyJava(input);
+		TokenStream tokens = new CommonTokenStream(lex);
+		tokens.toString();
+		//System.out.println(tokens);
+	    }
+	}
 }

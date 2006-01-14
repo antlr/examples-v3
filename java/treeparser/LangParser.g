@@ -6,6 +6,8 @@ options {
 
 tokens {DECL;} // an imaginary node
 
+start : decl ;
+
 decl : type ID ';' -> ^(DECL type ID)
      ;
 type : INTTYPE  // automatic tree construction builds a node for this rule

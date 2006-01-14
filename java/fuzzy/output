@@ -1,0 +1,13 @@
+found class Main
+found method main
+found call for
+found var i
+found var input
+found call ANTLRFileStream
+found var lex
+found call FuzzyJava
+found var tokens
+found call CommonTokenStream
+found call tokens.toString
+found // comment //System.out.println(tokens);
+

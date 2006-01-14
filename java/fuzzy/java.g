@@ -2,8 +2,7 @@ lexer grammar FuzzyJava;
 options {filter=true;}
 
 IMPORT
-	:	'import' WS QID ';'
-        {System.out.println("found import "+$QID.text);}
+	:	'import' WS name=QIDStar WS? ';'
 	;
 	
 /** Avoids having "return foo;" match as a field */
@@ -28,7 +27,7 @@ FIELD
         {System.out.println("found var "+$name.text);}
     ;
 
-STAT:	('if'|'while'|'switch') WS? '(' ;
+STAT:	('if'|'while'|'switch'|'for') WS? '(' ;
 	
 CALL
     :   name=QID WS? '('
@@ -60,6 +59,15 @@ fragment
 QID :	ID ('.' ID)*
 	;
 	
+/** QID cannot see beyond end of token so using QID '.*'? somewhere won't
+ *  ever match since k=1 lookahead in the QID loop of '.' will make it loop.
+ *  I made this rule to compensate.
+ */
+fragment
+QIDStar
+	:	ID ('.' ID)* '.*'?
+	;
+
 fragment
 TYPE:   QID '[]'?
     ;

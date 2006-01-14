@@ -70,11 +70,6 @@ tokens {
  */
 int implicitLineJoiningLevel = 0;
 int startPos=-1;
-
-public int foo() {
-    System.out.println("line:pos = "+getLine()+":"+getCharPositionInLine());
-    return getCharPositionInLine();
-}
 }
 
 single_input
@@ -93,6 +88,7 @@ eval_input
 
 funcdef
     :   'def' NAME parameters COLON suite
+	{System.out.println("found method def "+$NAME.text);}
 	;
 
 parameters
@@ -364,6 +360,7 @@ dictmaker
     ;
 
 classdef: 'class' NAME (LPAREN testlist RPAREN)? COLON suite
+	{System.out.println("found class def "+$NAME.text);}
 	;
 
 arglist: argument (COMMA argument)*
@@ -560,7 +557,7 @@ LEADING_WS
     :   {startPos==0}?=>
     	(   {implicitLineJoiningLevel>0}? ( ' ' | '\t' )+ {channel=99;}
        	|	( 	' '  { spaces++; }
-        	|	'\t' { spaces += 8; spaces -= (spaces % 8); }
+        	|	'\t' { spaces += 8; spaces -= (spaces \% 8); }
        		)+
         	{
             // make a string of n spaces where n is column number - 1

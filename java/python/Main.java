@@ -22,7 +22,7 @@ public class Main {
 	tokens.discardOffChannelTokens(true);
 	PythonTokenSource indentedSource = new PythonTokenSource(tokens);
 	tokens = new CommonTokenStream(indentedSource);
-	System.out.println("tokens="+tokens.getTokens());
+	//System.out.println("tokens="+tokens.getTokens());
 	PythonParser parser = new PythonParser(tokens);
 	parser.file_input();
     }
