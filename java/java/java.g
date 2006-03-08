@@ -439,17 +439,11 @@ casesGroup
 			:
 			aCase
 		)+
-		caseSList
-		
+		statement*		
 	;
 
 aCase
 	:	('case' expression | 'default') COLON
-	;
-
-caseSList
-	:	(statement)*
-		
 	;
 
 // The initializer for a for loop
