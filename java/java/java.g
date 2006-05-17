@@ -113,9 +113,7 @@ identifier
 	;
 
 identifierStar
-	:	IDENT
-		( DOT IDENT )*
-		( DOT STAR  )?
+	:	identiifer ( DOT STAR )?
 	;
 
 // A list of zero or more modifiers.  We could have used (modifier)* in
