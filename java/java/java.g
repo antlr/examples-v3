@@ -113,7 +113,7 @@ identifier
 	;
 
 identifierStar
-	:	identiifer ( DOT STAR )?
+	:	identifier ( DOT STAR )?
 	;
 
 // A list of zero or more modifiers.  We could have used (modifier)* in
@@ -972,7 +972,6 @@ WS	:	(	' '
 		|	'\f'
 			// handle newlines
 		|	(	'\r\n'  // Evil DOS
-			|	'\r'    // Macintosh
 			|	'\n'    // Unix (the right way)
 			)
 		)+
