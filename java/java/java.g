@@ -6,6 +6,12 @@
  */
 grammar JavaParser;
 
+/*
+options {
+	output=AST;
+}
+*/
+
 tokens {
 	BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF;
 	INSTANCE_INIT; STATIC_INIT; TYPE; CLASS_DEF; INTERFACE_DEF;
