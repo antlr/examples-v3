@@ -1,7 +1,7 @@
 /** XML parser by Oliver Zeigermann October 10, 2005 */
 lexer grammar XMLLexer;
 
-DOCUMENT!
+DOCUMENT
     :  XMLDECL? WS? DOCTYPE? WS? ELEMENT WS? 
     ;
 
@@ -44,12 +44,12 @@ fragment XMLDECL :
 fragment ELEMENT
     : ( START_TAG
             (ELEMENT
-            | text=PCDATA
-                { System.out.println("PCDATA: \""+text.getText()+"\""); }
-            | text=CDATA
-                { System.out.println("CDATA: \""+text.getText()+"\""); }
-            | text=COMMENT
-                { System.out.println("Comment: \""+text.getText()+"\""); }
+            | t=PCDATA
+                { System.out.println("PCDATA: \""+$t.getText()+"\""); }
+            | t=CDATA
+                { System.out.println("CDATA: \""+$t.getText()+"\""); }
+            | t=COMMENT
+                { System.out.println("Comment: \""+$t.getText()+"\""); }
             | pi=PI
             )*
             END_TAG
@@ -80,18 +80,18 @@ fragment END_TAG
     ;
 
 fragment COMMENT
-	:	'<!--'! (options {greedy=false;} : .)* '-->'!
+	:	'<!--' (options {greedy=false;} : .)* '-->'
 	;
 
 fragment CDATA
-	:	'<![CDATA['! (options {greedy=false;} : .)* ']]>'!
+	:	'<![CDATA[' (options {greedy=false;} : .)* ']]>'
 	;
 
 fragment PCDATA : (~'<')+ ; 
 
 fragment VALUE : 
-        ( '\"'! (~'\"')* '\"'!
-        | '\''! (~'\'')* '\''!
+        ( '\"' (~'\"')* '\"'
+        | '\'' (~'\'')* '\''
         )
 	;
 
