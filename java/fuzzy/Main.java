@@ -8,6 +8,14 @@ public class Main {
 		TokenStream tokens = new CommonTokenStream(lex);
 		tokens.toString();
 		//System.out.println(tokens);
+/*
+		Token t=null;
+		do {
+			t = lex.nextToken();
+			System.out.println("### "+t);
+		}
+		while ( t==null || t.getType()!=Token.EOF );
+*/
 	    }
 	}
 }
