@@ -27,8 +27,7 @@ class Main {
 			}
 			long stop = System.currentTimeMillis();
 
-			System.out.println("finished parsing OK; "+(int)(stop-start)+" ms");
-			System.out.println("lexing time "+lexerTime+" ms");
+			System.out.println("finished parsing OK");
 			if ( profile ) {
 				System.out.println("num decisions "+profiler.numDecisions);
 			}
