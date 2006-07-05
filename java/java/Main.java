@@ -1,6 +1,6 @@
-import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.debug.*;
+import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.debug.BlankDebugEventListener;
 
 import java.io.File;
 
@@ -11,7 +11,9 @@ class Main {
 	public static long lexerTime = 0;
 	public static boolean profile = false;
 
-    public static void main(String[] args) {
+	static JavaParserLexer lexer;
+
+	public static void main(String[] args) {
 		try {
 			long start = System.currentTimeMillis();
 			if (args.length > 0 ) {
@@ -72,7 +74,10 @@ class Main {
 								 throws Exception {
 		try {
 			// Create a scanner that reads from the input stream passed to us
-			JavaParserLexer lexer = new JavaParserLexer(new ANTLRFileStream(f));
+			if ( lexer==null ) {
+				lexer = new JavaParserLexer();
+			}
+			lexer.setCharStream(new ANTLRFileStream(f));
 			CommonTokenStream tokens = new CommonTokenStream();
 			tokens.discardOffChannelTokens(true);
 			tokens.setTokenSource(lexer);

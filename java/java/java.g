@@ -1,3 +1,31 @@
+/** A Java 1.5 grammar for ANTLR v3 derived from the spec
+ *
+ *  This is a very close representation of the spec; the changes
+ *  are comestic (remove left recursion) and also fixes (the spec
+ *  isn't exactly perfect).  I have run this on the 1.4.2 source
+ *  and some nasty looking enums from 1.5, but have not really
+ *  tested for 1.5 compatibility.
+ *
+ *  I built this with:
+ *   java -Xms200M -Xmx400M org.antlr.Tool -dfa -nfa -Xmaxdfaedges 65534 java.g 
+ *  and got two errors that are ok:
+ *  java.g:691:9: Decision can match input such as
+ *    "'0'..'9'{'E', 'e'}{'+', '-'}'0'..'9'{'D', 'F', 'd', 'f'}"
+ *    using multiple alternatives: 3, 4
+ *  As a result, alternative(s) 4 were disabled for that input
+ *  java.g:734:35: Decision can match input such as "{'$', 'A'..'Z',
+ *    '_', 'a'..'z', '\u00C0'..'\u00D6', '\u00D8'..'\u00F6',
+ *    '\u00F8'..'\u1FFF', '\u3040'..'\u318F', '\u3300'..'\u337F',
+ *    '\u3400'..'\u3D2D', '\u4E00'..'\u9FFF', '\uF900'..'\uFAFF'}"
+ *    using multiple alternatives: 1, 2
+ *  As a result, alternative(s) 2 were disabled for that input
+ *
+ *  You can turn enum on/off as a keyword :)
+ *
+ *  Version 1.0 -- initial release July 5, 2006 (requires 3.0b2)
+ *
+ *  Primary author: Terence Parr, July 2006
+ */
 grammar JavaParser;
 options {k=2; backtrack=true; memoize=true;}
 
@@ -733,20 +761,9 @@ Identifier
     :   Letter (Letter|JavaIDDigit)*
     ;
 
-fragment
-Letter 
-	:	'a'..'z'
-	|	'A'..'Z'
-	|	'_'
-	|	'$'
-	;
-
-fragment
-JavaIDDigit
-	:	'0'..'9'
-	;
-		
-/*
+/**I found this char range in JavaCC's grammar, but Letter and Digit overlap.
+   Still works, but...
+ */
 fragment
 Letter
     :  '\u0024' |
@@ -782,14 +799,6 @@ JavaIDDigit
        '\u0ed0'..'\u0ed9' |
        '\u1040'..'\u1049'
    ;
-*/
-
-/*
-Identifier :  
-  {Character.isJavaIdentifierStart(input.LA(1))}? .
-  ( {Character.isJavaIdentifierPart(input.LA(1))}? . )*
-  ;
-  */
 
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {channel=99;}
     ;
