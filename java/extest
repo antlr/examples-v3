@@ -13,7 +13,7 @@ def process_example
 	ex = Dir["*.g"]
 	grammars = ""
 	ex.each {|g| grammars+=" "+g}
-	system("java org.antlr.Tool" + grammars)
+	system("java -Xms200M -Xmx400M org.antlr.Tool" + grammars)
 	system("javac *.java")
 	channel = IO.popen("java Main input")
 	result = channel.readlines
