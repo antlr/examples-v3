@@ -1,15 +1,19 @@
-import java.io.*;
-import org.antlr.runtime.*;
+import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.debug.*;
+
+import java.io.File;
 
 /** Parse a java file or directory of java files using the generated parser
  *  ANTLR builds from java.g
  */
 class Main {
-
-	static CommonTokenStream tokens = new CommonTokenStream();
+	public static long lexerTime = 0;
+	public static boolean profile = false;
 
     public static void main(String[] args) {
 		try {
+			long start = System.currentTimeMillis();
 			if (args.length > 0 ) {
 				// for each directory/file specified on the command line
 				for(int i=0; i< args.length;i++) {
@@ -18,6 +22,13 @@ class Main {
 			}
 			else {
 				System.err.println("Usage: java Main <directory or file name>");
+			}
+			long stop = System.currentTimeMillis();
+
+			System.out.println("finished parsing OK; "+(int)(stop-start)+" ms");
+			System.out.println("lexing time "+lexerTime+" ms");
+			if ( profile ) {
+				System.out.println("num decisions "+profiler.numDecisions);
 			}
 		}
 		catch(Exception e) {
@@ -43,10 +54,18 @@ class Main {
 				f.getName().substring(f.getName().length()-5).equals(".java"))
 			|| f.getName().equals("input") )
 		{
-			// System.err.println("   "+f.getAbsolutePath());
+		    System.err.println("parsing "+f.getAbsolutePath());
 			parseFile(f.getAbsolutePath());
 		}
 	}
+
+	static class CountDecisions extends BlankDebugEventListener {
+		public int numDecisions = 0;
+		public void enterDecision(int decisionNumber) {
+			numDecisions++;
+		}
+	}
+	static CountDecisions profiler = new CountDecisions();
 
 	// Here's where we do the real work...
 	public static void parseFile(String f)
@@ -54,8 +73,14 @@ class Main {
 		try {
 			// Create a scanner that reads from the input stream passed to us
 			JavaParserLexer lexer = new JavaParserLexer(new ANTLRFileStream(f));
-			//tokens.discardOffChannelTokens(true);
+			CommonTokenStream tokens = new CommonTokenStream();
+			tokens.discardOffChannelTokens(true);
 			tokens.setTokenSource(lexer);
+			long start = System.currentTimeMillis();
+			tokens.LT(1); // force load
+			long stop = System.currentTimeMillis();
+			lexerTime += stop-start;
+
 			/*
 			long t1 = System.currentTimeMillis();
 			tokens.LT(1);
@@ -65,11 +90,12 @@ class Main {
 			//System.out.println(tokens);
 
 			// Create a parser that reads from the scanner
-			JavaParser parser = new JavaParser(tokens);
+			JavaParser parser = null;
+			parser = new JavaParser(tokens);
 
 			// start parsing at the compilationUnit rule
 			parser.compilationUnit();
-			System.out.println("finished parsing OK");
+			//System.err.println("finished "+f);
 		}
 		catch (Exception e) {
 			System.err.println("parser exception: "+e);

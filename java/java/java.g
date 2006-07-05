@@ -1,1095 +1,803 @@
-/** A direct copy / modify of the ANTLR 2.x Java grammar.  Still lots
- *  of ambiguity warnings, but I'm pretty sure they are true ambiguities
- *  in the grammar.  I will rewrite this completely from the spec when
- *  I get a chance.  I just slammed this together.
- *  Terence Parr.
- */
 grammar JavaParser;
+options {k=2; backtrack=true; memoize=true;}
 
-/*
-options {
-	output=AST;
-}
-*/
-
-tokens {
-	BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF;
-	INSTANCE_INIT; STATIC_INIT; TYPE; CLASS_DEF; INTERFACE_DEF;
-	PACKAGE_DEF; ARRAY_DECLARATOR; EXTENDS_CLAUSE; IMPLEMENTS_CLAUSE;
-	PARAMETERS; PARAMETER_DEF; LABELED_STAT; TYPECAST; INDEX_OP;
-	POST_INC; POST_DEC; METHOD_CALL; EXPR; ARRAY_INIT;
-	UNARY_MINUS; UNARY_PLUS; CASE_GROUP; ELIST; FOR_INIT; FOR_CONDITION;
-	FOR_ITERATOR; EMPTY_STAT; SUPER_CTOR_CALL; CTOR_CALL;
+@lexer::members {
+protected boolean enumIsKeyword = false;
 }
 
-@members {
-public static final CommonToken IGNORE_TOKEN = new CommonToken(null,0,99,0,0);
-}
-
-// Compilation Unit: In Java, this is a single file.  This is the start
-//   rule for this parser
+// starting point for parsing a java file
 compilationUnit
-	:	// A compilation unit starts with an optional package definition
-		(	packageDefinition
-		|	/* nothing */
-		)
-
-		// Next we have a series of zero or more import statements
-		( importDefinition )*
-
-		// Wrapping things up with any number of class or interface
-		//    definitions
-		( typeDefinition )*
-
-//		EOF
+	:	annotations?
+		packageDeclaration?
+        importDeclaration*
+        typeDeclaration*
 	;
 
-
-// Package statement: 'package' followed by an identifier.
-packageDefinition
-	:	'package'  identifier SEMI
+packageDeclaration
+	:	'package' qualifiedName ';'
+	;
+	
+importDeclaration
+	:	'import' 'static'? Identifier ('.' Identifier)* ('.' '*')? ';'
+	;
+	
+typeDeclaration
+	:	classOrInterfaceDeclaration
+    |   ';'
+	;
+	
+classOrInterfaceDeclaration
+	:	modifier* (classDeclaration | interfaceDeclaration)
+	;
+	
+classDeclaration
+	:	normalClassDeclaration
+    |   enumDeclaration
+	;
+	
+normalClassDeclaration
+	:	'class' Identifier (typeParameters)?
+        ('extends' type)?
+        ('implements' typeList)?
+        classBody
+	;
+	
+typeParameters
+	:	'<' typeParameter (',' typeParameter)* '>'
 	;
 
-
-// Import statement: import followed by a package or class name
-importDefinition
-	:	'import'  identifierStar SEMI
+typeParameter
+	:	Identifier ('extends' bound)?
 	;
-
-// A type definition in a file is either a class or interface definition.
-typeDefinition
-	:	modifiers
-		( classDefinition
-		| interfaceDefinition
-		)
-	|	SEMI
-	;
-
-/** A declaration is the creation of a reference or primitive-type variable
- *  Create a separate Type/Var tree for each var in the var list.
- */
-declaration
-	:	modifiers typeSpec variableDefinitions
 		
+bound
+	:	type ('&' type)*
 	;
 
-// A type specification is a type name with possible brackets afterwards
-//   (which would make it an array type).
-typeSpec
-	: classTypeSpec
-	| builtInTypeSpec
+enumDeclaration
+	:	ENUM Identifier ('implements' typeList)? enumBody
+	;
+	
+enumBody
+	:	'{' enumConstants? ','? enumBodyDeclarations? '}'
 	;
 
-// A class type specification is a class type with possible brackets afterwards
-//   (which would make it an array type).
-classTypeSpec
-	:	identifier (LBRACK  RBRACK)*
+enumConstants
+	:	enumConstant (',' enumConstant)*
+	;
+	
+enumConstant
+	:	annotations? Identifier (arguments)? (classBody)?
+	;
+	
+enumBodyDeclarations
+	:	';' (classBodyDeclaration)*
+	;
+	
+interfaceDeclaration
+	:	normalInterfaceDeclaration
+		| annotationTypeDeclaration
+	;
+	
+normalInterfaceDeclaration
+	:	'interface' Identifier typeParameter? ('extends' typeList)? interfaceBody
+	;
+	
+typeList
+	:	type (',' type)*
+	;
+	
+classBody
+	:	'{' classBodyDeclaration* '}'
+	;
+	
+interfaceBody
+	:	'{' interfaceBodyDeclaration* '}'
 	;
 
-// A builtin type specification is a builtin type with possible brackets
-// afterwards (which would make it an array type).
-builtInTypeSpec
-	:	builtInType (LBRACK  RBRACK)*
+classBodyDeclaration
+	:	';'
+	|	'static'? block
+	|	modifier* memberDecl
+	;
+	
+memberDecl
+	:	genericMethodOrConstructorDecl
+	|	methodDeclaration
+	|	fieldDeclaration
+	|	'void' Identifier voidMethodDeclaratorRest
+	|	Identifier constructorDeclaratorRest
+	|	interfaceDeclaration
+	|	classDeclaration
+	;
+	
+genericMethodOrConstructorDecl
+	:	typeParameters genericMethodOrConstructorRest
+	;
+	
+genericMethodOrConstructorRest
+	:	(type | 'void') Identifier methodDeclaratorRest
+	|	Identifier constructorDeclaratorRest
 	;
 
-// A type name. which is either a (possibly qualified) class name or
-//   a primitive (builtin) type
-type
-	:	identifier
-	|	builtInType
+methodDeclaration
+	:	type Identifier methodDeclaratorRest
 	;
 
-// The primitive types.
-builtInType
-	:	'void'
-	|	'boolean'
-	|	'byte'
-	|	'char'
-	|	'short'
-	|	'int'
-	|	'float'
-	|	'long'
-	|	'double'
+fieldDeclaration
+	:	type variableDeclarators ';'
 	;
-
-// A (possibly-qualified) java identifier.  We start with the first IDENT
-//   and expand its name by adding dots and following IDENTS
-identifier
-	:	IDENT  ( DOT IDENT )*
-	;
-
-identifierStar
-	:	identifier ( DOT STAR )?
-	;
-
-// A list of zero or more modifiers.  We could have used (modifier)* in
-//   place of a call to modifiers, but I thought it was a good idea to keep
-//   this rule separate so they can easily be collected in a Vector if
-//   someone so desires
-modifiers
-	:	( modifier )*
 		
+interfaceBodyDeclaration
+	:	modifier* interfaceMemberDecl
+	|   ';'
 	;
 
-// modifiers for Java classes, interfaces, class/instance vars and methods
-modifier
-	:	'private'
-	|	'public'
-	|	'protected'
-	|	'static'
-	|	'transient'
-	|	'final'
-	|	'abstract'
-	|	'native'
-	|	'threadsafe'
-	|	'synchronized'
-//	|	'const'			// reserved word, but not valid
-	|	'volatile'
-	|	'strictfp'
+interfaceMemberDecl
+	:	interfaceMethodOrFieldDecl
+	|   interfaceGenericMethodDecl
+    |   'void' Identifier voidInterfaceMethodDeclaratorRest
+    |   interfaceDeclaration
+    |   classDeclaration
+	;
+	
+interfaceMethodOrFieldDecl
+	:	type Identifier interfaceMethodOrFieldRest
+	;
+	
+interfaceMethodOrFieldRest
+	:	constantDeclaratorsRest ';'
+	|	interfaceMethodDeclaratorRest
+	;
+	
+methodDeclaratorRest
+	:	formalParameters ('[' ']')*
+        ('throws' qualifiedNameList)?
+        (   methodBody
+        |   ';'
+        )
+	;
+	
+voidMethodDeclaratorRest
+	:	formalParameters ('throws' qualifiedNameList)?
+        (   methodBody
+        |   ';'
+        )
+	;
+	
+interfaceMethodDeclaratorRest
+	:	formalParameters ('[' ']')* ('throws' qualifiedNameList)? ';'
+	;
+	
+interfaceGenericMethodDecl
+	:	typeParameters (type | 'void') Identifier
+        interfaceMethodDeclaratorRest
+	;
+	
+voidInterfaceMethodDeclaratorRest
+	:	formalParameters ('throws' qualifiedNameList)? ';'
+	;
+	
+constructorDeclaratorRest
+	:	formalParameters ('throws' qualifiedNameList)? methodBody
 	;
 
-// Definition of a Java class
-classDefinition
-	:	'class' IDENT
-		// it _might_ have a superclass...
-		superClassClause
-		// it might implement some interfaces...
-		implementsClause
-		// now parse the body of the class
-		classBlock
+constantDeclarator
+	:	Identifier constantDeclaratorRest
+	;
+	
+variableDeclarators
+	:	variableDeclarator (',' variableDeclarator)*
 	;
 
-superClassClause
-	:	( 'extends' identifier )?
-		
-	;
-
-// Definition of a Java Interface
-interfaceDefinition
-	:	'interface' IDENT
-		// it might extend some other interfaces
-		interfaceExtends
-		// now parse the body of the interface (looks like a class...)
-		classBlock
-	;
-
-
-// This is the body of a class.  You can have fields and extra semicolons,
-// That's about it (until you see what a field is...)
-classBlock
-	:	LCURLY
-			( field | SEMI )*
-		RCURLY
-		
-	;
-
-// An interface can extend several other interfaces...
-interfaceExtends
-	:	(
-		'extends'
-		identifier ( COMMA identifier )*
-		)?
-	;
-
-// A class can implement several interfaces...
-implementsClause
-	:	(
-			'implements' identifier ( COMMA identifier )*
-		)?
-	;
-
-// Now the various things that can be defined inside a class or interface...
-// Note that not all of these are really valid in an interface (constructors,
-//   for example), and if this grammar were used for a compiler there would
-//   need to be some semantic checks to make sure we're doing the right thing...
-field
-	:	// method, constructor, or variable declaration
-		modifiers
-		(	ctorHead constructorBody // constructor
-			
-
-		|	classDefinition       // inner class
-			
-
-		|	interfaceDefinition   // inner interface
-			
-
-		|	typeSpec  // method or variable declaration(s)
-			(	IDENT  // the name of the method
-
-				// parse the formal parameter declarations.
-				LPAREN parameterDeclarationList RPAREN
-
-				declaratorBrackets
-
-				// get the list of exceptions that this method is
-				// declared to throw
-				(throwsClause)?
-
-				( compoundStatement | SEMI )
-			|	variableDefinitions SEMI
-//				
-				
-			)
-		)
-
-    // 'static { ... }' class initializer
-	|	'static' compoundStatement
-		
-
-    // '{ ... }' instance initializer
-	|	compoundStatement
-		
-	;
-
-constructorBody
-    :   LCURLY 
-            ( options {greedy=true;} : explicitConstructorInvocation)?
-            (statement)*
-        RCURLY
-    ;
-
-/** Catch obvious constructor calls, but not the expr.super(...) calls */
-explicitConstructorInvocation
-    :   'this' LPAREN argList RPAREN SEMI
-		
-    |   'super' LPAREN argList RPAREN SEMI
-		
-    ;
-
-variableDefinitions
-	:	variableDeclarator
-		(	COMMA
-			variableDeclarator
-		)*
-	;
-
-/** Declaration of a variable.  This can be a class/instance variable,
- *   or a local variable in a method
- * It can also include possible initialization.
- */
 variableDeclarator
-	:	IDENT declaratorBrackets varInitializer
-		
+	:	Identifier variableDeclaratorRest
+	;
+	
+variableDeclaratorRest
+	:	('[' ']')+ ('=' variableInitializer)?
+	|	'=' variableInitializer
+	|
+	;
+	
+constantDeclaratorsRest
+    :   constantDeclaratorRest (',' constantDeclarator)*
+    ;
+
+constantDeclaratorRest
+	:	('[' ']')* '=' variableInitializer
+	;
+	
+variableDeclaratorId
+	:	Identifier ('[' ']')*
 	;
 
-declaratorBrackets
-	:	
-		(LBRACK  RBRACK)*
+variableInitializer
+	:	arrayInitializer
+    |   expression
 	;
-
-varInitializer
-	:	( ASSIGN initializer )?
-	;
-
-// This is an initializer used to set up an array.
+	
 arrayInitializer
-	:	LCURLY 
-			(	initializer
-				(
-					// CONFLICT: does a COMMA after an initializer start a new
-					//           initializer or start the option ',' at end?
-					//           ANTLR generates proper code by matching
-					//			 the comma as soon as possible.
-					COMMA initializer
-				)*
-				(COMMA)?
-			)?
-		RCURLY
+	:	'{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
 	;
 
+modifier
+    :   annotation
+    |   'public'
+    |   'protected'
+    |   'private'
+    |   'static'
+    |   'abstract'
+    |   'final'
+    |   'native'
+    |   'synchronized'
+    |   'transient'
+    |   'volatile'
+    |   'strictfp'
+    ;
 
-// The two 'things' that can initialize an array element are an expression
-//   and another (nested) array initializer.
-initializer
-	:	expression
-	|	arrayInitializer
+packageOrTypeName
+	:	Identifier ('.' Identifier)*
 	;
 
-// This is the header of a method.  It includes the name and parameters
-//   for the method.
-//   This also watches for a list of exception classes in a 'throws' clause.
-ctorHead
-	:	IDENT  // the name of the method
+enumConstantName
+    :   Identifier
+    ;
 
-		// parse the formal parameter declarations.
-		LPAREN parameterDeclarationList RPAREN
-
-		// get the list of exceptions that this method is declared to throw
-		(throwsClause)?
+typeName
+	:   Identifier
+    |   packageOrTypeName '.' Identifier
 	;
 
-// This is a list of exception classes that the method is declared to throw
-throwsClause
-	:	'throws' identifier ( COMMA identifier )*
+type
+	:	Identifier (typeArguments)? ('.' Identifier (typeArguments)? )* ('[' ']')*
+	|	primitiveType ('[' ']')*
 	;
 
+primitiveType
+    :   'boolean'
+    |	'char'
+    |	'byte'
+    |	'short'
+    |	'int'
+    |	'long'
+    |	'float'
+    |	'double'
+    ;
 
-// A list of formal parameters
-parameterDeclarationList
-	:	( parameterDeclaration ( COMMA parameterDeclaration )* )?
+variableModifier
+	:	'final'
+    |   annotation
 	;
 
-// A formal parameter.
-parameterDeclaration
-	:	parameterModifier typeSpec IDENT
-		declaratorBrackets
+typeArguments
+	:	'<' typeArgument (',' typeArgument)* '>'
+	;
+	
+typeArgument
+	:	type
+	|	'?' (('extends' | 'super') type)?
+	;
+	
+qualifiedNameList
+	:	qualifiedName (',' qualifiedName)*
+	;
+	
+formalParameters
+	:	'(' formalParameterDecls? ')'
+	;
+	
+formalParameterDecls
+	:	'final'? annotations? type formalParameterDeclsRest?
+	;
+	
+formalParameterDeclsRest
+	:	variableDeclaratorId (',' formalParameterDecls)?
+	|   '...' variableDeclaratorId
+	;
+	
+methodBody
+	:	block
 	;
 
-parameterModifier
-	:	('final')?
-		
+qualifiedName
+	:	Identifier ('.' Identifier)*
+	;
+	
+literal	
+	:   integerLiteral
+    |   FloatingPointLiteral
+    |   CharacterLiteral
+    |   StringLiteral
+    |   booleanLiteral
+    |   'null'
 	;
 
-// Compound statement.  This is used in many contexts:
-//   Inside a class definition prefixed with 'static':
-//      it is a class initializer
-//   Inside a class definition without 'static':
-//      it is an instance initializer
-//   As the body of a method
-//   As a completely indepdent braced block of code inside a method
-//      it starts a new scope for variable definitions
+integerLiteral
+    :   HexLiteral
+    |   OctalLiteral
+    |   DecimalLiteral
+    ;
 
-compoundStatement
-	:	LCURLY 
-			// include the (possibly-empty) list of statements
-			(statement)*
-		RCURLY
+booleanLiteral
+    :   'true'
+    |   'false'
+    ;
+
+// ANNOTATIONS
+
+annotations
+	:	annotation+
 	;
 
-
-statement
-	// A list of statements in curly braces -- start a new scope
-	:	compoundStatement
-
-	// declarations are ambiguous with 'ID DOT' relative to expression
-	// statements.  Must backtrack to be sure.  Could use a semantic
-	// predicate to test symbol table to see what the type was coming
-	// up, but that's pretty hard without a symbol table ;)
-	// remove (declaration)=>
-	|	declaration SEMI
-
-	// An expression statement.  This could be a method call,
-	// assignment statement, or any other expression evaluated for
-	// side-effects.
-	|	expression SEMI
-
-	// class definition
-	|	modifiers classDefinition
-
-	// Attach a label to the front of a statement
-	|	IDENT COLON  statement
-
-	// If-else statement
-	|	'if' LPAREN expression RPAREN statement
-		(
-			// CONFLICT: the old "dangling-else" problem...
-			//           ANTLR generates proper code matching
-			//			 as soon as possible.  Hush warning.
-			'else' statement
-		)?
-
-	// For statement
-	|	'for'
-			LPAREN
-				forInit SEMI   // initializer
-				forCond	SEMI   // condition test
-				forIter         // updater
-			RPAREN
-			statement                     // statement to loop over
-
-	// While statement
-	|	'while' LPAREN expression RPAREN statement
-
-	// do-while statement
-	|	'do' statement 'while' LPAREN expression RPAREN SEMI
-
-	// get out of a loop (or switch)
-	|	'break' (IDENT)? SEMI
-
-	// do next iteration of a loop
-	|	'continue' (IDENT)? SEMI
-
-	// Return an expression
-	|	'return' (expression)? SEMI
-
-	// switch/case statement
-	|	'switch' LPAREN expression RPAREN LCURLY
-			( casesGroup )*
-		RCURLY
-
-	// exception try-catch block
-	|	tryBlock
-
-	// throw an exception
-	|	'throw' expression SEMI
-
-	// synchronize a statement
-	|	'synchronized' LPAREN expression RPAREN compoundStatement
-
-	// asserts (uncomment if you want 1.4 compatibility)
-	// |	'assert' expression ( COLON expression )? SEMI
-
-	// empty statement
-	|	SEMI 
+annotation
+	:	'@' typeName ('(' (Identifier '=')? elementValue ')')?
 	;
-
-casesGroup
-	:	(	// CONFLICT: to which case group do the statements bind?
-			//           ANTLR generates proper code: it groups the
-			//           many 'case'/'default' labels together then
-			//           follows them with the statements
-				options {greedy=true;}
-			:
-			aCase
-		)+
-		statement*		
-	;
-
-aCase
-	:	('case' expression | 'default') COLON
-	;
-
-// The initializer for a for loop
-forInit
-		// if it looks like a declaration, it is
-        // remove (declaration)=> 
-	:	(	declaration
-		// otherwise it could be an expression list...
-		|	expressionList
-		)?
-		
-	;
-
-forCond
-	:	(expression)?
-		
-	;
-
-forIter
-	:	(expressionList)?
-		
-	;
-
-// an exception handler try/catch block
-tryBlock
-	:	'try' compoundStatement
-		(handler)*
-		( finallyClause )?
-	;
-
-finallyClause
-	:	'finally' compoundStatement
-	;
-
-// an exception handler
-handler
-	:	'catch' LPAREN parameterDeclaration RPAREN compoundStatement
-	;
-
-
-// expressions
-// Note that most of these expressions follow the pattern
-//   thisLevelExpression :
-//       nextHigherPrecedenceExpression
-//           (OPERATOR nextHigherPrecedenceExpression)*
-// which is a standard recursive definition for a parsing an expression.
-// The operators in java have the following precedences:
-//    lowest  (13)  = *= /= %= += -= <<= >>= >>>= &= = |=
-//            (12)  ?:
-//            (11)  ||
-//            (10)  &&
-//            ( 9)  |
-//            ( 8)  
-//            ( 7)  &
-//            ( 6)  == =
-//            ( 5)  < <= > >=
-//            ( 4)  << >>
-//            ( 3)  +(binary) -(binary)
-//            ( 2)  * / %
-//            ( 1)  ++ -- +(unary) -(unary)  ~    (type)
-//                  []   () (method call)  . (dot -- identifier qualification)
-//                  new   ()  (explicit parenthesis)
-//
-// the last two are not usually on a precedence chart; I put them in
-// to point out that new has a higher precedence than '.', so you
-// can validy use
-//     new Frame().show()
-//
-// Note that the above precedence levels map to the rules below...
-// Once you have a precedence chart, writing the appropriate rules as below
-//   is usually very straightfoward
-
-
-
-// the mother of all expressions
-expression
-	:	assignmentExpression
-		
-	;
-
-
-// This is a list of expressions.
-expressionList
-	:	expression (COMMA expression)*
-		
-	;
-
-
-// assignment expression (level 13)
-assignmentExpression
+	
+elementValue
 	:	conditionalExpression
-		(	(	ASSIGN
-            |   PLUS_ASSIGN
-            |   MINUS_ASSIGN
-            |   STAR_ASSIGN
-            |   DIV_ASSIGN
-            |   MOD_ASSIGN
-            |   SR_ASSIGN
-            |   BSR_ASSIGN
-            |   SL_ASSIGN
-            |   BAND_ASSIGN
-            |   BXOR_ASSIGN
-            |   BOR_ASSIGN
-            )
-			assignmentExpression
-		)?
+	|   annotation
+	|   elementValueArrayInitializer
 	;
-
-
-// conditional test (level 12)
-conditionalExpression
-	:	logicalOrExpression
-		( QUESTION assignmentExpression COLON conditionalExpression )?
+	
+elementValueArrayInitializer
+	:	'{' (elementValue)? (',')? '}'
 	;
-
-
-// logical or (||)  (level 11)
-logicalOrExpression
-	:	logicalAndExpression (LOR logicalAndExpression)*
+	
+annotationTypeDeclaration
+	:	'@' 'interface' Identifier annotationTypeBody
 	;
-
-
-// logical and (&&)  (level 10)
-logicalAndExpression
-	:	inclusiveOrExpression (LAND inclusiveOrExpression)*
+	
+annotationTypeBody
+	:	'{' (annotationTypeElementDeclarations)? '}'
 	;
-
-
-// bitwise or non-short-circuiting or (|)  (level 9)
-inclusiveOrExpression
-	:	exclusiveOrExpression (BOR exclusiveOrExpression)*
+	
+annotationTypeElementDeclarations
+	:	(annotationTypeElementDeclaration) (annotationTypeElementDeclaration)*
 	;
-
-
-// exclusive or ()  (level 8)
-exclusiveOrExpression
-	:	andExpression (BXOR andExpression)*
+	
+annotationTypeElementDeclaration
+	:	(modifier)* annotationTypeElementRest
 	;
-
-
-// bitwise or non-short-circuiting and (&)  (level 7)
-andExpression
-	:	equalityExpression (BAND equalityExpression)*
+	
+annotationTypeElementRest
+	:	type Identifier annotationMethodOrConstantRest ';'
+	|   classDeclaration
+	|   interfaceDeclaration
+	|   enumDeclaration
+	|   annotationTypeDeclaration
 	;
-
-
-// equality/inequality (==/=) (level 6)
-equalityExpression
-	:	relationalExpression ((NOT_EQUAL | EQUAL) relationalExpression)*
+	
+annotationMethodOrConstantRest
+	:	annotationMethodRest
+	|   annotationConstantRest
 	;
-
-
-// boolean relational expressions (level 5)
-relationalExpression
-	:	shiftExpression
-		(	(	(	LT
-				|	GT
-				|	LE
-				|	GE
-				)
-				shiftExpression
-			)*
-		|	'instanceof' typeSpec
-		)
-	;
-
-
-// bit shift expressions (level 4)
-shiftExpression
-	:	additiveExpression ((SL | SR | BSR) additiveExpression)*
-	;
-
-
-// binary addition/subtraction (level 3)
-additiveExpression
-	:	multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*
-	;
-
-
-// multiplication/division/modulo (level 2)
-multiplicativeExpression
-	:	unaryExpression ((STAR | DIV | MOD ) unaryExpression)*
-	;
-
-unaryExpression
-	:	INC unaryExpression
-	|	DEC unaryExpression
-	|	MINUS  unaryExpression
-	|	PLUS   unaryExpression
-	|	unaryExpressionNotPlusMinus
-	;
-
-unaryExpressionNotPlusMinus
-	:	BNOT unaryExpression
-	|	LNOT unaryExpression
-
-    |   LPAREN builtInTypeSpec RPAREN
-        unaryExpression
-
-        // Have to backtrack to see if operator follows.  If no operator
-        // follows, it's a typecast.  No semantic checking needed to parse.
-        // if it _looks_ like a cast, it _is_ a cast; else it's a '(expr)'
-    |	LPAREN classTypeSpec RPAREN
-        unaryExpressionNotPlusMinus
-
-    |	postfixExpression
-	;
-
-// qualified names, array expressions, method invocation, post inc/dec
-postfixExpression
-	:   primaryExpression
-		(   DOT IDENT
-			(	LPAREN 
-				argList
-				RPAREN
-			)?
-		|	DOT 'this'
-
-		|	DOT 'super'
-            (   // (new Outer()).super()  (create enclosing instance)
-                LPAREN argList RPAREN
-                
-			|   DOT IDENT
-                (	LPAREN 
-                    argList
-                    RPAREN
-                )?
-            )
-		|	DOT newExpression
-		|	LBRACK  expression RBRACK
-		)*
-
-		(   // possibly add on a post-increment or post-decrement.
-            // allows INC/DEC on too much, but semantics can check
-			INC 
-	 	|	DEC 
-		)?
+	
+annotationMethodRest
+ 	:	'(' ')' (defaultValue)?
+ 	;
+ 	
+annotationConstantRest
+ 	:	variableDeclarators
+ 	;
+ 	
+defaultValue
+ 	:	'default' elementValue
  	;
 
-// the basic element of an expression
-primaryExpression
-	:	identPrimary ( options {greedy=true;}: DOT 'class' )?
-    |   constant
-	|	'true'
-	|	'false'
-	|	'null'
-    |   newExpression
-	|	'this'
-	|	'super'
-	|	LPAREN assignmentExpression RPAREN
-		// look for int.class and int[].class
-	|	builtInType
-		( LBRACK  RBRACK )*
-		DOT 'class'
+// STATEMENTS / BLOCKS
+
+block
+	:	'{' blockStatement* '}'
+	;
+	
+blockStatement
+	:	localVariableDeclaration
+    |   classOrInterfaceDeclaration
+    |   statement
+	;
+	
+localVariableDeclaration
+	:	('final')? type variableDeclarators ';'
+	;
+	
+statement
+	: block
+    | 'assert' expression (':' expression)? ';'
+    | 'if' parExpression statement ('else' statement)?
+    | 'for' '(' forControl ')' statement
+    | 'while' parExpression statement
+    | 'do' statement 'while' parExpression ';'
+    | 'try' block
+      (	catches 'finally' block
+      | catches
+      | 'finally' block
+      )
+    | 'switch' parExpression '{' switchBlockStatementGroups '}'
+    | 'synchronized' parExpression block
+    | 'return' expression? ';'
+    | 'throw' expression ';'
+    | 'break' Identifier? ';'
+    | 'continue' Identifier? ';'
+    | ';'
+    | statementExpression ';'
+    | Identifier ':' statement
+	;
+	
+catches
+	:	catchClause (catchClause)*
+	;
+	
+catchClause
+	:	'catch' '(' formalParameter ')' block
 	;
 
-/** Match a, a.b.c refs, a.b.c(...) refs, a.b.c[], a.b.c[].class,
- *  and a.b.c.class refs.  Also this(...) and super(...).  Match
- *  this or super.
- */
-identPrimary
-	:	IDENT
-		(
-				// .ident could match here or in postfixExpression.
-				// We do want to match here.  Turn off warning.
-				options {greedy=true; k=2;}
-		:	DOT IDENT
-		)*
-		(
-				// ARRAY_DECLARATOR here conflicts with INDEX_OP in
-				// postfixExpression on LBRACK RBRACK.
-				// We want to match [] here, so greedy.  This overcomes
-                // limitation of linear approximate lookahead.
-				options {greedy=true;}
-		:   ( LPAREN  argList RPAREN )
-		|	( options {greedy=true;} :
-              LBRACK  RBRACK
-            )+
-		)?
+formalParameter
+	:	variableModifier* type variableDeclaratorId
+	;
+		
+switchBlockStatementGroups
+	:	(switchBlockStatementGroup)*
+	;
+	
+switchBlockStatementGroup
+	:	switchLabel blockStatement*
+	;
+	
+switchLabel
+	:	'case' constantExpression ':'
+	|   'case' enumConstantName ':'
+	|   'default' ':'
+	;
+	
+moreStatementExpressions
+	:	(',' statementExpression)*
+	;
+
+forControl
+	:	forVarControl
+	|   forInit? ';' expression? ';' forUpdate?
+	;
+
+forInit
+	:	'final'? type variableDeclarators
+    |   expressionList
+	;
+	
+forVarControl
+	:	'final'? (annotation)? type Identifier forVarControlRest
+	;
+
+forVarControlRest
+	:	variableDeclaratorRest (',' variableDeclarator)* ';' expression? ':' forUpdate?
+    |   ':' expression
+	;
+
+forUpdate
+	:	expressionList
+	;
+
+// EXPRESSIONS
+
+parExpression
+	:	'(' expression ')'
+	;
+	
+expressionList
+    :   expression (',' expression)*
     ;
 
-/** object instantiation.
- *  Trees are built as illustrated by the following input/tree pairs:
- *
- *  new T()
- *
- *  new
- *   |
- *   T --  ELIST
- *           |
- *          arg1 -- arg2 -- .. -- argn
- *
- *  new int[]
- *
- *  new
- *   |
- *  int -- ARRAY_DECLARATOR
- *
- *  new int[] {1,2}
- *
- *  new
- *   |
- *  int -- ARRAY_DECLARATOR -- ARRAY_INIT
- *                                  |
- *                                EXPR -- EXPR
- *                                  |      |
- *                                  1      2
- *
- *  new int[3]
- *  new
- *   |
- *  int -- ARRAY_DECLARATOR
- *                |
- *              EXPR
- *                |
- *                3
- *
- *  new int[1][2]
- *
- *  new
- *   |
- *  int -- ARRAY_DECLARATOR
- *               |
- *         ARRAY_DECLARATOR -- EXPR
- *               |              |
- *             EXPR             1
- *               |
- *               2
- *
- */
-newExpression
-	:	'new' type
-		(	LPAREN argList RPAREN (classBlock)?
-
-			//java 1.1
-			// Note: This will allow bad constructs like
-			//    new int[4][][3] {exp,exp}.
-			//    There needs to be a semantic check here...
-			// to make sure:
-			//   a) [ expr ] and [ ] are not mixed
-			//   b) [ expr ] and an init are not used together
-
-		|	newArrayDeclarator (arrayInitializer)?
-		)
+statementExpression
+	:	expression
+	;
+	
+constantExpression
+	:	expression
+	;
+	
+expression
+	:	conditionalExpression (assignmentOperator expression)?
+	;
+	
+assignmentOperator
+	:	'='
+    |   '+='
+    |   '-='
+    |   '*='
+    |   '/='
+    |   '&='
+    |   '|='
+    |   '^='
+    |   '%='
+    |   '<' '<' '='
+    |   '>' '>' '='
+    |   '>' '>' '>' '='
 	;
 
-argList
-	:	(	expressionList
-		|	/*nothing*/
-			
-		)
+conditionalExpression
+    :   conditionalOrExpression ( '?' expression ':' expression )?
 	;
 
-newArrayDeclarator
-	:	(
-			// CONFLICT:
-			// newExpression is a primaryExpression which can be
-			// followed by an array index reference.  This is ok,
-			// as the generated code will stay in this loop as
-			// long as it sees an LBRACK (proper behavior)
-				options {k=1;}
-				//options {warnWhenFollowAmbig = false;}
-		:
-			LBRACK 
-				(expression)?
-			RBRACK
-		)+
+conditionalOrExpression
+    :   conditionalAndExpression ( '||' conditionalAndExpression )*
 	;
 
-constant
-	:	NUM_INT
-	|	CHAR_LITERAL
-	|	STRING_LITERAL
-	|	NUM_FLOAT
-	|	NUM_LONG
-	|	NUM_DOUBLE
+conditionalAndExpression
+    :   inclusiveOrExpression ( '&&' inclusiveOrExpression )*
+	;
+
+inclusiveOrExpression
+    :   exclusiveOrExpression ( '|' exclusiveOrExpression )*
+	;
+
+exclusiveOrExpression
+    :   andExpression ( '^' andExpression )*
+	;
+
+andExpression
+    :   equalityExpression ( '&' equalityExpression )*
+	;
+
+equalityExpression
+    :   instanceOfExpression ( ('==' | '!=') instanceOfExpression )*
+	;
+
+instanceOfExpression
+    :   relationalExpression ('instanceof' type)?
+	;
+
+relationalExpression
+    :   shiftExpression ( relationalOp shiftExpression )*
+	;
+	
+relationalOp
+	:	('<' '=' | '>' '=' | '<' | '>')
+	;
+
+shiftExpression
+    :   additiveExpression ( shiftOp additiveExpression )*
+	;
+
+        // TODO: need a sem pred to check column on these >>>
+shiftOp
+	:	('<' '<' | '>' '>' '>' | '>' '>')
 	;
 
 
-//----------------------------------------------------------------------------
-// The Java scanner
-//----------------------------------------------------------------------------
-
-// OPERATORS
-
-
-QUESTION		:	'?'		;
-
-
-LPAREN			:	'('		;
-
-
-RPAREN			:	')'		;
-
-
-LBRACK			:	'['		;
-
-
-RBRACK			:	']'		;
-
-
-LCURLY			:	'{'		;
-
-
-RCURLY			:	'}'		;
-
-
-COLON			:	':'		;
-
-
-COMMA			:	','		;
-
-DOT				:	'.'		;
-
-ASSIGN			:	'='		;
-
-
-EQUAL			:	'=='	;
-
-
-LNOT			:	'!'		;
-
-
-BNOT			:	'~'		;
-
-
-NOT_EQUAL		:	'!='	;
-
-
-DIV				:	'/'		;
-
-
-DIV_ASSIGN		:	'/='	;
-
-
-PLUS			:	'+'		;
-
-
-PLUS_ASSIGN		:	'+='	;
-
-
-INC				:	'++'	;
-
-
-MINUS			:	'-'		;
-
-
-MINUS_ASSIGN	:	'-='	;
-
-
-DEC				:	'--'	;
-
-
-STAR			:	'*'		;
-
-
-STAR_ASSIGN		:	'*='	;
-
-
-MOD				:	'%'		;
-
-
-MOD_ASSIGN		:	'%='	;
-
-
-SR				:	'>>'	;
-
-
-SR_ASSIGN		:	'>>='	;
-
-
-BSR				:	'>>>'	;
-
-
-BSR_ASSIGN		:	'>>>='	;
-
-
-GE				:	'>='	;
-
-
-GT				:	'>'		;
-
-
-SL				:	'<<'	;
-
-
-SL_ASSIGN		:	'<<='	;
-
-
-LE				:	'<='	;
-
-
-LT				:	'<'		;
-
-
-BXOR			:	'^'		;
-
-
-BXOR_ASSIGN		:	'^='	;
-
-
-BOR				:	'|'		;
-
-
-BOR_ASSIGN		:	'|='	;
-
-
-LOR				:	'||'	;
-
-
-BAND			:	'&'		;
-
-
-BAND_ASSIGN		:	'&='	;
-
-
-LAND			:	'&&'	;
-
-
-SEMI			:	';'		;
-
-
-// Whitespace -- ignored
-
-
-WS	:	(	' '
-		|	'\t'
-		|	'\f'
-			// handle newlines
-		|	(	'\r\n'  // Evil DOS
-			|	'\n'    // Unix (the right way)
-			)
-		)+
-		{ channel=99; /*token = JavaParser.IGNORE_TOKEN;*/ }
+additiveExpression
+    :   multiplicativeExpression ( ('+' | '-') multiplicativeExpression )*
 	;
 
-// Single-line comments
+multiplicativeExpression
+    :   unaryExpression ( ( '*' | '/' | '%' ) unaryExpression )*
+	;
+	
+unaryExpression
+    :   '+' unaryExpression
+    |	'-' unaryExpression
+    |   '++' primary
+    |   '--' primary
+    |   unaryExpressionNotPlusMinus
+    ;
 
+unaryExpressionNotPlusMinus
+    :   '~' unaryExpression
+    | 	'!' unaryExpression
+    |   castExpression
+    |   primary selector* ('++'|'--')?
+    ;
 
-SL_COMMENT
-	:	'//' (options {greedy=false;} : .)* ('\r')? '\n'
-		{channel=99; /*token = JavaParser.IGNORE_TOKEN;*/}
+castExpression
+    :  '(' primitiveType ')' unaryExpression
+    |  '(' (expression | type) ')' unaryExpressionNotPlusMinus
+    ;
+
+primary
+    :	parExpression
+    |   nonWildcardTypeArguments
+        (explicitGenericInvocationSuffix | 'this' arguments)
+    |   'this' (arguments)?
+    |   'super' superSuffix
+    |   literal
+    |   'new' creator
+    |   Identifier ('.' Identifier)* (identifierSuffix)?
+    |   primitiveType ('[' ']')* '.' 'class'
+    |   'void' '.' 'class'
 	;
 
-// multiple-line comments
-
-
-ML_COMMENT
-	:	'/*'
-		( options {greedy=false;} : . )*
-		'*/'
-		{channel=99;/*token = JavaParser.IGNORE_TOKEN;*/}
+identifierSuffix
+	:	('[' ']')+ '.' 'class'
+	|	('[' expression ']')+ // can also be matched by selector, but do here
+    |   arguments
+    |   '.' 'class'
+    |   '.' explicitGenericInvocation
+    |   '.' 'this'
+    |   '.' 'super' arguments
+    |   '.' 'new' (nonWildcardTypeArguments)? innerCreator
+	;
+	
+creator
+	:	nonWildcardTypeArguments? createdName
+        (arrayCreatorRest | classCreatorRest)
 	;
 
-IDENT
-	:	('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')*
+createdName
+	:	Identifier nonWildcardTypeArguments?
+        ('.' Identifier nonWildcardTypeArguments?)*
+    |	primitiveType
+	;
+	
+innerCreator
+	:	Identifier classCreatorRest
 	;
 
-// From the java language spec
+arrayCreatorRest
+	:	'['
+        (   ']' ('[' ']')* arrayInitializer
+        |   expression ']' ('[' expression ']')* ('[' ']')*
+        )
+	;
 
-NUM_INT
-    : DECIMAL_LITERAL 
-    | HEX_LITERAL
-    | OCTAL_LITERAL
+classCreatorRest
+	:	arguments classBody?
+	;
+	
+explicitGenericInvocation
+	:	nonWildcardTypeArguments explicitGenericInvocationSuffix
+	;
+	
+nonWildcardTypeArguments
+	:	'<' typeList '>'
+	;
+	
+explicitGenericInvocationSuffix
+	:	'super' superSuffix
+	|   Identifier arguments
+	;
+	
+selector
+	:	'.' Identifier (arguments)?
+	|   '.' 'this'
+	|   '.' 'super' superSuffix
+	|   '.' 'new' (nonWildcardTypeArguments)? innerCreator
+	|   '[' expression ']'
+	;
+	
+superSuffix
+	:	arguments
+	|   '.' Identifier (arguments)?
+    ;
+
+arguments
+	:	'(' expressionList? ')'
+	;
+
+// LEXER
+
+HexLiteral : '0' ('x'|'X') HexDigit+ IntegerTypeSuffix? ;
+
+DecimalLiteral : ('0' | '1'..'9' '0'..'9'*) IntegerTypeSuffix? ;
+
+OctalLiteral : '0' ('0'..'7')+ IntegerTypeSuffix? ;
+
+fragment
+HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
+
+fragment
+IntegerTypeSuffix : ('l'|'L') ;
+
+FloatingPointLiteral
+    :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
+    |   '.' ('0'..'9')+ Exponent? FloatTypeSuffix?
+    |   ('0'..'9')+ Exponent FloatTypeSuffix?
+    |   ('0'..'9')+ Exponent? FloatTypeSuffix
+	;
+
+fragment
+Exponent : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
+
+fragment
+FloatTypeSuffix : ('f'|'F'|'d'|'D') ;
+
+CharacterLiteral
+    :   '\'' ( EscapeSequence | ~('\''|'\\') ) '\''
+    ;
+
+StringLiteral
+    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
     ;
 
 fragment
-DECIMAL_LITERAL: '1'..'9' ('0'..'9')* ('l'|'L')? ;
-
-fragment
-HEX_LITERAL: '0' ('x'|'X') ('0'..'9'|'a'..'f'|'A'..'F')+ ('l'|'L')? ;
-
-fragment
-OCTAL_LITERAL: '0' ('0'..'7')* ('l'|'L')? ;
-
-NUM_FLOAT
-    :     DIGITS '.' (DIGITS)? (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
-    | '.' DIGITS (EXPONENT_PART)? (FLOAT_TYPE_SUFFIX)?
-    |     DIGITS EXPONENT_PART FLOAT_TYPE_SUFFIX
-    |     DIGITS EXPONENT_PART
-    |     DIGITS FLOAT_TYPE_SUFFIX
+EscapeSequence
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+    |   UnicodeEscape
+    |   OctalEscape
     ;
 
 fragment
-DIGITS : ('0'..'9')+ ;
+OctalEscape
+    :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
+    |   '\\' ('0'..'7') ('0'..'7')
+    |   '\\' ('0'..'7')
+    ;
 
+fragment
+UnicodeEscape
+    :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
+    ;
+
+ENUM:	'enum' {if ( !enumIsKeyword ) type=Identifier;}
+	;
+	
+Identifier 
+    :   Letter (Letter|JavaIDDigit)*
+    ;
+
+fragment
+Letter 
+	:	'a'..'z'
+	|	'A'..'Z'
+	|	'_'
+	|	'$'
+	;
+
+fragment
+JavaIDDigit
+	:	'0'..'9'
+	;
+		
 /*
 fragment
-EXPONENT_PART: ('e'|'E') ('+'|'-')? DIGITS ;
-*/
-
-fragment
-EXPONENT_PART: ('e'|'E') ('+'|'-')? DIGITS ;
-
-fragment
-FLOAT_TYPE_SUFFIX :   ('f'|'F'|'d'|'D') ;
-
-CHAR_LITERAL
-    :
-      '\''
-      ( ~('\''|'\\')
-      | ESCAPE_SEQUENCE
-      )
-      '\''
+Letter
+    :  '\u0024' |
+       '\u0041'..'\u005a' |
+       '\u005f' |
+       '\u0061'..'\u007a' |
+       '\u00c0'..'\u00d6' |
+       '\u00d8'..'\u00f6' |
+       '\u00f8'..'\u00ff' |
+       '\u0100'..'\u1fff' |
+       '\u3040'..'\u318f' |
+       '\u3300'..'\u337f' |
+       '\u3400'..'\u3d2d' |
+       '\u4e00'..'\u9fff' |
+       '\uf900'..'\ufaff'
     ;
 
-STRING_LITERAL
-    :
-      '\"'
-      ( ~('\"'|'\\')
-      | ESCAPE_SEQUENCE
-      )*
-      '\"'
-        ;
-
 fragment
-ESCAPE_SEQUENCE
-    :	'\\' 'b'
-    |   '\\' 't'
-    |   '\\' 'n'
-    |   '\\' 'f'
-    |   '\\' 'r'
-    |   '\\' '\"'
-    |   '\\' '\''
-    |   '\\' '\\'
-    |	'\\' '0'..'3' OCTAL_DIGIT OCTAL_DIGIT
-    |   '\\' OCTAL_DIGIT OCTAL_DIGIT
-    |   '\\' OCTAL_DIGIT
-	|	UNICODE_CHAR
-	;
+JavaIDDigit
+    :  '\u0030'..'\u0039' |
+       '\u0660'..'\u0669' |
+       '\u06f0'..'\u06f9' |
+       '\u0966'..'\u096f' |
+       '\u09e6'..'\u09ef' |
+       '\u0a66'..'\u0a6f' |
+       '\u0ae6'..'\u0aef' |
+       '\u0b66'..'\u0b6f' |
+       '\u0be7'..'\u0bef' |
+       '\u0c66'..'\u0c6f' |
+       '\u0ce6'..'\u0cef' |
+       '\u0d66'..'\u0d6f' |
+       '\u0e50'..'\u0e59' |
+       '\u0ed0'..'\u0ed9' |
+       '\u1040'..'\u1049'
+   ;
+*/
 
-fragment
-UNICODE_CHAR
-	:	'\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
-	;
+/*
+Identifier :  
+  {Character.isJavaIdentifierStart(input.LA(1))}? .
+  ( {Character.isJavaIdentifierPart(input.LA(1))}? . )*
+  ;
+  */
 
-fragment
-HEX_DIGIT
-	:	'0'..'9'|'a'..'f'|'A'..'F'
-	;
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {channel=99;}
+    ;
 
-fragment
-OCTAL_DIGIT
-	:	'0'..'7'
-	;
+COMMENT
+    :   '/*' ( options {greedy=false;} : . )* '*/' {channel=99;}
+    ;
+
+LINE_COMMENT
+    : '//' ~('\n'|'\r')* '\r'? '\n' {channel=99;}
+    ;
