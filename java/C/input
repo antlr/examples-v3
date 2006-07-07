@@ -1,0 +1,7 @@
+int i;
+void foo(int *p[3], float (*pf)(void)) {
+  int j=3*i+foo(null, null);
+}
+
+void bar() {
+}
