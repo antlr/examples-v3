@@ -1,4 +1,6 @@
-int i;
+typedef unsigned int size_t;
+
+size_t i;
 void foo(int *p[3], float (*pf)(void)) {
   int j=3*i+foo(null, null);
 }

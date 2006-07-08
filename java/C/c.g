@@ -22,11 +22,34 @@ options {
     k=2;
 }
 
-scope TypeCount {int n;}
+scope Symbols {
+	Set types; // only track types in order to get parser working
+}
 
-@synpredgate {true} // always execute actions
+@header {
+import java.util.Set;
+import java.util.HashSet;
+}
+
+@members {
+	boolean isTypeName(String name) {
+		for (int i = Symbols_stack.size()-1; i>=0; i--) {
+			Symbols_scope scope = (Symbols_scope)Symbols_stack.get(i);
+			if ( scope.types.contains(name) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+//@synpredgate {true} // always execute actions for symbol table
 
 translation_unit
+scope Symbols; // entire file is a scope
+@init {
+  $Symbols::types = new HashSet();
+}
 	: external_declaration+
 	;
 
@@ -36,6 +59,10 @@ external_declaration
 	;
 
 function_definition
+scope Symbols; // put parameters and locals into same scope for now
+@init {
+  $Symbols::types = new HashSet();
+}
 	:	declaration_specifiers? declarator
 		(	declaration+ compound_statement	// K&R style
 		|	compound_statement				// ANSI style
@@ -43,11 +70,19 @@ function_definition
 	;
 
 declaration
-	: declaration_specifiers init_declarator_list? ';'
+scope {
+  boolean isTypedef;
+}
+@init {
+  $declaration::isTypedef = false;
+}
+	: 'typedef' declaration_specifiers?
+	  {$declaration::isTypedef=true; System.out.println("found typedef");}
+	  init_declarator_list ';' // special case, looking for typedef	
+	| declaration_specifiers init_declarator_list? ';'
 	;
 
 declaration_specifiers
-scope TypeCount;
 	:   (   storage_class_specifier
 		|   type_specifier
         |   type_qualifier
@@ -63,15 +98,13 @@ init_declarator
 	;
 
 storage_class_specifier
-	: 'typedef'
-	| 'extern'
+	: 'extern'
 	| 'static'
 	| 'auto'
 	| 'register'
 	;
 
 type_specifier
-@finally {$TypeCount::n++;}
 	: 'void'
 	| 'char'
 	| 'short'
@@ -83,15 +116,20 @@ type_specifier
 	| 'unsigned'
 	| struct_or_union_specifier
 	| enum_specifier
-	| {$TypeCount::n==0}?=> type_id
+	| type_id
 	;
 
 type_id
-    :   {true}? IDENTIFIER  // for now it's any name
+    :   {isTypeName(input.LT(1).getText())}? IDENTIFIER
+    	{System.out.println($IDENTIFIER.text+" is a type");}
     ;
 
 struct_or_union_specifier
 options {k=3;}
+scope Symbols; // structs are scopes
+@init {
+  $Symbols::types = new HashSet();
+}
 	: struct_or_union IDENTIFIER? '{' struct_declaration_list '}'
 	| struct_or_union IDENTIFIER
 	;
@@ -110,7 +148,6 @@ struct_declaration
 	;
 
 specifier_qualifier_list
-scope TypeCount;
 	: ( type_qualifier | type_specifier )+
 	;
 
@@ -149,13 +186,24 @@ declarator
 	;
 
 direct_declarator
-	:   (IDENTIFIER | '(' declarator ')')
-        (   '[' constant_expression ']'
-        |   '[' ']'
-        |   '(' parameter_type_list ')'
-        |   '(' identifier_list ')'
-        |   '(' ')'
-        )*
+	:   (	IDENTIFIER
+			{
+			if ($declaration.size()>0&&$declaration::isTypedef) {
+				$Symbols::types.add($IDENTIFIER.text);
+				System.out.println("define type "+$IDENTIFIER.text);
+			}
+			}
+		|	'(' declarator ')'
+		)
+        declarator_suffix*
+	;
+
+declarator_suffix
+	:   '[' constant_expression ']'
+    |   '[' ']'
+    |   '(' parameter_type_list ')'
+    |   '(' identifier_list ')'
+    |   '(' ')'
 	;
 
 pointer
@@ -358,6 +406,10 @@ labeled_statement
 	;
 
 compound_statement
+scope Symbols; // blocks have a scope of symbols
+@init {
+  $Symbols::types = new HashSet();
+}
 	: '{' declaration* statement_list? '}'
 	;
 
@@ -461,4 +513,9 @@ COMMENT
 
 LINE_COMMENT
     : '//' ~('\n'|'\r')* '\r'? '\n' {channel=99;}
+    ;
+
+// ignore #line info for now
+LINE_COMMAND 
+    : '#' ~('\n'|'\r')* '\r'? '\n' {channel=99;}
     ;
