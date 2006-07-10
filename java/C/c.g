@@ -12,8 +12,18 @@ comp.lang.c FAQ, can be ftp'ed from ftp.uu.net,
 I intend to keep this version as close to the current C Standard grammar as
 possible; please let me know if you discover discrepancies. Jutta Degener, 1995"
 
-I also took Monty and John Mitchell's type counter from their GNU C grammar to
-avoid having to build a symbol table to track types in declarations.
+Generally speaking, you need symbol table info to parse C; typedefs
+define types and then IDENTIFIERS are either types or plain IDs.  I'm doing
+the min necessary here tracking only type names.  This is a good example
+of the global scope (called Symbols).  Every rule that declares its usage
+of Symbols pushes a new copy on the stack effectively creating a new
+symbol scope.  Also note rule declaration declares a rule scope that
+lets any invoked rule see isTypedef boolean.  It's much easier than
+passing that info down as parameters.  Very clean.  Rule
+direct_declarator can then easily determine whether the IDENTIFIER
+should be declared as a type name.
+
+I have only tested this on a single file, though it is 3500 lines.
 */
 grammar CParser;
 options {
@@ -43,8 +53,6 @@ import java.util.HashSet;
 	}
 }
 
-//@synpredgate {true} // always execute actions for symbol table
-
 translation_unit
 scope Symbols; // entire file is a scope
 @init {
@@ -53,8 +61,23 @@ scope Symbols; // entire file is a scope
 	: external_declaration+
 	;
 
+/** Either a function definition or any other kind of C decl/def.
+ *  The LL(*) analysis algorithm fails to deal with this due to
+ *  recursion in the declarator rules.  I'm putting in a
+ *  manual predicate here so that we don't backtrack over
+ *  the entire function.  Further, you get a better error
+ *  as errors within the function itself don't make it fail
+ *  to predict that it's a function.  Weird errors previously.
+ *  Remember: the goal is to avoid backtrack like the plague
+ *  because it makes debugging, actions, and errors harder.
+ *
+ *  Note that k=1 results in a much smaller predictor for the 
+ *  fixed lookahead; k=2 made a few extra thousand lines. ;)
+ *  I'll have to optimize that in the future.
+ */
 external_declaration
-	: function_definition
+options {k=1;}
+	: ( declaration_specifiers? declarator declaration* '{' )=> function_definition
 	| declaration
 	;
 
@@ -76,8 +99,7 @@ scope {
 @init {
   $declaration::isTypedef = false;
 }
-	: 'typedef' declaration_specifiers?
-	  {$declaration::isTypedef=true; System.out.println("found typedef");}
+	: 'typedef' declaration_specifiers? {$declaration::isTypedef=true;}
 	  init_declarator_list ';' // special case, looking for typedef	
 	| declaration_specifiers init_declarator_list? ';'
 	;
@@ -121,7 +143,7 @@ type_specifier
 
 type_id
     :   {isTypeName(input.LT(1).getText())}? IDENTIFIER
-    	{System.out.println($IDENTIFIER.text+" is a type");}
+//    	{System.out.println($IDENTIFIER.text+" is a type");}
     ;
 
 struct_or_union_specifier
@@ -292,6 +314,7 @@ postfix_expression
         |   '(' argument_expression_list ')'
         |   '.' IDENTIFIER
         |   '*' IDENTIFIER
+        |   '->' IDENTIFIER
         |   '++'
         |   '--'
         )*
@@ -309,7 +332,6 @@ unary_operator
 primary_expression
 	: IDENTIFIER
 	| constant
-	| STRING_LITERAL
 	| '(' expression ')'
 	;
 
@@ -317,13 +339,15 @@ constant
     :   HEX_LITERAL
     |   OCTAL_LITERAL
     |   DECIMAL_LITERAL
+    |	CHARACTER_LITERAL
+	|	STRING_LITERAL
     |   FLOATING_POINT_LITERAL
     ;
 
 /////
 
 expression
-	: (assignment_expression) (',' assignment_expression)*
+	: assignment_expression (',' assignment_expression)*
 	;
 
 constant_expression
@@ -377,11 +401,11 @@ and_expression
 	: equality_expression ('&' equality_expression)*
 	;
 equality_expression
-	: relational_expression ('==' relational_expression | '!=' relational_expression)*
+	: relational_expression (('=='|'!=') relational_expression)*
 	;
 
 relational_expression
-	: shift_expression (('<'|'>''<=''>=') shift_expression)*
+	: shift_expression (('<'|'>'|'<='|'>=') shift_expression)*
 	;
 
 shift_expression
@@ -471,7 +495,10 @@ fragment
 HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
 
 fragment
-IntegerTypeSuffix : ('l'|'L') ;
+IntegerTypeSuffix
+	:	('u'|'U')? ('l'|'L')
+	|	('u'|'U')  ('l'|'L')?
+	;
 
 FLOATING_POINT_LITERAL
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
