@@ -476,8 +476,7 @@ IDENTIFIER
 	
 fragment
 LETTER
-	:	'$'
-	|	'A'..'Z'
+	:	'A'..'Z'
 	|	'a'..'z'
 	|	'_'
 	;
