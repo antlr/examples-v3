@@ -7,8 +7,8 @@
  *  tested for 1.5 compatibility.
  *
  *  I built this with:
- *   java -Xms200M -Xmx400M org.antlr.Tool -dfa -nfa -Xmaxdfaedges 65534 java.g 
- *  and got two errors that are ok:
+ *   java -Xms200M -Xmx400M org.antlr.Tool java.g 
+ *  and got two errors that are ok (for now):
  *  java.g:691:9: Decision can match input such as
  *    "'0'..'9'{'E', 'e'}{'+', '-'}'0'..'9'{'D', 'F', 'd', 'f'}"
  *    using multiple alternatives: 3, 4
@@ -22,7 +22,7 @@
  *
  *  You can turn enum on/off as a keyword :)
  *
- *  Version 1.0 -- initial release July 5, 2006 (requires 3.0b2)
+ *  Version 1.0 -- initial release July 5, 2006 (requires 3.0b2 or higher)
  *
  *  Primary author: Terence Parr, July 2006
  */
