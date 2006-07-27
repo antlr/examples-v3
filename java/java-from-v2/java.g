@@ -6,10 +6,6 @@
  */
 grammar JavaParser;
 
-options {
-	backtrack=true;
-}
-
 tokens {
 	BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF;
 	INSTANCE_INIT; STATIC_INIT; TYPE; CLASS_DEF; INTERFACE_DEF;
@@ -426,7 +422,7 @@ statement
 	|	'synchronized' LPAREN expression RPAREN compoundStatement
 
 	// asserts (uncomment if you want 1.4 compatibility)
-	// |	'assert' expression ( COLON expression )? SEMI
+	|	'assert' expression ( COLON expression )? SEMI
 
 	// empty statement
 	|	SEMI 
