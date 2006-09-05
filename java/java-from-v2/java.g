@@ -803,7 +803,7 @@ newArrayDeclarator
 			// followed by an array index reference.  This is ok,
 			// as the generated code will stay in this loop as
 			// long as it sees an LBRACK (proper behavior)
-				options {k=1;}
+				options {k=2;}
 				//options {warnWhenFollowAmbig = false;}
 		:
 			LBRACK 
