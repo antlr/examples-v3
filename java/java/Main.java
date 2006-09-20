@@ -11,7 +11,7 @@ class Main {
 	public static long lexerTime = 0;
 	public static boolean profile = false;
 
-	static JavaParserLexer lexer;
+	static JavaLexer lexer;
 
 	public static void main(String[] args) {
 		try {
@@ -74,11 +74,11 @@ class Main {
 		try {
 			// Create a scanner that reads from the input stream passed to us
 			if ( lexer==null ) {
-				lexer = new JavaParserLexer();
+				lexer = new JavaLexer();
 			}
 			lexer.setCharStream(new ANTLRFileStream(f));
 			CommonTokenStream tokens = new CommonTokenStream();
-			tokens.discardOffChannelTokens(true);
+//			tokens.discardOffChannelTokens(true);
 			tokens.setTokenSource(lexer);
 			long start = System.currentTimeMillis();
 			tokens.LT(1); // force load
