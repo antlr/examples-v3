@@ -1,4 +1,4 @@
-tree grammar SimpleCTreeParser;
+tree grammar SimpleCWalker;
 options {
     tokenVocab=SimpleC;
 }

@@ -6,11 +6,11 @@ public class Main {
 		CharStream input = new ANTLRFileStream(args[0]);
 		SimpleCLexer lex = new SimpleCLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
-		SimpleC parser = new SimpleC(tokens);
-		SimpleC.program_return r = parser.program();
+		SimpleCParser parser = new SimpleCParser(tokens);
+		SimpleCParser.program_return r = parser.program();
 		System.out.println("tree="+((Tree)r.tree).toStringTree());
         CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
-		SimpleCTreeParser walker = new SimpleCTreeParser(nodes);
+		SimpleCWalkerTreeParser walker = new SimpleCWalkerTreeParser(nodes);
 		walker.program();
 	}
 }
