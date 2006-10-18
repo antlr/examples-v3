@@ -27,7 +27,7 @@
  *  Primary author: Terence Parr, July 2006
  */
 grammar Java;
-options {k=2; backtrack=true; memoize=true;}
+options {k=2; backtrack=true; memoize=true; output=AST;}
 
 @lexer::members {
 protected boolean enumIsKeyword = false;

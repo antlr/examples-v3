@@ -4,7 +4,7 @@
  *  I get a chance.  I just slammed this together.
  *  Terence Parr.
  */
-grammar JavaParser;
+grammar Java;
 
 tokens {
 	BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF;
