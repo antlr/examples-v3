@@ -6,7 +6,7 @@ public class Main {
 		TLexer lex = new TLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		//System.out.println("tokens="+tokens);
-		T parser = new T(tokens);
+		TParser parser = new TParser(tokens);
 		parser.stat();
 	}
 }
