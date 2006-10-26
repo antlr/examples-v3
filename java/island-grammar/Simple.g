@@ -92,7 +92,7 @@ JAVADOC : '/**'
             JavadocLexer j = new JavadocLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(j);
             tokens.discardTokenType(JavadocLexer.WS);
-            Javadoc p = new Javadoc(tokens);
+            JavadocParser p = new JavadocParser(tokens);
             p.comment();
             // returns a JAVADOC token to the java parser but on a
             // different channel than the normal token stream so it

@@ -13,7 +13,7 @@ SIMPLE  :   '{'
             SimpleLexer lex = new SimpleLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lex);
             //System.out.println("tokens="+tokens);
-            Simple parser = new Simple(tokens);
+            SimpleParser parser = new SimpleParser(tokens);
             parser.statement();
             }
             {channel=99;}
