@@ -20,7 +20,7 @@ public class Main {
 					    AngleBracketTemplateLexer.class);
 
 	CharStream input = new ANTLRFileStream(args[a]);
-	CMinusParserLexer lexer = new CMinusParserLexer(input);
+	CMinusLexer lexer = new CMinusLexer(input);
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 	CMinusParser parser = new CMinusParser(tokens);
 	parser.setTemplateLib(templates);

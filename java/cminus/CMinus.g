@@ -1,4 +1,4 @@
-grammar CMinusParser;
+grammar CMinus;
 options {output=template;}
 
 scope slist {
