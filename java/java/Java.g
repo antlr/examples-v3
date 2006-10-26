@@ -6,8 +6,7 @@
  *  and some nasty looking enums from 1.5, but have not really
  *  tested for 1.5 compatibility.
  *
- *  I built this with:
- *   java -Xms200M -Xmx400M org.antlr.Tool java.g 
+ *  I built this with: java -Xmx100M org.antlr.Tool java.g 
  *  and got two errors that are ok (for now):
  *  java.g:691:9: Decision can match input such as
  *    "'0'..'9'{'E', 'e'}{'+', '-'}'0'..'9'{'D', 'F', 'd', 'f'}"
@@ -25,9 +24,16 @@
  *  Version 1.0 -- initial release July 5, 2006 (requires 3.0b2 or higher)
  *
  *  Primary author: Terence Parr, July 2006
+ *
+ *  Version 1.0.1 -- corrections by Koen Vanderkimpen & Marko van Dooren,
+ *      October 25, 2006;
+ *      fixed normalInterfaceDeclaration: now uses typeParameters instead
+ *          of typeParameter (according to JLS, 3rd edition)
+ *      fixed castExpression: no longer allows expression next to type
+ *          (according to semantics in JLS, in contrast with syntax in JLS)
  */
 grammar Java;
-options {k=2; backtrack=true; memoize=true; output=AST;}
+options {k=2; backtrack=true; memoize=true;}
 
 @lexer::members {
 protected boolean enumIsKeyword = false;
@@ -108,7 +114,7 @@ interfaceDeclaration
 	;
 	
 normalInterfaceDeclaration
-	:	'interface' Identifier typeParameter? ('extends' typeList)? interfaceBody
+	:	'interface' Identifier typeParameters? ('extends' typeList)? interfaceBody
 	;
 	
 typeList
