@@ -1,4 +1,4 @@
-grammar SymtabTestParser;
+grammar SymtabTest;
 
 /* Scope of symbol names.  Both globals and block rules need to push a new
  * symbol table upon entry and they must use the same stack.  So, I must

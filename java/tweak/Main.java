@@ -6,7 +6,7 @@ public class Main {
 		TLexer lex = new TLexer(input);
 		TokenStream tokens = new TokenRewriteStream(lex);
 		//System.out.println("before, tokens="+tokens);
-		T parser = new T(tokens);
+		TParser parser = new TParser(tokens);
 		parser.program();
 		System.out.println(tokens);
 	}
