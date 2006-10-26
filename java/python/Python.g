@@ -55,7 +55,7 @@
  *
  *  REQUIRES ANTLR v3
  */
-grammar PythonParser;
+grammar Python;
 
 tokens {
     INDENT;

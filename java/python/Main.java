@@ -5,7 +5,7 @@ import org.antlr.stringtemplate.language.*;
 
 public class Main {
     // override nextToken to set startPos (this seems too hard)
-    public static class MyLexer extends PythonParserLexer {
+    public static class MyLexer extends PythonLexer {
 	public MyLexer(CharStream lexer) {
 	    super(lexer);
 	}
@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 	CharStream input = new ANTLRFileStream(args[0]);
-	PythonParserLexer lexer = new MyLexer(input);
+	PythonLexer lexer = new MyLexer(input);
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 	tokens.discardOffChannelTokens(true);
 	PythonTokenSource indentedSource = new PythonTokenSource(tokens);

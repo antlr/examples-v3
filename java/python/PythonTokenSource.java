@@ -86,7 +86,7 @@ public class PythonTokenSource implements TokenSource {
 
 	int lastTokenAddedIndex = -1;
 
-	public PythonTokenSource(PythonParserLexer lexer) {
+	public PythonTokenSource(PythonLexer lexer) {
 	}
 
 	public PythonTokenSource(CommonTokenStream stream) {
@@ -137,7 +137,7 @@ public class PythonTokenSource implements TokenSource {
 		stream.consume();
 
 		// if not a NEWLINE, doesn't signal indent/dedent work; just enqueue
-		if ( t.getType()!=PythonParserLexer.NEWLINE ) {
+		if ( t.getType()!=PythonLexer.NEWLINE ) {
 			List hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1);
 			if ( hiddenTokens!=null ) {
 				tokens.addAll(hiddenTokens);
@@ -171,7 +171,7 @@ public class PythonTokenSource implements TokenSource {
 		if ( t.getType()==Token.EOF ) {
 			cpos = -1; // pretend EOF always happens at left edge
 		}
-		else if ( t.getType()==PythonParserLexer.LEADING_WS ) {
+		else if ( t.getType()==PythonLexer.LEADING_WS ) {
 			cpos = t.getText().length();
 		}
 
@@ -201,7 +201,7 @@ public class PythonTokenSource implements TokenSource {
 			}
 			sp = prevIndex; // pop those off indent level
 		}
-		if ( t.getType()!=PythonParserLexer.LEADING_WS ) { // discard WS
+		if ( t.getType()!=PythonLexer.LEADING_WS ) { // discard WS
 			tokens.addElement(t);
 		}
 	}
