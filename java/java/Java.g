@@ -760,7 +760,7 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
-ENUM:	'enum' {if ( !enumIsKeyword ) type=Identifier;}
+ENUM:	'enum' {if ( !enumIsKeyword ) $type=Identifier;}
 	;
 	
 Identifier 
@@ -806,13 +806,13 @@ JavaIDDigit
        '\u1040'..'\u1049'
    ;
 
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {channel=99;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
     ;
 
 COMMENT
-    :   '/*' ( options {greedy=false;} : . )* '*/' {channel=99;}
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {channel=99;}
+    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
