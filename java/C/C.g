@@ -476,7 +476,8 @@ IDENTIFIER
 	
 fragment
 LETTER
-	:	'A'..'Z'
+	:	'$'
+	|	'A'..'Z'
 	|	'a'..'z'
 	|	'_'
 	;
@@ -535,18 +536,18 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {channel=99;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
     ;
 
 COMMENT
-    :   '/*' ( options {greedy=false;} : . )* '*/' {channel=99;}
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {channel=99;}
+    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
 
 // ignore #line info for now
 LINE_COMMAND 
-    : '#' ~('\n'|'\r')* '\r'? '\n' {channel=99;}
+    : '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
