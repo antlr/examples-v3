@@ -1,4 +1,4 @@
-grammar LangParser;
+grammar Lang;
 options {
 	output=AST;
 	ASTLabelType=CommonTree;
