@@ -4,7 +4,7 @@ import org.antlr.runtime.tree.*;
 public class Main {
 	public static void main(String[] args) throws Exception {
 		CharStream input = new ANTLRFileStream(args[0]);
-		LangParserLexer lex = new LangParserLexer(input);
+		LangLexer lex = new LangLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		LangParser parser = new LangParser(tokens);
 		//LangParser.decl_return r = parser.decl();
@@ -13,7 +13,7 @@ public class Main {
 		CommonTree root_0 = ((CommonTree)r.tree);
 
 		CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
-		LangTreeParser walker = new LangTreeParser(nodes);
+		LangDumpDeclTreeParser walker = new LangDumpDeclTreeParser(nodes);
 		walker.decl();
 	}
 }

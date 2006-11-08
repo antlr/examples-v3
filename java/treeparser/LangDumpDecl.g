@@ -1,6 +1,6 @@
-tree grammar LangTreeParser;
+tree grammar LangDumpDecl;
 options {
-    tokenVocab=LangParser;
+    tokenVocab=Lang;
     ASTLabelType = Tree;
 }
 
