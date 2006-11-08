@@ -1,6 +1,7 @@
 tree grammar SimpleCWalker;
 options {
     tokenVocab=SimpleC;
+    ASTLabelType=CommonTree;
 }
 
 program
