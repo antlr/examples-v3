@@ -65,7 +65,7 @@ expr    : ID
 
 ID      : ('a'..'z'|'A'..'Z')+ ;
 INT     : ('0'..'9')+ ;
-WS      : (' '|'\t'|'\n')+ {channel=99;}
+WS      : (' '|'\t'|'\n')+ {$channel=HIDDEN;}
         ;
 LCURLY  : '{' {nesting++;}
         ;

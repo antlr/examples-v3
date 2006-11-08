@@ -98,5 +98,5 @@ WS  :   (   ' '
         |   '\r'
         |   '\n'
         )+
-        { channel=99; }
+        { $channel=HIDDEN; }
     ;    

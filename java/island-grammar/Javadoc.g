@@ -16,7 +16,7 @@ SIMPLE  :   '{'
             SimpleParser parser = new SimpleParser(tokens);
             parser.statement();
             }
-            {channel=99;}
+            {$channel=HIDDEN;}
         ;
 
 /** When the javadoc parser sees end-of-comment it just says 'I'm done', which

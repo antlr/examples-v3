@@ -976,7 +976,7 @@ WS	:	(	' '
 			|	'\n'    // Unix (the right way)
 			)
 		)+
-		{ channel=99; /*token = JavaParser.IGNORE_TOKEN;*/ }
+		{ $channel=HIDDEN; /*token = JavaParser.IGNORE_TOKEN;*/ }
 	;
 
 // Single-line comments
@@ -984,7 +984,7 @@ WS	:	(	' '
 
 SL_COMMENT
 	:	'//' (options {greedy=false;} : .)* ('\r')? '\n'
-		{channel=99; /*token = JavaParser.IGNORE_TOKEN;*/}
+		{$channel=HIDDEN; /*token = JavaParser.IGNORE_TOKEN;*/}
 	;
 
 // multiple-line comments
@@ -994,7 +994,7 @@ ML_COMMENT
 	:	'/*'
 		( options {greedy=false;} : . )*
 		'*/'
-		{channel=99;/*token = JavaParser.IGNORE_TOKEN;*/}
+		{$channel=HIDDEN;/*token = JavaParser.IGNORE_TOKEN;*/}
 	;
 
 IDENT

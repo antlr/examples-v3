@@ -527,7 +527,7 @@ ESC
 
 /** Consume a newline and any whitespace at start of next line */
 CONTINUED_LINE
-	:	'\\' ('\r')? '\n' (' '|'\t')* { channel=99; }
+	:	'\\' ('\r')? '\n' (' '|'\t')* { $channel=HIDDEN; }
 	;
 
 /** Treat a sequence of blank lines as a single blank line.  If
@@ -537,11 +537,11 @@ CONTINUED_LINE
 NEWLINE
     :   (('\r')? '\n' )+
         {if ( startPos==0 || implicitLineJoiningLevel>0 )
-            channel=99;
+            $channel=HIDDEN;
         }
     ;
 
-WS	:	{startPos>0}?=> (' '|'\t')+ {channel=99;}
+WS	:	{startPos>0}?=> (' '|'\t')+ {$channel=HIDDEN;}
 	;
 	
 /** Grab everything before a real symbol.  Then if newline, kill it
@@ -555,7 +555,7 @@ LEADING_WS
     int spaces = 0;
 }
     :   {startPos==0}?=>
-    	(   {implicitLineJoiningLevel>0}? ( ' ' | '\t' )+ {channel=99;}
+    	(   {implicitLineJoiningLevel>0}? ( ' ' | '\t' )+ {$channel=HIDDEN;}
        	|	( 	' '  { spaces++; }
         	|	'\t' { spaces += 8; spaces -= (spaces \% 8); }
        		)+
@@ -569,7 +569,7 @@ LEADING_WS
             emit(new ClassicToken(LEADING_WS,new String(indentation)));
         	}
         	// kill trailing newline if present and then ignore
-        	( ('\r')? '\n' {if (token!=null) token.setChannel(99); else channel=99;})*
+        	( ('\r')? '\n' {if (token!=null) token.setChannel(99); else $channel=HIDDEN;})*
            // {token.setChannel(99); }
         )
 
@@ -578,7 +578,7 @@ LEADING_WS
             // ignore totally also wack any following newlines as
             // they cannot be terminating a statement
             '#' (~'\n')* ('\n')+ 
-            {if (token!=null) token.setChannel(99); else channel=99;}
+            {if (token!=null) token.setChannel(99); else $channel=HIDDEN;}
         )?
         */
     ;
@@ -602,7 +602,7 @@ LEADING_WS
  */
 COMMENT
 @init {
-    channel = 99;
+    $channel=HIDDEN;
 }
     :	{startPos==0}?=> (' '|'\t')* '#' (~'\n')* '\n'+
     |	{startPos>0}?=> '#' (~'\n')* // let NEWLINE handle \n unless char pos==0 for '#'
