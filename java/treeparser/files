@@ -1,6 +1,6 @@
 README.txt
 Main.java
 Lang.g
-LangTreeParser.g
+LangDumpDecl.g
 input
 output
