@@ -97,6 +97,6 @@ JAVADOC : '/**'
             // returns a JAVADOC token to the java parser but on a
             // different channel than the normal token stream so it
             // doesn't get in the way.
-            channel = JAVADOC_CHANNEL;
+            $channel = JAVADOC_CHANNEL;
           }
         ;
