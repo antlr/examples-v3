@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project name="all" default="usage" xmlns="http://nant.sf.net/release/0.85/nant.xsd">
+
+	<property name="examples.root.dir"  value="." />
+	<property name="project.root.dir"   value="." />
+
+	<include buildfile="examples-v3.common.xml" />
+	
+
+  	<!-- =================================================================== -->
+  	<!-- Help on usage                                                       -->
+  	<!-- =================================================================== -->
+  	
+  	<target name="usage">
+    	<echo message="ANTLR V3 Examples (C#) - Nant Build file"/>
+    	<echo message="-------------------------------------------------------------"/>
+    	<echo message=""/>
+    	<echo message="Available targets are:"/>
+    	<echo message=""/>
+    	<echo message="  build      - build all examples locally and into:"/>
+    	<echo message="                 '${build.dir}'"/>
+    	<echo message=""/>
+    	<echo message="  clean      - delete the Nant build artifacts for all examples"/>
+    	<echo message="               (including the bin/obj directories used by VS.NET)"/>
+    	<echo message=""/>
+    	<echo message="  cleanall   - delete the Nant build artifacts for all examples"/>
+    	<echo message="               (including the bin/obj directories used by VS.NET)"/>
+    	<echo message="               and the build directory: '${build.dir}'"/>
+    	<echo message=""/>
+    	<echo message="  usage      - show this message (default)"/>
+    	<echo message=""/>
+    	<echo message="-------------------------------------------------------------"/>
+  	</target>
+
+	<target name="build">
+		<nant buildfile="C/c.build"                                  target="build" inheritall="true" />
+		<nant buildfile="cminus/cminus.build"                        target="build" inheritall="true" />
+		<nant buildfile="dynamic-scope/dynamic-scope.build"          target="build" inheritall="true" />
+		<nant buildfile="fuzzy/fuzzy.build"                          target="build" inheritall="true" />
+		<nant buildfile="hoistedPredicates/hoistedPredicates.build"  target="build" inheritall="true" />
+		<nant buildfile="island-grammar/island-grammar.build"        target="build" inheritall="true" />
+		<nant buildfile="java/java.build"                            target="build" inheritall="true" />
+		<nant buildfile="java-from-v2/java-from-v2.build"            target="build" inheritall="true" />
+		<nant buildfile="ll-star/ll-star.build"                      target="build" inheritall="true" />
+		<nant buildfile="python/python.build"                        target="build" inheritall="true" />
+		<nant buildfile="ruby/ruby.build"                            target="build" inheritall="true" />
+		<nant buildfile="scopes/scopes.build"                        target="build" inheritall="true" />
+		<nant buildfile="simplectreeparser/simplec.treeparser.build" target="build" inheritall="true" />
+		<nant buildfile="treeparser/treeparser.build"                target="build" inheritall="true" />
+		<nant buildfile="tweak/tweak.build"                          target="build" inheritall="true" />
+		<nant buildfile="xmllexer/xmllexer.build"                    target="build" inheritall="true" />
+	</target>
+
+	<target name="clean">
+		<nant buildfile="C/c.build"                                  target="clean" inheritall="true" />
+		<nant buildfile="cminus/cminus.build"                        target="clean" inheritall="true" />
+		<nant buildfile="dynamic-scope/dynamic-scope.build"          target="clean" inheritall="true" />
+		<nant buildfile="fuzzy/fuzzy.build"                          target="clean" inheritall="true" />
+		<nant buildfile="hoistedPredicates/hoistedPredicates.build"  target="clean" inheritall="true" />
+		<nant buildfile="island-grammar/island-grammar.build"        target="clean" inheritall="true" />
+		<nant buildfile="java/java.build"                            target="clean" inheritall="true" />
+		<nant buildfile="java-from-v2/java-from-v2.build"            target="clean" inheritall="true" />
+		<nant buildfile="ll-star/ll-star.build"                      target="clean" inheritall="true" />
+		<nant buildfile="python/python.build"                        target="clean" inheritall="true" />
+		<nant buildfile="ruby/ruby.build"                            target="clean" inheritall="true" />
+		<nant buildfile="scopes/scopes.build"                        target="clean" inheritall="true" />
+		<nant buildfile="simplectreeparser/simplec.treeparser.build" target="clean" inheritall="true" />
+		<nant buildfile="treeparser/treeparser.build"                target="clean" inheritall="true" />
+		<nant buildfile="tweak/tweak.build"                          target="clean" inheritall="true" />
+		<nant buildfile="xmllexer/xmllexer.build"                    target="clean" inheritall="true" />
+	</target>
+
+	<target name="cleanall" depends="clean">
+	</target>
+
+</project>
