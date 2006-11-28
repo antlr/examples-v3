@@ -31,6 +31,11 @@
  *          of typeParameter (according to JLS, 3rd edition)
  *      fixed castExpression: no longer allows expression next to type
  *          (according to semantics in JLS, in contrast with syntax in JLS)
+ *
+ *  Version 1.0.2 -- Terence Parr, Nov 27, 2006
+ *      java spec I built this from had some bizarre for-loop control.
+ *          Looked weird and so I looked elsewhere...Yep, it's messed up.
+ *          simplified.
  */
 grammar Java;
 options {k=2; backtrack=true; memoize=true;}
@@ -489,22 +494,18 @@ moreStatementExpressions
 	;
 
 forControl
+options {k=3;} // be efficient for common case: for (ID ID : ID) ...
 	:	forVarControl
 	|   forInit? ';' expression? ';' forUpdate?
 	;
 
 forInit
-	:	'final'? type variableDeclarators
+	:	'final'? (annotation)? type variableDeclarators
     |   expressionList
 	;
 	
 forVarControl
-	:	'final'? (annotation)? type Identifier forVarControlRest
-	;
-
-forVarControlRest
-	:	variableDeclaratorRest (',' variableDeclarator)* ';' expression? ':' forUpdate?
-    |   ':' expression
+	:	'final'? type Identifier ':' expression
 	;
 
 forUpdate
