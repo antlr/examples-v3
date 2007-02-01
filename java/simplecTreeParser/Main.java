@@ -9,8 +9,10 @@ public class Main {
 		SimpleCParser parser = new SimpleCParser(tokens);
 		SimpleCParser.program_return r = parser.program();
 		System.out.println("tree="+((Tree)r.tree).toStringTree());
-        CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
-		SimpleCWalkerTreeParser walker = new SimpleCWalkerTreeParser(nodes);
+
+        	CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
+		nodes.setTokenStream(tokens);
+		SimpleCWalker walker = new SimpleCWalker(nodes);
 		walker.program();
 	}
 }
