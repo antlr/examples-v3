@@ -10,10 +10,11 @@ public class Main {
 		//LangParser.decl_return r = parser.decl();
 		LangParser.start_return r = parser.start();
 		System.out.println("tree: "+((Tree)r.tree).toStringTree());
-		CommonTree root_0 = ((CommonTree)r.tree);
+		CommonTree r0 = ((CommonTree)r.tree);
 
-		CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
-		LangDumpDeclTreeParser walker = new LangDumpDeclTreeParser(nodes);
+		CommonTreeNodeStream nodes = new CommonTreeNodeStream(r0);
+		nodes.setTokenStream(tokens);
+		LangDumpDecl walker = new LangDumpDecl(nodes);
 		walker.decl();
 	}
 }
