@@ -239,6 +239,22 @@
 		<Filter
 			Name="Generated"
 			>
+			<File
+				RelativePath=".\CLexer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\CLexer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CParser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\CParser.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
