@@ -545,8 +545,13 @@ UnicodeEscape
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
     ;
 
+// Note a special case here. If we used * and / as 2 characters strings
+// we will generate a C comment that includes them and seems, to the C
+// C compiler to be an embedded comment or the end of the comment documenting
+// the generated function. Hence we must utilize them as individual characters.
+//
 COMMENT
-    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    :   '/' '*' ( options {greedy=false;} : . )* '*' '/' {$channel=HIDDEN;}
     ;
 
 LINE_COMMENT
