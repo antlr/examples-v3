@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C", "C\C.vcproj", "{01FA69C3-76DC-422B-B3B7-64F7C9142AC0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic-scope", "dynamic-scope\dynamic-scope.vcproj", "{CF47417F-D4EC-4CEB-B441-863E414AF1CD}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 3
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = C\\C.vcproj
 		SccLocalPath1 = .
 		SccProjectFilePathRelativizedFromConnection1 = C\\
+		SccProjectUniqueName2 = dynamic-scope\\dynamic-scope.vcproj
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = dynamic-scope\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -20,6 +25,10 @@ Global
 		{01FA69C3-76DC-422B-B3B7-64F7C9142AC0}.Debug|Win32.Build.0 = Debug|Win32
 		{01FA69C3-76DC-422B-B3B7-64F7C9142AC0}.Release|Win32.ActiveCfg = Release|Win32
 		{01FA69C3-76DC-422B-B3B7-64F7C9142AC0}.Release|Win32.Build.0 = Release|Win32
+		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Debug|Win32.Build.0 = Debug|Win32
+		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Release|Win32.ActiveCfg = Release|Win32
+		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
