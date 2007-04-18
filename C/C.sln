@@ -5,9 +5,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C", "C\C.vcproj", "{01FA69C
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic-scope", "dynamic-scope\dynamic-scope.vcproj", "{CF47417F-D4EC-4CEB-B441-863E414AF1CD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzzy", "fuzzy\fuzzy.vcproj", "{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 4
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = C\\C.vcproj
 		SccLocalPath1 = .
@@ -15,6 +17,9 @@ Global
 		SccProjectUniqueName2 = dynamic-scope\\dynamic-scope.vcproj
 		SccLocalPath2 = .
 		SccProjectFilePathRelativizedFromConnection2 = dynamic-scope\\
+		SccProjectUniqueName3 = fuzzy\\fuzzy.vcproj
+		SccLocalPath3 = .
+		SccProjectFilePathRelativizedFromConnection3 = fuzzy\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -29,6 +34,10 @@ Global
 		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Debug|Win32.Build.0 = Debug|Win32
 		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Release|Win32.ActiveCfg = Release|Win32
 		{CF47417F-D4EC-4CEB-B441-863E414AF1CD}.Release|Win32.Build.0 = Release|Win32
+		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Debug|Win32.Build.0 = Debug|Win32
+		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Release|Win32.ActiveCfg = Release|Win32
+		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
