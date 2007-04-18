@@ -29,7 +29,7 @@ METHOD
 
 FIELD
     :   TYPE WS name=ID '[]'? WS? (';'|'=')
-        {printf("found var \%s\n"+$name.text->chars);}
+        {printf("found var \%s\n",$name.text->chars);}
     ;
 
 STAT:	('if'|'while'|'switch'|'for') WS? '(' ;
@@ -40,13 +40,13 @@ CALL
     ;
 
 COMMENT
-    :   '/*' (options {greedy=false;} : . )* '*/'
-        {printf("found comment \%s\n",getText());}
+    :   '/' '*' (options {greedy=false;} : . )* '*' '/'
+        {printf("found comment \%s\n",GETTEXT()->chars);}
     ;
 
 SL_COMMENT
     :   '//' (options {greedy=false;} : . )* '\n'
-        {printf("found // comment \%s\n", getText());}
+        {printf("found // comment \%s\n", GETTEXT()->chars);}
     ;
 	
 STRING
