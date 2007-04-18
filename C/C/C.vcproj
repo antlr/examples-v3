@@ -80,7 +80,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="antlr3cd_dll.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\DebugDLL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -166,7 +168,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="antlr3c_dll.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\ReleaseDLL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -239,6 +243,10 @@
 		<Filter
 			Name="Generated"
 			>
+			<File
+				RelativePath=".\C.tokens"
+				>
+			</File>
 			<File
 				RelativePath=".\CLexer.c"
 				>
