@@ -2,7 +2,8 @@ lexer grammar FuzzyJava;
 
 options 
 {
-    filter=true;
+    filter	= true;
+    language	= C;
 }
 
 IMPORT
