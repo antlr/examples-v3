@@ -85,7 +85,7 @@ expr    : ID
 
 ID      : ('a'..'z'|'A'..'Z')+ ;
 INT     : ('0'..'9')+ ;
-WS      : (' '|'\t'|'\n')+ {$channel=HIDDEN;}
+WS      : (' '|'\t'|'\n'|'\r')+ {$channel=HIDDEN;}
         ;
 LCURLY  : '{' {nesting++;}
         ;
@@ -99,7 +99,7 @@ RCURLY
 	if ( nesting<=0 ) 
 	{
 	    LTOKEN()	= EOF_TOKEN;
-	    printf("exiting embedded simple");
+	    printf("exiting embedded simple\n");
         }
         else 
 	{
