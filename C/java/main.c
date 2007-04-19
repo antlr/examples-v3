@@ -206,7 +206,9 @@ main	(int argc, char *argv[])
     // It also has the side advantage, if you are using an IDE such as VS2005 taht can do it
     // that when you type ->, you will see a list of tall the methods the object supports.
     //
-    psr->translation_unit(psr);
+    psr->compilationUnit(psr);
+
+    printf("finished parsing OK\n");	// Finnish parking is pretty good - I think it is all the snow
 
     // We did not return anything from this parser rule, so we can finish. It only remains
     // to close down our open objects, in the reverse order we created them
@@ -217,3 +219,4 @@ main	(int argc, char *argv[])
     input   ->close (input);	    input = NULL;
 
     return 0;
+}

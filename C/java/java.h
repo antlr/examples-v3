@@ -1,6 +1,6 @@
 /** \file
- * This is the include file for the ANTLR3 smaple project "C"
- * which shows how to use a C grammar and call it from C code.
+ * This is the include file for the ANTLR3 smaple project "java"
+ * which shows how to use a java grammar and call it from C code.
  */
 #ifndef	_JAVA_H
 #define	_JAVA_H

@@ -208,7 +208,7 @@ main	(int argc, char *argv[])
     //
     psr->translation_unit(psr);
 
-    // We did not return anythign from this parser rule, so we can finish. It only remains
+    // We did not return anything from this parser rule, so we can finish. It only remains
     // to close down our open objects, in the reverse order we created them
     //
     psr	    ->free  (psr);	    psr = NULL;
