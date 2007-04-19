@@ -1,23 +1,35 @@
 grammar Javadoc;
 
-comment : ( author )* ;
+options
+{
+    language	= C;
+}
 
-author  : '@author' ID {System.out.println("author "+$ID.text);} ;
+// Include external declarations of our parser calling functions
+//
+@lexer::includes
+{
+#include    <islandfuncs.h>
+}
 
-ID      : ('a'..'z'|'A'..'Z')+
-        ;
+comment 
+    : ( author )* 
+    ;
 
-SIMPLE  :   '{'
-            {
-            System.out.println("enter embedded Simple escape");
-            SimpleLexer lex = new SimpleLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(lex);
-            //System.out.println("tokens="+tokens);
-            SimpleParser parser = new SimpleParser(tokens);
-            parser.statement();
-            }
-            {$channel=HIDDEN;}
-        ;
+author  
+    : '@author' ID {printf("author ",$ID.text->chars);} ;
+
+ID      
+    : ('a'..'z'|'A'..'Z')+
+    ;
+
+SIMPLE  
+    : '{'
+    {
+	callSimple(INPUT);
+	$channel=HIDDEN;
+    }
+    ;
 
 /** When the javadoc parser sees end-of-comment it just says 'I'm done', which
  *  consumes the tokens and forces this javadoc parser (feeding
@@ -25,8 +37,11 @@ SIMPLE  :   '{'
  *  method comment(), which was called from JAVADOC action in the
  *  Simple parser's lexer.
  */
-END     : '*/' {token = Token.EOF_TOKEN;}
-          {System.out.println("exit javadoc");}
+END     : '*/' 
+	  {
+	    LTOKEN = EOF_TOKEN;
+	    printf("exit javadoc\n");
+	  }
         ;
 
 WS      : (' '|'\t'|'\n')+

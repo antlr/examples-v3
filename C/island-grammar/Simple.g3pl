@@ -1,12 +1,26 @@
 grammar Simple;
 
-tokens {
+options
+{
+    language	= C;
+}
+
+tokens 
+{
 	RCURLY='}';
 }
 
-@lexer::members {
-public static final int JAVADOC_CHANNEL = 1;
-public static int nesting = 0;
+// Include external declarations of our parser calling functions
+//
+@lexer::includes
+{
+#include    <islandfuncs.h>
+}
+
+@lexer::members 
+{
+#define	JAVADOC_CHANNEL = 1;
+    static int nesting	= 0;
 }
 
 /** This example is meant to illustrate how ANTLR can handle so-called "island
@@ -38,26 +52,32 @@ public static int nesting = 0;
  *  I go off to recognize javadoc comments, the lookahead for the Simple
  *  parser is not messed up in any way.
  */
-program : (variable)*
+program 
+    : (variable)*
           (method)+
-        ;
-variable: 'int' ID ('=' expr)? ';'
-        ;
-method  : 'method' ID '(' ')' {System.out.println("enter method "+$ID.text);}
-          block
-        ;
+    ;
 
-block   : '{'
-            (variable)*
-            (statement)+
-          '}'
-        ;
+variable
+    : 'int' ID ('=' expr)? ';'
+    ;
+
+method  
+    : 'method' ID '(' ')' {printf("enter method \%s\n",$ID.text->chars);}
+          block
+    ;
+
+block   
+    : '{'
+	(variable)*
+        (statement)+
+      '}'
+    ;
 
 statement
-        : ID '=' expr ';' {System.out.println("assignment to "+$ID.text);}
-        | 'return' expr ';'
-        | block
-        ;
+    : ID '=' expr ';' {printf("assignment to \%s\n",$ID.text->chars);}
+    | 'return' expr ';'
+    | block
+    ;
 
 expr    : ID
         | INT
@@ -73,27 +93,26 @@ LCURLY  : '{' {nesting++;}
  *  (unseen by this grammar) that started an embedded Simple statement
  *  block within a javadoc comment.
  */
-RCURLY  : '}'
+RCURLY  
+    : '}'
+    {
+	if ( nesting<=0 ) 
+	{
+	    LTOKEN	= EOF_TOKEN;
+	    printf("exiting embedded simple");
+        }
+        else 
+	{
+	    nesting--;
+	}
+    }
+    ;
+
+JAVADOC 
+    : '/**'
           {
-          if ( nesting<=0 ) {
-                token=Token.EOF_TOKEN;
-                System.out.println("exiting embedded simple");
-          }
-          else {
-                nesting--;
-          }
-          }
-        ;
-JAVADOC : '/**'
-          {
-            // create a new javadoc lexer/parser duo that feeds
-            // off the current input stream
-            System.out.println("enter javadoc");
-            JavadocLexer j = new JavadocLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(j);
-            tokens.discardTokenType(JavadocLexer.WS);
-            JavadocParser p = new JavadocParser(tokens);
-            p.comment();
+	      callJavaDoc(INPUT);
+
             // returns a JAVADOC token to the java parser but on a
             // different channel than the normal token stream so it
             // doesn't get in the way.
