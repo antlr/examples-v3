@@ -18,7 +18,7 @@
 //        report any warnings or errors to the antlr-interest newsgroup (see www.antlr.org)
 //        so that they may be corrected for any platofrm that I have not specifically tested.
 //
-//	  The project settings such as addinotal library paths and include paths have been set
+//	  The project settings such as additional library paths and include paths have been set
 //        relative to the place where this source code sits on the ANTLR perforce system. You
 //        may well need to change the settings to locate the includes and the lib files. UNIX
 //        people need -L path/to/antlr/libs -lantlr3c (release mode) or -lantlr3cd (debug)
@@ -32,7 +32,7 @@
 // multiple times) and your own project related header files. Use <> to include and
 // -I on the compile line (which vs2005 now handles, where vs2003 did not).
 //
-#include    <T.h>
+#include    <hoistedPredicates.h>
 
 // Main entry point for this example
 //
@@ -203,12 +203,26 @@ main	(int argc, char *argv[])
     //
     // Note that this means only that the methods are always called via the object
     // pointer and the first argument to any method, is a pointer to the structure itself.
-    // It also has the side advantage, if you are using an IDE such as VS2005 taht can do it
-    // that when you type ->, you will see a list of tall the methods the object supports.
+    // It also has the side advantage, if you are using an IDE such as VS2005 that can do it,
+    // that when you type ->, you will see a list of all the methods the object supports.
     //
-    psr->program(psr);
+    psr->statement(psr, ANTLR3_TRUE);    // First see enum as a keyword
+    
+    // Set up again.
+    // NB: I need to look in to this, because I think there should be a way to reset the token
+    // stream and input stream and invoke the same parser, but maybe not.
+    //
+    psr	    ->free  (psr);	    psr = NULL;
+    tstream ->free  (tstream);	    tstream = NULL;
+    lxr	    ->free  (lxr);	    lxr = NULL;
+    input->reset(input);
+    lxr	    = TLexerNew(input);
+    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lxr->pLexer->tokSource);
+    psr	    = TParserNew(tstream);
 
-    // We did not return anythign from this parser rule, so we can finish. It only remains
+    psr->statement(psr, ANTLR3_FALSE);   // Now, see enum as an identifier
+
+    // We did not return anything from this parser rule, so we can finish. It only remains
     // to close down our open objects, in the reverse order we created them
     //
     psr	    ->free  (psr);	    psr = NULL;

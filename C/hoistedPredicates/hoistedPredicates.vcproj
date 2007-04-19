@@ -59,12 +59,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\antlr\main\lib\C\include;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
@@ -79,7 +80,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="antlr3cd_dll.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\DebugDLL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -146,10 +149,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\..\..\antlr\main\lib\C\include;."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -164,7 +168,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="antlr3c_dll.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\ReleaseDLL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

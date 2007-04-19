@@ -26,9 +26,12 @@ options
 }
 
 // Modifed slightly from the Java example to give an example of
-// invoking a parser rule with a parameter
+// invoking a parser rule with a parameter. Also note that you have to be more careful
+// with your rule names in C as the functions they generate are not obfuscated. This rule was
+// called stat, but that generates a function called stat() that clashes with the C runtime.
+// I have left it this way as it is more intuitive and is aminor incovenience at most.
 //
-stat[ANTLR3_BOOLEAN asIDs]
+statement[ANTLR3_BOOLEAN asIDs]
 
     @init
     {
