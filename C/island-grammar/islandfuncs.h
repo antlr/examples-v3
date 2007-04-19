@@ -7,6 +7,6 @@ extern	void	callSimple(pANTLR3_INPUT_STREAM input);
 
 // External function that sets up and calls a JavaDoc parser
 //
-extern	void	callJavaDoc(pANTLR3_INPUT_STREAM input);
+extern	void	callJavadoc(pANTLR3_INPUT_STREAM input);
 
 #endif

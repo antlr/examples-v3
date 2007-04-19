@@ -1,17 +1,39 @@
 #include    <islandctl.h>
 
-void callJavaDoc(pANTLR3_INPUT_STREAM input)
+void callJavadoc(pANTLR3_INPUT_STREAM input)
 {
-            // create a new javadoc lexer/parser duo that feeds
-            // off the current input stream
-            System.out.println("enter javadoc");
-            JavadocLexer j = new JavadocLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(j);
-            tokens.discardTokenType(JavadocLexer.WS);
-            JavadocParser p = new JavadocParser(tokens);
-            p.comment();
+        pANTLR3_COMMON_TOKEN_STREAM tstream;
+	pJavadocLexer		    lex;
+	pJavadocParser		    parser;
+
+	printf("enter Javadoc\n");
+
+	lex	    = JavaDocLexerNew(INPUT);
+	tstream	    = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lex->pLexer->tokSource);
+        parser	    = JavaDocParserNew(tokens);
+
+        parser->comment(parser);
+
+	parser	->free(parser);
+	tstream	->free(tstream);
+	lex	->free(lex);
 }
 
 void callSimple(pANTLR3_INPUT_STREAM input)
 {
+    	pANTLR3_COMMON_TOKEN_STREAM tstream;
+	pSimpleLexer		    lex;
+	pSimpleParser		    parser;
+
+	printf("enter embedded Simple escape\n");
+
+	lex	    = SimpleLexerNew(INPUT);
+	tstream	    = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lex->pLexer->tokSource);
+        parser	    = SimpleParserNew(tokens);
+
+        parser->statement(parser);
+
+	parser	->free(parser);
+	tstream	->free(tstream);
+	lex	->free(lex);
 }

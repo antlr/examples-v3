@@ -13,8 +13,8 @@
 // The compiler must use -I (or set the project settings in VS2005)
 // to locate the antlr3 runtime files and -I. to find this file
 //
-#include    <JavaDocLexer.h>
-#include    <JavaDocParser.h>
+#include    <JavadocLexer.h>
+#include    <JavadocParser.h>
 #include    <SimpleLexer.h>
 #include    <SimpleParser.h>
 

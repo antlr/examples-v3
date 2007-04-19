@@ -111,7 +111,7 @@ RCURLY
 JAVADOC 
     : '/**'
           {
-	      callJavaDoc(INPUT);
+	      callJavadoc(INPUT);
 
             // returns a JAVADOC token to the java parser but on a
             // different channel than the normal token stream so it
