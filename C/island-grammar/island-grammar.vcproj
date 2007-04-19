@@ -260,6 +260,50 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Generated"
+			>
+			<File
+				RelativePath=".\Javadoc.tokens"
+				>
+			</File>
+			<File
+				RelativePath=".\JavadocLexer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavadocLexer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavadocParser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavadocParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Simple.tokens"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleLexer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleLexer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleParser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleParser.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
