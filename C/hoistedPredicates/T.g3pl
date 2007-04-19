@@ -10,6 +10,11 @@
  */
 grammar T;
 
+options
+{
+    language	= C;
+}
+
 @members 
 {
     /** With this true, enum is seen as a keyword.  False, it's an identifier.
