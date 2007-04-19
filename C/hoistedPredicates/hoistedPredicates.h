@@ -1,5 +1,5 @@
 /** \file
- * This is the include file for the ANTLR3 sample project "dynamic-scope"
+ * This is the include file for the ANTLR3 sample project "hoistedPredicates"
  * which shows how to use a C grammar and call it from C code.
  */
 #ifndef	_T_H

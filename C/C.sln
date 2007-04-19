@@ -7,9 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic-scope", "dynamic-sc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzzy", "fuzzy\fuzzy.vcproj", "{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoistedPredicates", "hoistedPredicates\hoistedPredicates.vcproj", "{462BF47F-E60B-49E7-B3B9-91A592BC3858}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = C\\C.vcproj
 		SccLocalPath1 = .
@@ -20,6 +22,9 @@ Global
 		SccProjectUniqueName3 = fuzzy\\fuzzy.vcproj
 		SccLocalPath3 = .
 		SccProjectFilePathRelativizedFromConnection3 = fuzzy\\
+		SccProjectUniqueName4 = hoistedPredicates\\hoistedPredicates.vcproj
+		SccLocalPath4 = .
+		SccProjectFilePathRelativizedFromConnection4 = hoistedPredicates\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -38,6 +43,10 @@ Global
 		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Debug|Win32.Build.0 = Debug|Win32
 		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Release|Win32.ActiveCfg = Release|Win32
 		{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}.Release|Win32.Build.0 = Release|Win32
+		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Debug|Win32.ActiveCfg = Debug|Win32
+		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Debug|Win32.Build.0 = Debug|Win32
+		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Release|Win32.ActiveCfg = Release|Win32
+		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
