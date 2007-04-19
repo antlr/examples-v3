@@ -37,7 +37,7 @@ grammar C;
 options 
 {
     backtrack	= true;
-    //memoize	= true;	// Not Yet Implementd in C target, it is an optimzatoin rather than requirement
+    memoize	= true;
     k		= 2;
     language	= C;
 }
