@@ -212,11 +212,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\islandctrl.c"
+				RelativePath=".\javadocctl.c"
 				>
 			</File>
 			<File
 				RelativePath=".\main.c"
+				>
+			</File>
+			<File
+				RelativePath=".\simplectl.c"
 				>
 			</File>
 		</Filter>
@@ -225,10 +229,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\islandctl.h"
-				>
-			</File>
 			<File
 				RelativePath=".\islandfuncs.h"
 				>

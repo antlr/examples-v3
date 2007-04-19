@@ -19,8 +19,6 @@
 //
 #include    <SimpleLexer.h>
 #include    <SimpleParser.h>
-#include    <JavaDocLexer.h>
-#include    <JavaDocParser.h>
 
 #ifdef	WIN32
 #pragma warning( disable : 4100 )

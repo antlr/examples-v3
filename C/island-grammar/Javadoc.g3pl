@@ -26,7 +26,7 @@ ID
 SIMPLE  
     : '{'
     {
-	callSimple(INPUT);
+	callSimple(INPUT());
 	$channel=HIDDEN;
     }
     ;
@@ -37,9 +37,9 @@ SIMPLE
  *  method comment(), which was called from JAVADOC action in the
  *  Simple parser's lexer.
  */
-END     : '*/' 
+END     : '*' '/' 
 	  {
-	    LTOKEN = EOF_TOKEN;
+	    LTOKEN() = EOF_TOKEN;
 	    printf("exit javadoc\n");
 	  }
         ;

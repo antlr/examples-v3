@@ -32,7 +32,7 @@
 // multiple times) and your own project related header files. Use <> to include and
 // -I on the compile line (which vs2005 now handles, where vs2003 did not).
 //
-#include    <island.h>
+#include    <simple.h>
 
 // Main entry point for this example
 //
@@ -90,7 +90,7 @@ main	(int argc, char *argv[])
     // but it can of cousre speficy any kind of return type from the rule you invoke
     // when calling it.
     //
-    pSimplearser		    psr;
+    pSimpleParser		    psr;
 
     // Create the input stream based upon the arguement supplied to us on the command line
     // for this example, the input will always default to ./input if there is no explicit
@@ -206,7 +206,7 @@ main	(int argc, char *argv[])
     // It also has the side advantage, if you are using an IDE such as VS2005 that can do it,
     // that when you type ->, you will see a list of all the methods the object supports.
     //
-    psr->progam(psr);
+    psr->program(psr);
 
     // We did not return anything from this parser rule, so we can finish. It only remains
     // to close down our open objects, in the reverse order we created them
