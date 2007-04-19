@@ -9,9 +9,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzzy", "fuzzy\fuzzy.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoistedPredicates", "hoistedPredicates\hoistedPredicates.vcproj", "{462BF47F-E60B-49E7-B3B9-91A592BC3858}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "island-grammar", "island-grammar\island-grammar.vcproj", "{D0A4B8F2-C6A0-45D6-95BE-976285CB10D1}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = C\\C.vcproj
 		SccLocalPath1 = .
@@ -25,6 +27,9 @@ Global
 		SccProjectUniqueName4 = hoistedPredicates\\hoistedPredicates.vcproj
 		SccLocalPath4 = .
 		SccProjectFilePathRelativizedFromConnection4 = hoistedPredicates\\
+		SccProjectUniqueName5 = island-grammar\\island-grammar.vcproj
+		SccLocalPath5 = .
+		SccProjectFilePathRelativizedFromConnection5 = island-grammar\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -47,6 +52,10 @@ Global
 		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Debug|Win32.Build.0 = Debug|Win32
 		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Release|Win32.ActiveCfg = Release|Win32
 		{462BF47F-E60B-49E7-B3B9-91A592BC3858}.Release|Win32.Build.0 = Release|Win32
+		{D0A4B8F2-C6A0-45D6-95BE-976285CB10D1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D0A4B8F2-C6A0-45D6-95BE-976285CB10D1}.Debug|Win32.Build.0 = Debug|Win32
+		{D0A4B8F2-C6A0-45D6-95BE-976285CB10D1}.Release|Win32.ActiveCfg = Release|Win32
+		{D0A4B8F2-C6A0-45D6-95BE-976285CB10D1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
