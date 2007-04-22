@@ -80,6 +80,15 @@ options
     language	= C;
 }
 
+@lexer::preinclude
+{
+#define ANTLR3_HUGE
+}
+@parser::preinclude
+{
+#define	ANTLR3_HUGE
+}
+
 @lexer::members 
 {
 static ANTLR3_BOOLEAN enumIsKeyword = ANTLR3_TRUE;

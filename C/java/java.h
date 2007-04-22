@@ -5,12 +5,12 @@
 #ifndef	_JAVA_H
 #define	_JAVA_H
 
-#ifdef	__xlc__
+# ifdef	__xlc__
 /* For reasons unknown, AIX xlC compiler is the only thing that won't accept C++ style 
  * comments without specifically telling it to.
  */
-#pragma options cpluscmt
-#endif
+#  pragma options cpluscmt
+# endif
 
 // First thing we always do is include the ANTLR3 generated files, which
 // will automatically include the antlr3 runtime header files.
@@ -19,9 +19,10 @@
 //
 #include    <javaLexer.h>
 #include    <javaParser.h>
+#include    <jimdirent.h>
 
-#ifdef	WIN32
-#pragma warning( disable : 4100 )
-#endif
+# ifdef	WIN32
+#  pragma warning( disable : 4100 )
+# endif
 
 #endif
