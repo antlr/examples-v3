@@ -244,6 +244,16 @@
 			<File
 				RelativePath=".\java.g3pl"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+						MaxRules="65535"
+						MaxDFAEdges="65535"
+						DFATimeout="65535"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
