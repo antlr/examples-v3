@@ -42,6 +42,8 @@ options
     language	= C;
 }
 
+
+
 scope Symbols 
 {
     // Only track types in order to get parser working. The Java example
@@ -55,6 +57,23 @@ scope Symbols
     // key to the hashtable and seeing if the table contains that key.
     //
     pANTLR3_HASH_TABLE	    types;
+}
+
+// While you can implement your own character streams and so on, they
+// normally call things like LA() via funtion pointers. In general you will
+// be using one of the pre-supplied input streams and you can instruct the
+// generated code to access the input pointrs directly.
+//
+// For  8 bit inputs            : #define ANTLR3_INLINE_INPUT_ASCII
+// For 16 bit UTF16/UCS2 inputs : #define ANTLR3_INLINE_INPUT_UTF16
+//
+// If your compiled recognizer might be given inputs from either of the sources
+// or you have written your own character input stream, then do not define
+// either of these.
+//
+@lexer::header
+{
+#define	ANTLR3_INLINE_INPUT_ASCII
 }
 
 // The @header specifier is valid in the C target, but in this case there
@@ -156,7 +175,7 @@ scope Symbols
     // called with a poitner to the scope isntance that is to be freed,
     // from whence we take teh table pointer, which we can then close :-)
     //
-    void freeTable(void * table)
+    void ANTLR3_CDECL freeTable(void * table)
     {
 	SCOPE_TYPE(Symbols) symtab;
 

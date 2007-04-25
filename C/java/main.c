@@ -46,7 +46,7 @@ static void	parseFile   (pANTLR3_UINT8 fName);
 
 // Main entry point for this example
 //
-int 
+int ANTLR3_CDECL 
 main	(int argc, char *argv[])
 {
 

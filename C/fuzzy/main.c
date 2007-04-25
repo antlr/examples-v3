@@ -36,7 +36,7 @@
 
 // Main entry point for this example
 //
-int 
+int ANTLR3_CDECL
 main	(int argc, char *argv[])
 {
     // Now we declare the ANTLR related local variables we need.

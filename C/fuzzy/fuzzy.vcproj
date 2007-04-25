@@ -151,11 +151,15 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\antlr\main\lib\C\include;."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				StringPooling="true"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
+				CallingConvention="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -171,10 +175,11 @@
 				AdditionalDependencies="antlr3c_dll.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\ReleaseDLL"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				OptimizeForWindows98="1"
 				TargetMachine="1"
 			/>
 			<Tool
