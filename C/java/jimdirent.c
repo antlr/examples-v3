@@ -45,7 +45,7 @@ jimopendir(const char * directory)
     // We have allocated our structure, so fill it in
     //
     doh->isFirst    = ANTLR3_TRUE;	// We have not called FindFirst yet
-    sprintf(doh->dirName, "%s%s*", directory, (directory[strlen((const char *) directory)-1] == '\\' ? "" : "\\")); // Don't duplicate delimiter
+    sprintf((char *)(doh->dirName), "%s%s*", directory, (directory[strlen((const char *) directory)-1] == '\\' ? "" : "\\")); // Don't duplicate delimiter
 
     return doh;
 }

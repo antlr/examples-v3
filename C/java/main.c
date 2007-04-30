@@ -49,7 +49,6 @@ static void	parseFile   (pANTLR3_UINT8 fName);
 int ANTLR3_CDECL 
 main	(int argc, char *argv[])
 {
-
     // Create the input stream based upon the arguement supplied to us on the command line
     // for this example, the input will always default to ./input if there is no explicit
     // argument, otherwise we are expecting potentially a whole list of 'em.
@@ -110,7 +109,7 @@ processDir(char * directory)
 		// We found a new entry in this directory, we need to know
 		// if it is a sub directory of course.
 		//
-		buflen = sprintf(buf, "%s%c%s", directory, DIRDELIM, dirfil->d_name);
+		buflen = sprintf((char *)buf, "%s%c%s", directory, DIRDELIM, dirfil->d_name);
 		Hdirs	= opendir((const char *)buf);
 
 		if (Hdirs != NULL)
@@ -119,7 +118,7 @@ processDir(char * directory)
 		    // ourselves recursively, to process this subdirectory
 		    //
 		    closedir(Hdirs);
-		    processDir(buf);
+		    processDir((char *)buf);
 		    printf(" %s\n", buf);
 		}
 		else
