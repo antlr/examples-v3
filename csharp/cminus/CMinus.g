@@ -67,7 +67,7 @@ scope slist;
         -> function(type={$type.st}, name={$function::name},
                     locals={$slist::locals},
                     stats={$slist::stats},
-                    args={ToTemplates($p)})
+                    args={$p})
     ;
 
 formalParameter

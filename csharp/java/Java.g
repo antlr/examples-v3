@@ -40,7 +40,44 @@
  *          of typeParameter (according to JLS, 3rd edition)
  *      fixed castExpression: no longer allows expression next to type
  *          (according to semantics in JLS, in contrast with syntax in JLS)
-
+ *
+ *  Version 1.0.2 -- Terence Parr, Nov 27, 2006
+ *      java spec I built this from had some bizarre for-loop control.
+ *          Looked weird and so I looked elsewhere...Yep, it's messed up.
+ *          simplified.
+ *
+ *  Version 1.0.3 -- Chris Hogue, Feb 26, 2007
+ *      Factored out an annotationName rule and used it in the annotation rule.
+ *          Not sure why, but typeName wasn't recognizing references to inner
+ *          annotations (e.g. @InterfaceName.InnerAnnotation())
+ *      Factored out the elementValue section of an annotation reference.  Created 
+ *          elementValuePair and elementValuePairs rules, then used them in the 
+ *          annotation rule.  Allows it to recognize annotation references with 
+ *          multiple, comma separated attributes.
+ *      Updated elementValueArrayInitializer so that it allows multiple elements.
+ *          (It was only allowing 0 or 1 element).
+ *      Updated localVariableDeclaration to allow annotations.  Interestingly the JLS
+ *          doesn't appear to indicate this is legal, but it does work as of at least
+ *          JDK 1.5.0_06.
+ *      Moved the Identifier portion of annotationTypeElementRest to annotationMethodRest.
+ *          Because annotationConstantRest already references variableDeclarator which 
+ *          has the Identifier portion in it, the parser would fail on constants in 
+ *          annotation definitions because it expected two identifiers.  
+ *      Added optional trailing ';' to the alternatives in annotationTypeElementRest.
+ *          Wouldn't handle an inner interface that has a trailing ';'.
+ *      Swapped the expression and type rule reference order in castExpression to 
+ *          make it check for genericized casts first.  It was failing to recognize a
+ *          statement like  "Class<Byte> TYPE = (Class<Byte>)...;" because it was seeing
+ *          'Class<Byte' in the cast expression as a less than expression, then failing 
+ *          on the '>'.
+ *      Changed createdName to use typeArguments instead of nonWildcardTypeArguments.
+ *          Again, JLS doesn't seem to allow this, but java.lang.Class has an example of
+ *          of this construct.
+ *      Changed the 'this' alternative in primary to allow 'identifierSuffix' rather than
+ *          just 'arguments'.  The case it couldn't handle was a call to an explicit
+ *          generic method invocation (e.g. this.<E>doSomething()).  Using identifierSuffix
+ *          may be overly aggressive--perhaps should create a more constrained thisSuffix rule?
+ * 		
  */
 grammar Java;
 
@@ -52,7 +89,7 @@ options {
 }
 
 @lexer::members {
-protected bool enumIsKeyword = false;
+protected bool enumIsKeyword = true;
 }
 
 // starting point for parsing a java file
@@ -381,7 +418,19 @@ annotations
 	;
 
 annotation
-	:	'@' typeName ('(' (Identifier '=')? elementValue ')')?
+	:	'@' annotationName ('(' elementValuePairs? ')')?
+	;
+	
+annotationName
+	: Identifier ('.' Identifier)*
+	;
+	
+elementValuePairs
+	: elementValuePair (',' elementValuePair)*
+	;
+	
+elementValuePair
+	: (Identifier '=')? elementValue
 	;
 	
 elementValue
@@ -391,7 +440,7 @@ elementValue
 	;
 	
 elementValueArrayInitializer
-	:	'{' (elementValue)? (',')? '}'
+	:	'{' (elementValue (',' elementValue )*)? '}'
 	;
 	
 annotationTypeDeclaration
@@ -411,11 +460,11 @@ annotationTypeElementDeclaration
 	;
 	
 annotationTypeElementRest
-	:	type Identifier annotationMethodOrConstantRest ';'
-	|   classDeclaration
-	|   interfaceDeclaration
-	|   enumDeclaration
-	|   annotationTypeDeclaration
+	:	type annotationMethodOrConstantRest ';'
+	|   classDeclaration ';'?
+	|   interfaceDeclaration ';'?
+	|   enumDeclaration ';'?
+	|   annotationTypeDeclaration ';'?
 	;
 	
 annotationMethodOrConstantRest
@@ -424,7 +473,7 @@ annotationMethodOrConstantRest
 	;
 	
 annotationMethodRest
- 	:	'(' ')' (defaultValue)?
+ 	:	Identifier '(' ')' (defaultValue)?
  	;
  	
 annotationConstantRest
@@ -448,13 +497,13 @@ blockStatement
 	;
 	
 localVariableDeclaration
-	:	('final')? type variableDeclarators ';'
+	:	('final' | annotation)* type variableDeclarators ';'
 	;
 	
 statement
 	: block
     | 'assert' expression (':' expression)? ';'
-    | 'if' parExpression statement ('else' statement)?
+    | 'if' parExpression statement (options {k=1;}:'else' statement)?
     | 'for' '(' forControl ')' statement
     | 'while' parExpression statement
     | 'do' statement 'while' parExpression ';'
@@ -505,22 +554,18 @@ moreStatementExpressions
 	;
 
 forControl
+options {k=3;} // be efficient for common case: for (ID ID : ID) ...
 	:	forVarControl
 	|   forInit? ';' expression? ';' forUpdate?
 	;
 
 forInit
-	:	'final'? type variableDeclarators
+	:	'final'? (annotation)? type variableDeclarators
     |   expressionList
 	;
 	
 forVarControl
-	:	'final'? (annotation)? type Identifier forVarControlRest
-	;
-
-forVarControlRest
-	:	variableDeclaratorRest (',' variableDeclarator)* ';' expression? ':' forUpdate?
-    |   ':' expression
+	:	'final'? type Identifier ':' expression
 	;
 
 forUpdate
@@ -639,14 +684,14 @@ unaryExpressionNotPlusMinus
 
 castExpression
     :  '(' primitiveType ')' unaryExpression
-    |  '(' (expression | type) ')' unaryExpressionNotPlusMinus
+    |  '(' (type | expression) ')' unaryExpressionNotPlusMinus
     ;
 
 primary
     :	parExpression
     |   nonWildcardTypeArguments
         (explicitGenericInvocationSuffix | 'this' arguments)
-    |   'this' (arguments)?
+    |   'this' ('.' Identifier)* (identifierSuffix)?
     |   'super' superSuffix
     |   literal
     |   'new' creator
@@ -672,8 +717,8 @@ creator
 	;
 
 createdName
-	:	Identifier nonWildcardTypeArguments?
-        ('.' Identifier nonWildcardTypeArguments?)*
+	:	Identifier typeArguments?
+        ('.' Identifier typeArguments?)*
     |	primitiveType
 	;
 	

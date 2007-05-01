@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='iso-8859-1' ?>
 <project
-	name="JavaParse" 
+	name="hoisted" 
 	default="build"
 	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
 >
@@ -28,7 +28,7 @@
 	
 	<include buildfile="${examples.root.dir}/examples-v3.common.xml" />
 
-	<property name="grammar.name"       value="Java" />
+	<property name="grammar.name"       value="T" />
 
 	<target name="init" depends="common.init">
 		<assemblyfileset id="project.references" basedir="${stnet.sharedlibs.dir}">

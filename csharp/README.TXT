@@ -1,6 +1,6 @@
 ANTLR V3 Examples for the C# Code-Generator and Runtime
 
-9 November, 2006
+30 April, 2007
 
 Kunle Odutola		: kunle UNDERSCORE odutola AT hotmail DOT com
 
@@ -12,7 +12,7 @@ HOW TO BUILD
    What you will need:
    - NAnt v0.85 or later (must be installed and available on the system PATH)
    
-   - 'antlr-3.0b5.jar' from ANTLR v3.0b5
+   - 'antlr-3.0b8.jar' from ANTLR v3.0b8
    
    - 'antlr-2.7.7.jar' from ANTLR v2.7.7
    
@@ -36,7 +36,7 @@ HOW TO BUILD
    
    File                       Destination
    ---------------------------------------------------------------------------
-   antlr-3.0b5.jar       -->  csharp/_SharedLib/antlr-3.0b5.jar
+   antlr-3.0b8.jar       -->  csharp/_SharedLib/antlr-3.0b8.jar
    antlr-2.7.7.jar       -->  csharp/_SharedLib/antlr-2.7.7.jar
    stringtemplate.jar    -->  csharp/_SharedLib/stringtemplate.jar
    
@@ -71,6 +71,12 @@ HOW TO BUILD
       nant clean build -t:net-1.1       (or net-2.0, mono-1.0, mono-2.0)
 
 
+NOTES
+	a. The Ruby example grammar (if it is included) is somewhat outdated. It
+	   will fail to process Ruby source files orrectly. It is unchanged 
+	   essentially since the 3.0eaX timeframe.
+	   
+	   
 Enjoy!
 
 Kunle Odutola

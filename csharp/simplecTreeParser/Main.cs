@@ -25,7 +25,9 @@ namespace Antlr.Examples.SimpleTreeParser
 				SimpleCParser.program_return r = parser.program();
 				Console.Out.WriteLine("tree="+((ITree)r.tree).ToStringTree());
 				CommonTreeNodeStream nodes = new CommonTreeNodeStream((ITree)r.tree);
-				SimpleCWalkerTreeParser walker = new SimpleCWalkerTreeParser(nodes);
+				nodes.TokenStream = tokens;
+				SimpleCWalker walker = new SimpleCWalker(nodes);
+				
 				walker.program();
 			}
 			else

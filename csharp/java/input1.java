@@ -130,7 +130,7 @@ public class JavaParser extends Parser {
     public String getGrammarFileName() { return ".\\java.g"; }
 
     
-    public static readonly CommonToken IGNORE_TOKEN = new CommonToken(null,0,99,0,0);
+    public static final CommonToken IGNORE_TOKEN = new CommonToken(null,0,99,0,0);
 
 
     
