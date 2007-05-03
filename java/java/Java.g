@@ -69,6 +69,10 @@
  *          generic method invocation (e.g. this.<E>doSomething()).  Using identifierSuffix
  *          may be overly aggressive--perhaps should create a more constrained thisSuffix rule?
  * 		
+ *  Version 1.0.4 -- Hiroaki Nakamura, May 3, 2007
+ *
+ *	Fixed formalParameterDecls, localVariableDeclaration, forInit,
+ *	and forVarControl to use variableModifier* not 'final'? (annotation)?
  */
 grammar Java;
 options {k=2; backtrack=true; memoize=true;}
@@ -360,7 +364,7 @@ formalParameters
 	;
 	
 formalParameterDecls
-	:	'final'? annotations? type formalParameterDeclsRest?
+	:	variableModifier* type formalParameterDeclsRest?
 	;
 	
 formalParameterDeclsRest
@@ -477,12 +481,12 @@ block
 	
 blockStatement
 	:	localVariableDeclaration
-    |   classOrInterfaceDeclaration
-    |   statement
+	|	classOrInterfaceDeclaration
+    	|	statement
 	;
 	
 localVariableDeclaration
-	:	('final' | annotation)* type variableDeclarators ';'
+	:	variableModifier* type variableDeclarators ';'
 	;
 	
 statement
@@ -541,16 +545,16 @@ moreStatementExpressions
 forControl
 options {k=3;} // be efficient for common case: for (ID ID : ID) ...
 	:	forVarControl
-	|   forInit? ';' expression? ';' forUpdate?
+	|	forInit? ';' expression? ';' forUpdate?
 	;
 
 forInit
-	:	'final'? (annotation)? type variableDeclarators
-    |   expressionList
+	:	variableModifier* type variableDeclarators
+	|	expressionList
 	;
 	
 forVarControl
-	:	'final'? type Identifier ':' expression
+	:	variableModifier* type Identifier ':' expression
 	;
 
 forUpdate
