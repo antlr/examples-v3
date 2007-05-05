@@ -1,0 +1,22 @@
+tree grammar LangDumpDecl;
+
+options 
+{
+    tokenVocab	    = Lang;
+    language	    = C;
+    ASTLabelType = blahblah;
+}
+
+decl : ^(DECL type declarator)
+
+       // label.start, label.start, label.text
+       {
+	   printf("int \%s\n", $declarator.text->chars);
+       }
+     ;
+
+type : INTTYPE ;
+
+declarator
+     : ID
+     ;

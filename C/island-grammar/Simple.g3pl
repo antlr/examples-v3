@@ -115,7 +115,7 @@ RCURLY
     {
 	if ( nesting<=0 ) 
 	{
-	    LTOKEN()	= EOF_TOKEN;
+	    LTOKEN	= EOF_TOKEN;
 	    printf("exiting embedded simple\n");
         }
         else 
@@ -128,7 +128,7 @@ RCURLY
 JAVADOC 
     : '/*' '*'
           {
-	      callJavadoc(INPUT());
+	      callJavadoc(INPUT);
 
             // returns a JAVADOC token to the java parser but on a
             // different channel than the normal token stream so it

@@ -43,7 +43,7 @@ ID
 SIMPLE  
     : '{'
     {
-	callSimple(INPUT());
+	callSimple(INPUT);
 	$channel=HIDDEN;
     }
     ;
@@ -56,7 +56,7 @@ SIMPLE
  */
 END     : '*' '/' 
 	  {
-	    LTOKEN() = EOF_TOKEN;
+	    LTOKEN = EOF_TOKEN;
 	    printf("exit javadoc\n");
 	  }
         ;

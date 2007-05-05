@@ -13,9 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "island-grammar", "island-gr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "java", "java\java.vcproj", "{4DC69534-9434-45F7-9026-F872441BEFD8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "treeparser", "treeparser\treeparser.vcproj", "{0A5C4302-8292-4CAF-BFD6-A9F9387CECA7}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 8
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = C\\C.vcproj
 		SccLocalPath1 = .
@@ -35,6 +37,9 @@ Global
 		SccProjectUniqueName6 = java\\java.vcproj
 		SccLocalPath6 = .
 		SccProjectFilePathRelativizedFromConnection6 = java\\
+		SccProjectUniqueName7 = treeparser\\treeparser.vcproj
+		SccLocalPath7 = .
+		SccProjectFilePathRelativizedFromConnection7 = treeparser\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -65,6 +70,10 @@ Global
 		{4DC69534-9434-45F7-9026-F872441BEFD8}.Debug|Win32.Build.0 = Debug|Win32
 		{4DC69534-9434-45F7-9026-F872441BEFD8}.Release|Win32.ActiveCfg = Release|Win32
 		{4DC69534-9434-45F7-9026-F872441BEFD8}.Release|Win32.Build.0 = Release|Win32
+		{0A5C4302-8292-4CAF-BFD6-A9F9387CECA7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A5C4302-8292-4CAF-BFD6-A9F9387CECA7}.Debug|Win32.Build.0 = Debug|Win32
+		{0A5C4302-8292-4CAF-BFD6-A9F9387CECA7}.Release|Win32.ActiveCfg = Release|Win32
+		{0A5C4302-8292-4CAF-BFD6-A9F9387CECA7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
