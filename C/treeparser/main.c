@@ -10,7 +10,7 @@
 
 // Notes: Although all the examples provided are configured to be built
 //        by Visual Studio 2005, based on the custom build rules
-//        provided in $(ANTLRSRC)/code/antlr/main/lib/C/vs2005/rulefiles/antlr3.rules
+//        provided in $(ANTLRSRC)/code/antlr/main/runtime/C/vs2005/rulefiles/antlr3.rules
 //        there is no reason that this MUST be the case. Provided that you know how
 //        to run the antlr tool, then just compile the resulting .c files and this
 //	  file together, using say gcc or whatever: gcc *.c -I. -o XXX
