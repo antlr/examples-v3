@@ -18,7 +18,7 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\..\..\antlr\main\lib\C\vs2005\rulefiles\antlr3.rules"
+			RelativePath="..\..\..\antlr\main\runtime\C\vs2005\rulefiles\antlr3.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\antlr\main\lib\C\include;."
+				AdditionalIncludeDirectories="..\..\..\antlr\main\runtime\C\include;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -82,7 +82,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="antlr3cd_dll.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\DebugDLL"
+				AdditionalLibraryDirectories="..\..\..\antlr\main\runtime\C\DebugDLL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -149,7 +149,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\antlr\main\lib\C\include;."
+				AdditionalIncludeDirectories="..\..\..\antlr\main\runtime\C\include;."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -170,7 +170,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="antlr3c_dll.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\antlr\main\lib\C\ReleaseDLL"
+				AdditionalLibraryDirectories="..\..\..\antlr\main\runtime\C\ReleaseDLL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
