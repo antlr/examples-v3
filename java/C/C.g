@@ -318,7 +318,6 @@ postfix_expression
         |   '(' ')'
         |   '(' argument_expression_list ')'
         |   '.' IDENTIFIER
-        |   '*' IDENTIFIER
         |   '->' IDENTIFIER
         |   '++'
         |   '--'
