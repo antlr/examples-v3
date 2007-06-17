@@ -4,10 +4,10 @@ options
 {
     tokenVocab	    = Lang;
     language	    = C;
-    ASTLabelType = blahblah;
+    ASTLabelType	= pANTLR3_BASE_TREE;
 }
 
-decl : ^(DECL type declarator)
+decl : ^(DECL type declarator+)
 
        // label.start, label.start, label.text
        {
@@ -18,5 +18,5 @@ decl : ^(DECL type declarator)
 type : INTTYPE ;
 
 declarator
-     : ID
+     : i=ID
      ;

@@ -107,7 +107,7 @@ main	(int argc, char *argv[])
     pANTLR3_COMMON_TREE_NODE_STREAM	nodes;
 
     // Finally, when the parser runs, it will produce an AST that can be traversed by the 
-    // the tree parser: c.f. LangDumpDecl.g3t
+    // the tree parser: c.f. SimpleCWalker.g3t
     //
     pSimpleCWalker		    treePsr;
 

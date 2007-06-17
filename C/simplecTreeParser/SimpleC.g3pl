@@ -56,7 +56,7 @@ block
             variable*
             cstat*
         '}'
-        -> ^(BLOCK[$lc,"BLOCK"] variable* cstat*)
+        -> ^(BLOCK[$lc, "BLOCK"] variable* cstat*)
     ;
 
 cstat: forStat
