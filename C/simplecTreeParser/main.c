@@ -245,6 +245,7 @@ main	(int argc, char *argv[])
 	treePsr	= SimpleCWalkerNew(nodes);
 
 	treePsr->program(treePsr);
+	nodes->free(nodes); nodes = NULL;
     }
 
     // We did not return anything from this parser rule, so we can finish. It only remains
