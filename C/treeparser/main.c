@@ -250,6 +250,7 @@ main	(int argc, char *argv[])
     // We did not return anything from this parser rule, so we can finish. It only remains
     // to close down our open objects, in the reverse order we created them
     //
+    nodes   ->free  (nodes);	    nodes	= NULL;
     treePsr ->free  (treePsr);	    treePsr	= NULL;
     psr	    ->free  (psr);	    psr		= NULL;
     tstream ->free  (tstream);	    tstream	= NULL;
