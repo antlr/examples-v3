@@ -776,7 +776,7 @@ LINE_COMMAND
 		    // and destroy them when the whoel parse session is complete. Remember that you
 		    // don't want to do this until all tokens have been manipulated all the way through 
 		    // your tree parsers etc as the token does not store the text it jsut refers
-		    // back to the input stream and trying to get teh test for it will abort if you
+		    // back to the input stream and trying to get the text for it will abort if you
 		    // close the input stream too early.
 		    //
 
