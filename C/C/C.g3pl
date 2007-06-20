@@ -172,8 +172,8 @@ scope Symbols
     // Because our dynamic scope contains an ANTLR3_HASH_TABLE, we need to free
     // it when it goes out of scope. When we create a new scope, we just set the
     // free pointer for the scope to point to this embedded function, which will be
-    // called with a poitner to the scope isntance that is to be freed,
-    // from whence we take teh table pointer, which we can then close :-)
+    // called with a pointer to the scope instance that is to be freed,
+    // from whence we take the table pointer, which we can then close :-)
     //
     void ANTLR3_CDECL freeTable(void * table)
     {
@@ -665,6 +665,8 @@ IDENTIFIER
     :	LETTER (LETTER|'0'..'9')*
     ;
 	
+
+
 fragment
 LETTER
     :	'$'
@@ -678,8 +680,11 @@ CHARACTER_LITERAL
     ;
 
 STRING_LITERAL
-    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+    :  '"' STRING_GUTS '"'
     ;
+
+fragment
+STRING_GUTS :	( EscapeSequence | ~('\\'|'"') )* ;
 
 HEX_LITERAL : '0' ('x'|'X') HexDigit+ IntegerTypeSuffix? ;
 
@@ -745,5 +750,29 @@ LINE_COMMENT
 
 // ignore #line info for now
 LINE_COMMAND 
-    : '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '#' (' ' | '\t')*
+	(
+	    'include' (' ' | '\t')+ '"' file = STRING_GUTS '"' (' ' | '\t')* '\r'? '\n'
+		{
+		    pANTLR3_STRING	    fName;
+		    pANTLR3_INPUT_STREAM    in;
+
+		    // Create an intial string, then take a substring
+		    // We can do this by messing with the start and end
+		    // pointers of tokens and so on. This shows a reasonable way to
+		    // manipulate strings.
+		    //
+		    fName = $file.text;
+		    printf("Including file '%s'\n", fName->chars);
+
+		    // Create a new input stream and take advantage of built in stream stacking
+		    // in C target runtime.
+		    //
+		    in = antlr3AsciiFileStreamNew(fName->chars);
+		    PUSHSTREAM(in);
+
+		}
+            | ('0'..'9')+ ~('\n'|'\r')* '\r'? '\n'
+	    )
+	 {$channel=HIDDEN;}
     ;

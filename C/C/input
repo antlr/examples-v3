@@ -3,6 +3,7 @@ typedef unsigned int size_t;
 typedef long int wchar_t;
 # 34 "/usr/include/stdlib.h" 2 3 4
 
+#include "jimtest.h"
 
 # 96 "/usr/include/stdlib.h" 3 4
 
