@@ -73,6 +73,9 @@
  *
  *	Fixed formalParameterDecls, localVariableDeclaration, forInit,
  *	and forVarControl to use variableModifier* not 'final'? (annotation)?
+ *
+ *  Version 1.0.5 -- Terence, June 21, 2007
+ *	--a[i].foo didn't work. Fixed unaryExpression
  */
 grammar Java;
 options {k=2; backtrack=true; memoize=true;}
@@ -659,8 +662,8 @@ multiplicativeExpression
 unaryExpression
     :   '+' unaryExpression
     |	'-' unaryExpression
-    |   '++' primary
-    |   '--' primary
+    |   '++' unaryExpression
+    |   '--' unaryExpression
     |   unaryExpressionNotPlusMinus
     ;
 
