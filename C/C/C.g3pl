@@ -643,7 +643,7 @@ expression_statement
     ;
 
 selection_statement
-    : 'if' '(' expression ')' statement (options {k=1; backtrack=false;}:'else' statement)?
+    : 'if' '(' expression ')' statement (('else')=> 'else' statement)?
     | 'switch' '(' expression ')' statement
     ;
 
@@ -697,15 +697,14 @@ HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
 
 fragment
 IntegerTypeSuffix
-    :	('u'|'U')? ('l'|'L')
+    :	('l'|'L')
     |	('u'|'U')  ('l'|'L')?
     ;
 
 FLOATING_POINT_LITERAL
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
     |   '.' ('0'..'9')+ Exponent? FloatTypeSuffix?
-    |   ('0'..'9')+ Exponent FloatTypeSuffix?
-    |   ('0'..'9')+ Exponent? FloatTypeSuffix
+    |   ('0'..'9')+ ( Exponent FloatTypeSuffix? | FloatTypeSuffix)
     ;
 
 fragment
@@ -763,7 +762,7 @@ LINE_COMMAND
 		    // manipulate strings.
 		    //
 		    fName = $file.text;
-		    printf("Including file '%s'\n", fName->chars);
+		    printf("Including file '\%s'\n", fName->chars);
 
 		    // Create a new input stream and take advantage of built in stream stacking
 		    // in C target runtime.
@@ -781,7 +780,7 @@ LINE_COMMAND
 		    //
 
 		}
-            | ('0'..'9')+ ~('\n'|'\r')* '\r'? '\n'
+            | (('0'..'9')=>('0'..'9'))+ ~('\n'|'\r')* '\r'? '\n'
 	    )
 	 {$channel=HIDDEN;}
     ;
