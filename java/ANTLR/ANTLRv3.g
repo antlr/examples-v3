@@ -99,8 +99,8 @@ tokensSpec
 
 tokenSpec
 	:	TOKEN_REF
-		(	'=' lit=(STRING_LITERAL|CHAR_LITERAL)	-> ^('=' TOKEN_REF $lit)
-		|											-> TOKEN_REF
+		(	'=' (lit=STRING_LITERAL|lit=CHAR_LITERAL)	-> ^('=' TOKEN_REF $lit)
+		|												-> TOKEN_REF
 		)
 		';'
 	;
@@ -152,7 +152,7 @@ scope {
 		throwsSpec? optionsSpec? ruleScopeSpec? ruleAction*
 		':'	altList	';'
 		exceptionGroup?
-	    -> ^( RULE id {adaptor.create(modifier)} ^(ARG $arg)? ^(RET $rt)?
+	    -> ^( RULE id {modifier!=null?adaptor.create(modifier):null} ^(ARG $arg)? ^(RET $rt)?
 	    	  optionsSpec? ruleScopeSpec? ruleAction*
 	    	  altList
 	    	  exceptionGroup?
@@ -223,10 +223,14 @@ element
 	;
 
 elementNoOptionSpec
-	:	id labelOp=('='|'+=') atom ebnfSuffix
-		-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] ^($labelOp id atom) EOA["EOA"]) EOB["EOB"]))
-	|	id labelOp=('='|'+=') block ebnfSuffix
-		-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] ^($labelOp id block) EOA["EOA"]) EOB["EOB"]))
+	:	id (labelOp='='|labelOp='+=') atom
+		(	ebnfSuffix	-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] ^($labelOp id atom) EOA["EOA"]) EOB["EOB"]))
+		|				-> ^($labelOp id atom)
+		)
+	|	id (labelOp='='|labelOp='+=') block
+		(	ebnfSuffix	-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] ^($labelOp id block) EOA["EOA"]) EOB["EOB"]))
+		|				-> ^($labelOp id block)
+		)
 	|	atom
 		(	ebnfSuffix	-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] atom EOA["EOA"]) EOB["EOB"])
 		|				-> atom
@@ -237,10 +241,10 @@ elementNoOptionSpec
 	|   treeSpec
 	;
 
-atom:   range ( op=('^'|'!') -> ^($op range) | -> range )
+atom:   range ( (op='^'|op='!') -> ^($op range) | -> range )
     |   terminal
-    |	notSet ( op=('^'|'!') -> ^($op notSet) | -> notSet )
-    |   RULE_REF ( arg=ARG_ACTION )? ( op=('^'|'!') )?
+    |	notSet ( (op='^'|op='!') -> ^($op notSet) | -> notSet )
+    |   RULE_REF ( arg=ARG_ACTION )? ( (op='^'|op='!') )?
     	-> {$arg!=null&&op!=null}?	^($op RULE_REF $arg)
     	-> {$arg!=null}?			^(RULE_REF $arg)
     	-> {$op!=null}?				^($op RULE_REF)
@@ -323,7 +327,8 @@ ebnfSuffix
 // R E W R I T E  S Y N T A X
 
 rewrite
-	:	( '->' SEMPRED rewrite_alternative )* '->' rewrite_alternative
+	:	( '->' SEMPRED rewrite_alternative )*
+		'->' rewrite_alternative
         -> ^('->' SEMPRED? rewrite_alternative)+
 	|
 	;
@@ -331,7 +336,7 @@ rewrite
 rewrite_alternative
 	:	rewrite_template
 	|	rewrite_tree_alternative
-   	|   -> ^(ALT["ALT"] EPSILON EOA["EOA"])
+   	|   -> ^(ALT["ALT"] EPSILON["EPSILON"] EOA["EOA"])
 	;
 	
 rewrite_template_block
@@ -348,10 +353,14 @@ rewrite_tree_alternative
     ;
 
 rewrite_tree_element
-	:	rewrite_tree_atom ebnfSuffix
+	:	rewrite_tree_atom
+	|	rewrite_tree_atom ebnfSuffix
 		-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree_atom EOA["EOA"]) EOB["EOB"])
-	|   rewrite_tree ebnfSuffix
-		-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"])
+	|   rewrite_tree
+		(	ebnfSuffix
+			-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"])
+		|	-> rewrite_tree
+		)
 	|   rewrite_tree_ebnf
 	;
 
@@ -530,16 +539,17 @@ NESTED_ACTION :
 	|	.
 	)*
 	'}'
+	{$channel = DEFAULT_TOKEN_CHANNEL;}
    ;
 
 fragment
 ACTION_CHAR_LITERAL
-	:	'\'' (ACTION_ESC|.) '\''
+	:	'\'' (ACTION_ESC|~('\\'|'\'')) '\''
 	;
 
 fragment
 ACTION_STRING_LITERAL
-	:	'"' (ACTION_ESC|.)+ '"'
+	:	'"' (ACTION_ESC|~('\\'|'"'))+ '"'
 	;
 
 fragment
@@ -561,11 +571,11 @@ RULE_REF
  *  action processing on the {...} as it's not a action.
  */
 OPTIONS
-	:	'options' WS_LOOP '{'
+	:	'options' WS_LOOP '{' {$channel=DEFAULT_TOKEN_CHANNEL;} // WS_LOOP sets channel
 	;
 	
 TOKENS
-	:	'tokens' WS_LOOP '{'
+	:	'tokens' WS_LOOP '{' {$channel=DEFAULT_TOKEN_CHANNEL;}
 	;
 
 /** Reset the file and line information; useful when the grammar
