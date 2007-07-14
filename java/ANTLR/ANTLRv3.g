@@ -189,8 +189,8 @@ altList
 @init {
 	// must create root manually as it's used by invoked rules in real antlr tool.
 	// leave here to demonstrate use of {...} in rewrite rule
-	// it's really BLOCK[firstToken,"BLOCK"]
-    CommonTree blkRoot = (CommonTree)adaptor.create(BLOCK,input.LT(1),"BLOCK");
+	// it's really BLOCK[firstToken,"BLOCK"]; set line/col to previous ( or : token.
+    CommonTree blkRoot = (CommonTree)adaptor.create(BLOCK,input.LT(-1),"BLOCK");
 }
     :   a1=alternative rewrite ( '|' a2=alternative rewrite )*
 		-> ^( {blkRoot} (alternative rewrite)+ EOB["EOB"] )
@@ -355,7 +355,7 @@ rewrite_tree_alternative
 rewrite_tree_element
 	:	rewrite_tree_atom
 	|	rewrite_tree_atom ebnfSuffix
-		-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree_atom EOA["EOA"]) EOB["EOB"])
+		-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree_atom EOA["EOA"]) EOB["EOB"]))
 	|   rewrite_tree
 		(	ebnfSuffix
 			-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"])
