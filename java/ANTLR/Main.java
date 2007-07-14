@@ -17,5 +17,9 @@ public class Main {
         ANTLRv3Parser.grammarDef_return r = g.grammarDef();
 	CommonTree t = (CommonTree)r.getTree();
 	System.out.println(t.toStringTree());
+
+	CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);
+	ANTLRv3Tree walker = new ANTLRv3Tree(nodes);
+	walker.grammarDef();
     }
 }

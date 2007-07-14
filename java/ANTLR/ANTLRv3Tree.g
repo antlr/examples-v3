@@ -31,6 +31,7 @@ tree grammar ANTLRv3Tree;
 
 options {
 	tokenVocab = ANTLRv3;
+	ASTLabelType = CommonTree;
 }
 
 grammarDef
@@ -166,7 +167,7 @@ treeSpec
 
 /** Matches ENBF blocks (and token sets via block rule) */
 ebnf
-	:	^(SYNPRED["=>"] block)
+	:	^(SYNPRED block)
 	|	SYN_SEMPRED
 	|	block
 	;
