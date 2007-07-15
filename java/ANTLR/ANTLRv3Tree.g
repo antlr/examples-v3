@@ -137,8 +137,7 @@ element
 	;
 
 elementNoOptionSpec
-	:	^( ebnfSuffix ^( BLOCK ^(ALT ^(('='|'+=') ID (atom|block)) EOA) EOB) )
-	|	^(('='|'+=') ID block)
+	:	^(('='|'+=') ID block)
 	|	^(('='|'+=') ID atom)
 	|	atom
 	|	ebnf
@@ -169,6 +168,7 @@ treeSpec
 ebnf
 	:	^(SYNPRED block)
 	|	SYN_SEMPRED
+	|	^(ebnfSuffix block)
 	|	block
 	;
 
