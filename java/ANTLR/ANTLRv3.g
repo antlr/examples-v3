@@ -72,6 +72,7 @@ tokens {
     ROOT='^';
     BANG='!';
     RANGE='..';
+    REWRITE='->';
 }
 
 @members {
@@ -182,7 +183,7 @@ block
 		( (opts=optionsSpec)? ':' )?
 		a1=alternative rewrite ( '|' a2=alternative rewrite )*
         rp=')'
-        -> ^( BLOCK[$lp] optionsSpec? alternative+ EOB[$rp] )
+        -> ^( BLOCK[$lp,"BLOCK"] optionsSpec? alternative+ EOB[$rp,"EOB"] )
     ;
 
 altList
@@ -327,25 +328,28 @@ ebnfSuffix
 // R E W R I T E  S Y N T A X
 
 rewrite
-	:	( '->' SEMPRED rewrite_alternative )*
-		'->' rewrite_alternative
-        -> ^('->' SEMPRED? rewrite_alternative)+
+@init {
+	Token firstToken = input.LT(1);
+}
+	:	(rew+='->' preds+=SEMPRED predicated+=rewrite_alternative)*
+		rew2='->' last=rewrite_alternative
+        -> ^($rew $preds $predicated)* ^($rew2 $last)
 	|
 	;
 
 rewrite_alternative
 	:	rewrite_template
 	|	rewrite_tree_alternative
-   	|   -> ^(ALT["ALT"] EPSILON["EPSILON"] EOA["EOA"])
+   	|   /* empty rewrite */ -> ^(ALT["ALT"] EPSILON["EPSILON"] EOA["EOA"])
 	;
 	
 rewrite_template_block
-    :   lp='(' rewrite_template ')' -> ^(BLOCK[$lp] rewrite_template EOB[$lp])
+    :   lp='(' rewrite_template ')' -> ^(BLOCK[$lp,"BLOCK"] rewrite_template EOB[$lp,"EOB"])
     ;
 
 rewrite_tree_block
     :   lp='(' rewrite_tree_alternative ')'
-    	-> ^(BLOCK[$lp] rewrite_tree_alternative EOB[$lp])
+    	-> ^(BLOCK[$lp,"BLOCK"] rewrite_tree_alternative EOB[$lp,"EOB"])
     ;
 
 rewrite_tree_alternative

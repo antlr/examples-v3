@@ -223,8 +223,8 @@ rewrite_tree_alternative
 
 rewrite_tree_element
 	:	rewrite_tree_atom
-	|   ^(BLOCK ^(ALT rewrite_tree ) EOB)
 	|	rewrite_tree
+	|   rewrite_tree_block
 	|   rewrite_tree_ebnf
 	;
 
