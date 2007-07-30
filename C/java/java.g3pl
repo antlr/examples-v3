@@ -90,9 +90,9 @@ options
 }
 
 // While you can implement your own character streams and so on, they
-// normally call things like LA() via funtion pointers. In general you will
+// normally call things like LA() via function pointers. In general you will
 // be using one of the pre-supplied input streams and you can instruct the
-// generated code to access the input pointrs directly.
+// generated code to access the input pointers directly.
 //
 // For  8 bit inputs            : #define ANTLR3_INLINE_INPUT_ASCII
 // For 16 bit UTF16/UCS2 inputs : #define ANTLR3_INLINE_INPUT_UTF16
