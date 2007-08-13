@@ -569,18 +569,9 @@ LEADING_WS
             emit(new ClassicToken(LEADING_WS,new String(indentation)));
         	}
         	// kill trailing newline if present and then ignore
-        	( ('\r')? '\n' {if (token!=null) token.setChannel(99); else $channel=HIDDEN;})*
+        	( ('\r')? '\n' {if (token!=null) token.setChannel(HIDDEN); else $channel=HIDDEN;})*
            // {token.setChannel(99); }
         )
-
-/*
-        |   // if comment, then only thing on a line; kill so we
-            // ignore totally also wack any following newlines as
-            // they cannot be terminating a statement
-            '#' (~'\n')* ('\n')+ 
-            {if (token!=null) token.setChannel(99); else $channel=HIDDEN;}
-        )?
-        */
     ;
 
 /** Comments not on line by themselves are turned into newlines.
