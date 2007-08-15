@@ -76,7 +76,7 @@ LCURLY  : '{' {nesting++;}
 RCURLY  : '}'
           {
           if ( nesting<=0 ) {
-                token=Token.EOF_TOKEN;
+                emit(Token.EOF_TOKEN);
                 System.out.println("exiting embedded simple");
           }
           else {
