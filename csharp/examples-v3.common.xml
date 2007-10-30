@@ -5,7 +5,7 @@
 >
 	<property name="sharedlibs.dir"        value="${path::combine(examples.root.dir,'_SharedLibs')}" dynamic="true" />
 	<property name="stnet.sharedlibs.dir"  value="${path::combine(sharedlibs.dir,framework::get-target-framework())}" dynamic="true" />
-    <property name="antlr.classpath"       value="${path::combine(sharedlibs.dir,'antlr_v3.0-beta.jar')};${path::combine(sharedlibs.dir,'stringtemplate-3.0.jar')};${path::combine(sharedlibs.dir,'antlr-2.7.7.jar')}"/>
+    <property name="antlr.classpath"       value="${path::combine(sharedlibs.dir,'antlr-v3.x.jar')};${path::combine(sharedlibs.dir,'stringtemplate-v3.x.jar')};${path::combine(sharedlibs.dir,'antlr-2.7.7.jar')}"/>
 	<property name="src.dir"               value="${project.root.dir}" />
 	<property name="build.dir"             value="${examples.root.dir}/_build/${framework::get-target-framework()}" />
 	<property name="build.working.dir"     value="${project.root.dir}/bin" />

@@ -1,6 +1,6 @@
-ANTLR V3 Examples for the C# Code-Generator and Runtime
+ANTLR V3.1 Examples for the C# Code-Generator and Runtime
 
-30 April, 2007
+30 October, 2007
 
 Kunle Odutola		: kunle UNDERSCORE odutola AT hotmail DOT com
 
@@ -12,15 +12,17 @@ HOW TO BUILD
    What you will need:
    - NAnt v0.85 or later (must be installed and available on the system PATH)
    
-   - 'antlr-3.0b8.jar' from ANTLR v3.0b8
+   - 'antlr-2007-10-29.14.jar' from ANTLR v3.1b [currently antlr-2007-10-29.14.tar.gz]
    
-   - 'antlr-2.7.7.jar' from ANTLR v2.7.7
+   - 'antlr-2.7.7.jar' from ANTLR v2.7.7 [or ANTLR v3.1b]
    
-   - 'stringtemplate.jar' from Java StringTemplate v3.0
+   - 'stringtemplate-3.1b1.jar' from Java StringTemplate v3.1b1 [or ANTLR v3.1b]
    
-   - 'StringTemplate.dll' and 'antlr.runtime.dll' from C# StringTemplate v3.0
+   - 'StringTemplate.dll' from C# StringTemplate v3.1b1 [or ANTLR V3.1 C# runtime]
    
-   - 'Antlr3.Runtime.dll' the ANTLR V3 C# runtime
+   - 'antlr.runtime.dll'  from C# StringTemplate v3.1b1 [or ANTLR V3.1 C# runtime]
+   
+   - 'Antlr3.Runtime.dll' from ANTLR V3.1 C# runtime
    
    
    NOTE: The C# binaries are available as .NET v1.1. and .NET v2.0 assemblies.
@@ -34,11 +36,11 @@ HOW TO BUILD
    NOTE: As an alternative to renaming files (for those familiar with editing NAnt 
    build files), you may change the names that the build files expects.
    
-   File                       Destination
+   File                           Destination
    ---------------------------------------------------------------------------
-   antlr-3.0b8.jar       -->  csharp/_SharedLib/antlr-3.0b8.jar
-   antlr-2.7.7.jar       -->  csharp/_SharedLib/antlr-2.7.7.jar
-   stringtemplate.jar    -->  csharp/_SharedLib/stringtemplate.jar
+   antlr-2007-10-29.14.jar   -->  csharp/_SharedLib/antlr-v3.x.jar
+   antlr-2.7.7.jar           -->  csharp/_SharedLib/antlr-2.7.7.jar
+   stringtemplate-3.1b1.jar  -->  csharp/_SharedLib/stringtemplate-v3.x.jar
    
    For .NET v1.1 (for use on Mono, replace 'net-1.1' with 'mono-1.0')
    Antlr3.Runtime.dll    -->  csharp/_SharedLib/net-1.1/Antlr3.Runtime.dll
