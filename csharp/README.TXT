@@ -38,19 +38,19 @@ HOW TO BUILD
    
    File                           Destination
    ---------------------------------------------------------------------------
-   antlr-2007-10-29.14.jar   -->  csharp/_SharedLib/antlr-v3.x.jar
-   antlr-2.7.7.jar           -->  csharp/_SharedLib/antlr-2.7.7.jar
-   stringtemplate-3.1b1.jar  -->  csharp/_SharedLib/stringtemplate-v3.x.jar
+   antlr-2007-10-29.14.jar   -->  csharp/_SharedLibs/antlr-v3.x.jar
+   antlr-2.7.7.jar           -->  csharp/_SharedLibs/antlr-2.7.7.jar
+   stringtemplate-3.1b1.jar  -->  csharp/_SharedLibs/stringtemplate-v3.x.jar
    
    For .NET v1.1 (for use on Mono, replace 'net-1.1' with 'mono-1.0')
-   Antlr3.Runtime.dll    -->  csharp/_SharedLib/net-1.1/Antlr3.Runtime.dll
-   StringTemplate.dll    -->  csharp/_SharedLib/net-1.1/StringTemplate.dll
-   antlr.runtime.dll     -->  csharp/_SharedLib/net-1.1/antlr.runtime.dll
+   Antlr3.Runtime.dll        -->  csharp/_SharedLibs/net-1.1/Antlr3.Runtime.dll
+   StringTemplate.dll        -->  csharp/_SharedLibs/net-1.1/StringTemplate.dll
+   antlr.runtime.dll         -->  csharp/_SharedLibs/net-1.1/antlr.runtime.dll
    
    For .NET v2.0 (for use on Mono, replace 'net-2.0' with 'mono-2.0')
-   Antlr3.Runtime.dll    -->  csharp/_SharedLib/net-2.0/Antlr3.Runtime.dll
-   StringTemplate.dll    -->  csharp/_SharedLib/net-2.0/StringTemplate.dll
-   antlr.runtime.dll     -->  csharp/_SharedLib/net-2.0/antlr.runtime.dll
+   Antlr3.Runtime.dll        -->  csharp/_SharedLibs/net-2.0/Antlr3.Runtime.dll
+   StringTemplate.dll        -->  csharp/_SharedLibs/net-2.0/StringTemplate.dll
+   antlr.runtime.dll         -->  csharp/_SharedLibs/net-2.0/antlr.runtime.dll
 
 
 2. Use the NAnt build files
