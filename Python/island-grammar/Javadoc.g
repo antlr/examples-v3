@@ -17,7 +17,7 @@ print "enter embedded Simple escape"
 import SimpleLexer
 import SimpleParser
 lex = SimpleLexer.SimpleLexer(self.input)
-tokens = antlr3.CommonTokenStream(lex)
+tokens = CommonTokenStream(lex)
 parser = SimpleParser.SimpleParser(tokens)
 parser.statement()
             }
@@ -30,7 +30,7 @@ parser.statement()
  *  method comment(), which was called from JAVADOC action in the
  *  Simple parser's lexer.
  */
-END     : '*/' {self.token = antlr3.EOF_TOKEN}
+END     : '*/' {self._state.token = EOF_TOKEN}
           {print "exit javadoc"}
         ;
 

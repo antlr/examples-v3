@@ -83,7 +83,7 @@ LCURLY  : '{' {self.nesting += 1}
 RCURLY  : '}'
           {
 if self.nesting <= 0:
-    self.token = antlr3.EOF_TOKEN
+    self._state.token = EOF_TOKEN
     print "exiting embedded simple"
 
 else:
@@ -96,7 +96,7 @@ print "enter javadoc"
 import JavadocLexer
 import JavadocParser
 j = JavadocLexer.JavadocLexer(self.input)
-tokens = antlr3.CommonTokenStream(j)
+tokens = CommonTokenStream(j)
 tokens.discardTokenType(JavadocLexer.WS)
 p = JavadocParser.JavadocParser(tokens)
 p.comment()

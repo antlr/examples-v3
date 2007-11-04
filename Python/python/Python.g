@@ -572,8 +572,8 @@ LEADING_WS
         	// kill trailing newline if present and then ignore
         	( ('\r')? '\n' 
                 {
-                    if self.token is not None:
-                        self.token.setChannel(99)
+                    if self._state.token is not None:
+                        self._state.token.setChannel(99)
                     else:
                         $channel=HIDDEN
                 }
