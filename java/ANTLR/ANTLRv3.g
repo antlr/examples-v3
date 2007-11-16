@@ -194,7 +194,7 @@ altList
     CommonTree blkRoot = (CommonTree)adaptor.create(BLOCK,input.LT(-1),"BLOCK");
 }
     :   a1=alternative rewrite ( '|' a2=alternative rewrite )*
-		-> ^( {blkRoot} (alternative rewrite)+ EOB["EOB"] )
+		-> ^( {blkRoot} (alternative rewrite?)+ EOB["EOB"] )
     ;
 
 alternative
