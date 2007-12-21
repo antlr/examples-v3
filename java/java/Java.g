@@ -495,7 +495,7 @@ localVariableDeclaration
 statement
 	: block
     | 'assert' expression (':' expression)? ';'
-    | 'if' parExpression statement (options {k=1;}:'else' statement)?
+    | 'if' parExpression statement (options {k=1; backtrack=false;}:'else' statement)?
     | 'for' '(' forControl ')' statement
     | 'while' parExpression statement
     | 'do' statement 'while' parExpression ';'
