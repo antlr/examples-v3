@@ -5,7 +5,12 @@
 >
 	<property name="sharedlibs.dir"        value="${path::combine(examples.root.dir,'_SharedLibs')}" dynamic="true" />
 	<property name="stnet.sharedlibs.dir"  value="${path::combine(sharedlibs.dir,framework::get-target-framework())}" dynamic="true" />
-    <property name="antlr.classpath"       value="${path::combine(sharedlibs.dir,'antlr-v3.x.jar')};${path::combine(sharedlibs.dir,'stringtemplate-v3.x.jar')};${path::combine(sharedlibs.dir,'antlr-2.7.7.jar')}"/>
+	<!-- Platform independent definition -->
+	<path id="antlr.classpath" >
+		<pathelement path="${path::combine(sharedlibs.dir,'antlr-v3.x.jar')}" />
+		<pathelement path="${path::combine(sharedlibs.dir,'stringtemplate-v3.x.jar')}" />
+		<pathelement path="${path::combine(sharedlibs.dir,'antlr-2.7.7.jar')}" />
+	</path>
 	<property name="src.dir"               value="${project.root.dir}" />
 	<property name="build.dir"             value="${examples.root.dir}/_build/${framework::get-target-framework()}" />
 	<property name="build.working.dir"     value="${project.root.dir}/bin" />
@@ -27,16 +32,23 @@
 		<resourcefileset id="project.resources" />
 	</target>
 	
-    <target name="common.run-antlr-v3" description="calls ANTLR to generate Lexers/Parsers">    	
+	<target name="common.run-antlr-v3" description="calls ANTLR to generate Lexers/Parsers">    	
 		<foreach item="File" property="filename">
 			<in>
 				<items refid="project.grammars" />
 			</in>
 			<do>
-        		<exec program="java.exe" commandline="-Xmx200M -classpath ${antlr.classpath} org.antlr.Tool -o ${grammar.out.dir} ${filename}" failonerror="true"/>
+        		<exec program="java">
+				<arg value="-Xmx200M" />
+				<arg value="-cp" />
+				<arg>
+					<path refid="antlr.classpath" />
+				</arg>
+				<arg line="org.antlr.Tool -o ${grammar.out.dir} ${filename}" />
+			</exec>
 			</do>
 		</foreach>
-    </target>
+	</target>
 
 	<target name="common.build-source-list">
 		<fileset id="project.sources" basedir="${grammar.src.dir}" failonempty="true">
@@ -79,26 +91,26 @@
 		</copy>
 	</target>
 
-    <target name="common.clean-combined-grammar-files" description="cleans up files generated for Parser/Lexer grammar">
-        <delete file="${grammar.out.dir}\${grammar.name}Parser.cs" failonerror="false"/>
-        <delete file="${grammar.out.dir}\${grammar.name}Lexer.cs" failonerror="false"/>
-        <delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
-        <delete file="${grammar.out.dir}\${grammar.name}__.g" failonerror="false"/>
-    </target>
+	<target name="common.clean-combined-grammar-files" description="cleans up files generated for Parser/Lexer grammar">
+		<delete file="${grammar.out.dir}\${grammar.name}Parser.cs" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}Lexer.cs" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}__.g" failonerror="false"/>
+	</target>
 
-    <target name="common.clean-parser-grammar-files" description="cleans up files generated for Parser grammar">
-        <delete file="${grammar.out.dir}\${grammar.name}Parser.cs" failonerror="false"/>
-        <delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
-    </target>
+	<target name="common.clean-parser-grammar-files" description="cleans up files generated for Parser grammar">
+		<delete file="${grammar.out.dir}\${grammar.name}Parser.cs" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
+	</target>
 
-    <target name="common.clean-lexer-grammar-files" description="cleans up files generated for Lexer grammar">
-        <delete file="${grammar.out.dir}\${grammar.name}Lexer.cs" failonerror="false"/>
-        <delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
-    </target>
+	<target name="common.clean-lexer-grammar-files" description="cleans up files generated for Lexer grammar">
+		<delete file="${grammar.out.dir}\${grammar.name}Lexer.cs" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
+	</target>
 
-    <target name="common.clean-treeparser-grammar-files" description="cleans up files generated for Lexer grammar">
-        <delete file="${grammar.out.dir}\${grammar.name}.cs" failonerror="false"/>
-        <delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
-    </target>
+	<target name="common.clean-treeparser-grammar-files" description="cleans up files generated for Lexer grammar">
+	        <delete file="${grammar.out.dir}\${grammar.name}.cs" failonerror="false"/>
+	        <delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
+	</target>
 
 </project>

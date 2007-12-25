@@ -31,7 +31,7 @@ SIMPLE  :   '{'
  *  method comment(), which was called from JAVADOC action in the
  *  Simple parser's lexer.
  */
-END     : '*/' {token = Token.EOF_TOKEN;}
+END     : '*/' {state.token = Token.EOF_TOKEN;}
           {Console.Out.WriteLine("exit javadoc");}
         ;
 

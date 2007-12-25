@@ -83,7 +83,7 @@ LCURLY  : '{' {nesting++;}
 RCURLY  : '}'
           {
           if ( nesting<=0 ) {
-                token=Token.EOF_TOKEN;
+                state.token=Token.EOF_TOKEN;
                 Console.Out.WriteLine("exiting embedded simple");
           }
           else {
