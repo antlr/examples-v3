@@ -569,7 +569,7 @@ LEADING_WS
             emit(new ClassicToken(LEADING_WS,new String(indentation)));
         	}
         	// kill trailing newline if present and then ignore
-        	( ('\r')? '\n' {if (token!=null) token.setChannel(HIDDEN); else $channel=HIDDEN;})*
+        	( ('\r')? '\n' {if (state.token!=null) state.token.setChannel(HIDDEN); else $channel=HIDDEN;})*
            // {token.setChannel(99); }
         )
     ;
