@@ -1,5 +1,5 @@
 /** XML parser by Oliver Zeigermann October 10, 2005 */
-lexer grammar XML;
+lexer grammar XMLLexer;
 
 DOCUMENT
     :  XMLDECL? WS? DOCTYPE? WS? ELEMENT WS? 
