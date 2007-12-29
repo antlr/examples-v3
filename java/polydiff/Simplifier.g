@@ -20,8 +20,7 @@ poly:	^('+' a=INT b=INT)	-> INT[String.valueOf($a.int+$b.int)]
 	|	^('+' ^('+' p=poly a=INT) b=INT)
 							-> ^('+' $p INT[String.valueOf($a.int+$b.int)])
 	
-	|	{System.out.println("alt 3");}
-		^('+' p=poly q=poly)-> {$p.tree.toStringTree().equals("0")}? $q
+	|	^('+' p=poly q=poly)-> {$p.tree.toStringTree().equals("0")}? $q
 							-> {$q.tree.toStringTree().equals("0")}? $p
 							-> ^('+' $p $q)
 
