@@ -1,4 +1,4 @@
-tree grammar Differentiator;
+tree grammar PolyDifferentiator;
 options {
 	tokenVocab=Poly;
 	ASTLabelType=CommonTree;

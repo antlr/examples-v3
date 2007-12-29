@@ -21,8 +21,8 @@ public class Main {
 		// DIFFERENTIATE
        	CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
 		nodes.setTokenStream(tokens);
-		Differentiator differ = new Differentiator(nodes);
-		Differentiator.poly_return r2 = differ.poly();
+		PolyDifferentiator differ = new PolyDifferentiator(nodes);
+		PolyDifferentiator.poly_return r2 = differ.poly();
 		System.out.println("d/dx="+((Tree)r2.tree).toStringTree());
 
 		// SIMPLIFY / NORMALIZE
