@@ -99,16 +99,16 @@
 	</target>
 
 	<target name="common.clean-parser-grammar-files" description="cleans up files generated for Parser grammar">
-		<delete file="${grammar.out.dir}\${grammar.name}Parser.cs" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}.cs" failonerror="false"/>
 		<delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
 	</target>
 
 	<target name="common.clean-lexer-grammar-files" description="cleans up files generated for Lexer grammar">
-		<delete file="${grammar.out.dir}\${grammar.name}Lexer.cs" failonerror="false"/>
+		<delete file="${grammar.out.dir}\${grammar.name}.cs" failonerror="false"/>
 		<delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
 	</target>
 
-	<target name="common.clean-treeparser-grammar-files" description="cleans up files generated for Lexer grammar">
+	<target name="common.clean-treeparser-grammar-files" description="cleans up files generated for Tree Parser grammar">
 	        <delete file="${grammar.out.dir}\${grammar.name}.cs" failonerror="false"/>
 	        <delete file="${grammar.out.dir}\${grammar.name}.tokens" failonerror="false"/>
 	</target>
