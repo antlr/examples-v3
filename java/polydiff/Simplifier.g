@@ -3,13 +3,25 @@ options {
 	tokenVocab=Poly;
 	ASTLabelType=CommonTree;
 	output=AST;
+	backtrack=true;
 	//rewrite=true;
 }
 
-poly:	// special case; ambiguous, but resolves properly to first alt
-		^('+' a=INT b=INT)	-> INT[String.valueOf($a.int+$b.int)]
+/** Match some common patterns that we can reduce via identity
+ *  definitions.  Since this is only run once, it will not be
+ *  perfect.  We'd need to run the tree into this until nothing
+ *  changed to make it correct.
+ */
+poly:	^('+' a=INT b=INT)	-> INT[String.valueOf($a.int+$b.int)]
 
-	|	^('+' p=poly q=poly)-> {$p.tree.toStringTree().equals("0")}? $q
+	|	^('+' ^('+' a=INT p=poly) b=INT)
+							-> ^('+' $p INT[String.valueOf($a.int+$b.int)])
+	
+	|	^('+' ^('+' p=poly a=INT) b=INT)
+							-> ^('+' $p INT[String.valueOf($a.int+$b.int)])
+	
+	|	{System.out.println("alt 3");}
+		^('+' p=poly q=poly)-> {$p.tree.toStringTree().equals("0")}? $q
 							-> {$q.tree.toStringTree().equals("0")}? $p
 							-> ^('+' $p $q)
 
