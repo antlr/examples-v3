@@ -4,7 +4,7 @@ options {
 	ASTLabelType=CommonTree;
 	output=AST;
 	backtrack=true;
-	//rewrite=true;
+//	rewrite=true; // works either in rewrite or normal mode
 }
 
 /** Match some common patterns that we can reduce via identity

@@ -3,7 +3,7 @@ options {
 	tokenVocab=Poly;
 	ASTLabelType=CommonTree;
 	output=AST;
-//	rewrite=true;
+//	rewrite=true; // works either in rewrite or normal mode
 }
 
 poly:	^('+' poly poly)
