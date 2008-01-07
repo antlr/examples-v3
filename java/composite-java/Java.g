@@ -8,7 +8,7 @@
 grammar Java;
 options {k=2; backtrack=true; memoize=true;}
 
-import JavaDecl, JavaAnnotations, JavaExpr, JavaLexer, JavaStat;
+import JavaDecl, JavaAnnotations, JavaExpr, JavaStat, JavaLexerRules;
 
 compilationUnit
 	:	annotations?

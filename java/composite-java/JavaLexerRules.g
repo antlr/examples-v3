@@ -1,4 +1,6 @@
-lexer grammar JavaLexer;
+lexer grammar JavaLexerRules; 
+// Note: can't use name JavaLexer; conflicts with JavaLexer generated from
+// Java.g
 
 @members {
 protected boolean enumIsKeyword = true;

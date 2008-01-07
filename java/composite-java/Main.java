@@ -73,18 +73,21 @@ class Main {
 								 throws Exception {
 		try {
 			// Create a scanner that reads from the input stream passed to us
+/*
 			if ( lexer==null ) {
-				lexer = new JavaLexer();
+				lexer = new JavaLexer((org.antlr.runtime.CharStream)null);
 			}
-			lexer.setCharStream(new ANTLRFileStream(f));
+*/
+			lexer = new JavaLexer(new ANTLRFileStream(f));
 			CommonTokenStream tokens = new CommonTokenStream();
 //			tokens.discardOffChannelTokens(true);
 			tokens.setTokenSource(lexer);
-			long start = System.currentTimeMillis();
-			tokens.LT(1); // force load
-			long stop = System.currentTimeMillis();
-			lexerTime += stop-start;
 
+/*
+	for (Object t : tokens.getTokens()) {
+		System.out.println(t);
+	}
+*/
 			/*
 			long t1 = System.currentTimeMillis();
 			tokens.LT(1);
