@@ -11,10 +11,10 @@
 
 def process_example
 	if FileTest.exist?("antlr")
-		cmd = File.open("antlr").readlines
+		cmd = File.open("antlr").gets
 	end
 	if cmd != nil
-		system(cmd);
+		system(cmd)
 	else
 		ex = Dir["*.g"]
 		grammars = ""
