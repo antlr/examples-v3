@@ -1,8 +1,9 @@
+antlr
 Main.java
 JavaAnnotations.g
 JavaDecl.g
 JavaExpr.g
-JavaLexer.g
+JavaLexerRules.g
 JavaStat.g
 Java.g
 input

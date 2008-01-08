@@ -10,10 +10,17 @@
 #
 
 def process_example
-	ex = Dir["*.g"]
-	grammars = ""
-	ex.each {|g| grammars+=" "+g}
-	system("java -Xmx200M org.antlr.Tool" + grammars)
+	if FileTest.exist?("antlr")
+		cmd = File.open("antlr").readlines
+	end
+	if cmd != nil
+		system(cmd);
+	else
+		ex = Dir["*.g"]
+		grammars = ""
+		ex.each {|g| grammars+=" "+g}
+		system("java -Xmx200M org.antlr.Tool" + grammars)
+	end
 	system("javac *.java")
 	channel = IO.popen("java Main input")
 	result = channel.readlines
