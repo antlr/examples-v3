@@ -32,7 +32,7 @@ declarator
 
 functionHeader
     :   type ID '(' ( formalParameter ( ',' formalParameter )* )? ')'
-        -> ^(FUNC_HDR type ID formalParameter+)
+        -> ^(FUNC_HDR type ID formalParameter*)
     ;
 
 formalParameter

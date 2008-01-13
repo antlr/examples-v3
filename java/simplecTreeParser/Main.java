@@ -10,6 +10,10 @@ public class Main {
 		SimpleCParser.program_return r = parser.program();
 		System.out.println("tree="+((Tree)r.tree).toStringTree());
 
+		if ( parser.getNumberOfSyntaxErrors()>0 ) {
+			// don't tree parse if has errors
+			return;
+		}
         	CommonTreeNodeStream nodes = new CommonTreeNodeStream((Tree)r.tree);
 		nodes.setTokenStream(tokens);
 		SimpleCWalker walker = new SimpleCWalker(nodes);
