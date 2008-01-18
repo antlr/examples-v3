@@ -35,9 +35,11 @@
 	<target name="build">
 		<nant buildfile="C/c.build"                                  target="build" inheritall="true" />
 		<nant buildfile="cminus/cminus.build"                        target="build" inheritall="true" />
+		<nant buildfile="composite-java/composite-java.build"        target="build" inheritall="true" />
 		<nant buildfile="dynamic-scope/dynamic-scope.build"          target="build" inheritall="true" />
 		<nant buildfile="fuzzy/fuzzy.build"                          target="build" inheritall="true" />
 		<nant buildfile="hoistedPredicates/hoistedPredicates.build"  target="build" inheritall="true" />
+		<nant buildfile="import/import.build"                        target="build" inheritall="true" />
 		<nant buildfile="island-grammar/island-grammar.build"        target="build" inheritall="true" />
 		<nant buildfile="java/java.build"                            target="build" inheritall="true" />
 		<nant buildfile="java-from-v2/java-from-v2.build"            target="build" inheritall="true" />
@@ -55,14 +57,16 @@
 	<target name="clean">
 		<nant buildfile="C/c.build"                                  target="clean" inheritall="true" />
 		<nant buildfile="cminus/cminus.build"                        target="clean" inheritall="true" />
+		<nant buildfile="composite-java/composite-java.build"        target="clean" inheritall="true" />
 		<nant buildfile="dynamic-scope/dynamic-scope.build"          target="clean" inheritall="true" />
 		<nant buildfile="fuzzy/fuzzy.build"                          target="clean" inheritall="true" />
 		<nant buildfile="hoistedPredicates/hoistedPredicates.build"  target="clean" inheritall="true" />
+		<nant buildfile="import/import.build"                        target="clean" inheritall="true" />
 		<nant buildfile="island-grammar/island-grammar.build"        target="clean" inheritall="true" />
 		<nant buildfile="java/java.build"                            target="clean" inheritall="true" />
 		<nant buildfile="java-from-v2/java-from-v2.build"            target="clean" inheritall="true" />
 		<nant buildfile="ll-star/ll-star.build"                      target="clean" inheritall="true" />
-		<nant buildfile="polydiff/polidiff.build"                    target="build" inheritall="true" />
+		<nant buildfile="polydiff/polidiff.build"                    target="clean" inheritall="true" />
 		<nant buildfile="python/python.build"                        target="clean" inheritall="true" />
 		<nant buildfile="ruby/ruby.build"                            target="clean" inheritall="true" />
 		<nant buildfile="scopes/scopes.build"                        target="clean" inheritall="true" />
