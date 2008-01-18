@@ -33,8 +33,7 @@
   	</target>
 
 	<target name="build">
-		<!-- C grammar will fail to build due to ANTLR bug. Probably fixed for 3.2. Manual fix is described in C grammar. -->
-		<nant buildfile="C/c.build"                                  target="build" inheritall="true" failonerror="false" />
+		<nant buildfile="C/c.build"                                  target="build" inheritall="true" />
 		<nant buildfile="cminus/cminus.build"                        target="build" inheritall="true" />
 		<nant buildfile="dynamic-scope/dynamic-scope.build"          target="build" inheritall="true" />
 		<nant buildfile="fuzzy/fuzzy.build"                          target="build" inheritall="true" />
@@ -43,6 +42,7 @@
 		<nant buildfile="java/java.build"                            target="build" inheritall="true" />
 		<nant buildfile="java-from-v2/java-from-v2.build"            target="build" inheritall="true" />
 		<nant buildfile="LL-star/LL-star.build"                      target="build" inheritall="true" />
+		<nant buildfile="polydiff/polidiff.build"                    target="build" inheritall="true" />
 		<nant buildfile="python/python.build"                        target="build" inheritall="true" />
 		<nant buildfile="ruby/ruby.build"                            target="build" inheritall="true" />
 		<nant buildfile="scopes/scopes.build"                        target="build" inheritall="true" />
@@ -62,6 +62,7 @@
 		<nant buildfile="java/java.build"                            target="clean" inheritall="true" />
 		<nant buildfile="java-from-v2/java-from-v2.build"            target="clean" inheritall="true" />
 		<nant buildfile="ll-star/ll-star.build"                      target="clean" inheritall="true" />
+		<nant buildfile="polydiff/polidiff.build"                    target="build" inheritall="true" />
 		<nant buildfile="python/python.build"                        target="clean" inheritall="true" />
 		<nant buildfile="ruby/ruby.build"                            target="clean" inheritall="true" />
 		<nant buildfile="scopes/scopes.build"                        target="clean" inheritall="true" />

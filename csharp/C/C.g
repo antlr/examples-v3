@@ -444,16 +444,10 @@ direct_declarator
 
 			// This line works only in ANTLR 3.0.x
 			// if ($declaration.Count>0 && $declaration::isTypedef) {
-			// When using ANTLR 3.1+ look at the "if" below. This line requires in the *generated* code
-			// the replacement of "null" with "false".
+			// The line below works with ANTLR 3.1+
 			if ($declaration::isTypedef) {
-			// The optimal solution is to use the line below. Unfortunately, it won't work until ANTLR 3.2.
-			// if ($(false)declaration::isTypedef) {
-
 				$Symbols::types[$IDENTIFIER.Text] = $IDENTIFIER.Text;
-
 				Console.Out.WriteLine("define type "+$IDENTIFIER.Text);
-
 			}
 
 			}

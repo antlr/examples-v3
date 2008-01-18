@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project
+	name="polydiff" 
+	default="build"
+	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
+>
+
+	<description>
+		To customize this ANTLR V3 example project build file, do the following:
+
+		1. Set the project name in the PROJECT tag above.
+		
+		2. Edit 'project.references' fileset to include all referenced assembly dlls
+		   
+		3. Set the property 'grammar.name' to the name of the main grammar (i.e. without the .g file extension)
+		   - edit 'clean' target to call one of the following tasks as appropriate:
+		        a. common.clean-combined-grammar-files
+		        b. common.clean-parser-grammar-files
+		        c. common.clean-lexer-grammar-files
+		        
+		4. If you have more than one grammar file, do the following for each additional one:
+		   - add grammar filename (including .g extension) to the 'project.grammars' fileset
+		   - add manual delete statements to the clean task for files generated for the grammar
+	</description>
+
+	<property name="examples.root.dir"  value=".." />
+	<property name="project.root.dir"   value="." />
+	
+	<include buildfile="${examples.root.dir}/examples-v3.common.xml" />
+
+	<target name="init" depends="common.init">
+		<assemblyfileset id="project.references" basedir="${stnet.sharedlibs.dir}">
+			<include name="Antlr3.Runtime.dll" />
+			<include name="StringTemplate.dll" />
+			<include name="antlr.runtime.dll" />
+		</assemblyfileset>
+
+		<fileset id="project.grammars" basedir="${grammar.src.dir}" failonempty="true">
+			<include name="Poly.g" />
+			<include name="PolyDifferentiator.g" />
+			<include name="PolyPrinter.g" />
+			<include name="Simplifier.g" />
+		</fileset>
+
+		<mkdir dir="${build.working.dir}" />
+	</target>
+
+	<target name="build" description="Build ${project::get-name()}.exe" 
+		depends="init common.run-antlr-v3 common.copy-references common.build-source-list common.compile-to-exe common.copy-binaries-to-build-dir"
+	>
+	</target>
+
+    <target name="clean" description="cleans up everything">
+	<property name="grammar.name"       value="Poly" />
+    	<call target="common.clean-combined-grammar-files" />
+		
+	<property name="grammar.name"       value="PolyDifferentiator" />
+    	<call target="common.clean-treeparser-grammar-files" />
+
+	<property name="grammar.name"       value="PolyPrinter" />
+    	<call target="common.clean-treeparser-grammar-files" />
+
+	<property name="grammar.name"       value="Simplifier" />
+    	<call target="common.clean-treeparser-grammar-files" />
+
+	<delete dir="${build.working.dir}" failonerror="false" />
+	<delete dir="${build.obj.dir}"     failonerror="false" />
+    </target>
+
+</project>
