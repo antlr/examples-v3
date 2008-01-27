@@ -1,9 +1,9 @@
 import sys
 import antlr3
-from FuzzyJavaLexer import FuzzyJavaLexer
+from FuzzyJava import FuzzyJava
 
 stream = antlr3.StringStream(open(sys.argv[1]).read())
-lexer = FuzzyJavaLexer(stream)
+lexer = FuzzyJava(stream)
 
 while True:
     token = lexer.nextToken()
