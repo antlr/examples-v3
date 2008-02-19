@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VisualStudioToolFile
-	Name="ANTLR3 Grammar Builder"
+	Name="ANTLR3 Combo Lexer and Parser"
 	Version="8.00"
 	>
 	<Rules>
