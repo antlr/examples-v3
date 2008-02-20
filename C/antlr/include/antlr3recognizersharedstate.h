@@ -23,9 +23,6 @@
  */
 typedef	struct ANTLR3_RECOGNIZER_SHARED_STATE_struct
 {
-
-
-
     /** If set to ANTLR3_TRUE then the recognizer has an exception
      * condition (this is tested by the generated code for the rules of
      * the grammar).
