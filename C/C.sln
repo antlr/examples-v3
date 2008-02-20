@@ -17,9 +17,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "treeparser", "treeparser\tr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simplecTreeParser", "simplecTreeParser\simplecTreeParser.vcproj", "{77878203-46EC-459B-A84E-4A0C1446D512}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "composite-java", "composite-java\composite-java.vcproj", "{B378C4E8-608E-42A8-B8EA-2BB1CDAE6711}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 9
+		SccNumberOfProjects = 10
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = C\\C.vcproj
 		SccLocalPath1 = .
@@ -45,6 +47,9 @@ Global
 		SccProjectUniqueName8 = simplecTreeParser\\simplecTreeParser.vcproj
 		SccLocalPath8 = .
 		SccProjectFilePathRelativizedFromConnection8 = simplecTreeParser\\
+		SccProjectUniqueName9 = composite-java\\composite-java.vcproj
+		SccLocalPath9 = .
+		SccProjectFilePathRelativizedFromConnection9 = composite-java\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -83,6 +88,10 @@ Global
 		{77878203-46EC-459B-A84E-4A0C1446D512}.Debug|Win32.Build.0 = Debug|Win32
 		{77878203-46EC-459B-A84E-4A0C1446D512}.Release|Win32.ActiveCfg = Release|Win32
 		{77878203-46EC-459B-A84E-4A0C1446D512}.Release|Win32.Build.0 = Release|Win32
+		{B378C4E8-608E-42A8-B8EA-2BB1CDAE6711}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B378C4E8-608E-42A8-B8EA-2BB1CDAE6711}.Debug|Win32.Build.0 = Debug|Win32
+		{B378C4E8-608E-42A8-B8EA-2BB1CDAE6711}.Release|Win32.ActiveCfg = Release|Win32
+		{B378C4E8-608E-42A8-B8EA-2BB1CDAE6711}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -169,7 +169,7 @@ main	(int argc, char *argv[])
     // you pass around to everything else. A common token as a pointer within
     // it that should point to your own outer token structure.
     //
-    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lxr->pLexer->tokSource);
+    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
 
     if ((ANTLR3_UINT64)tstream == ANTLR3_ERR_NOMEM)
     {
@@ -217,7 +217,7 @@ main	(int argc, char *argv[])
     lxr	    ->free  (lxr);	    lxr = NULL;
     input->reset(input);
     lxr	    = TLexerNew(input);
-    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lxr->pLexer->tokSource);
+    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
     psr	    = TParserNew(tstream);
 
     psr->statement(psr, ANTLR3_FALSE);   // Now, see enum as an identifier

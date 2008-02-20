@@ -188,7 +188,7 @@ main	(int argc, char *argv[])
     // you pass around to everything else. A common token as a pointer within
     // it that should point to your own outer token structure.
     //
-    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lxr->pLexer->tokSource);
+    tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
 
     if ((ANTLR3_UINT64)tstream == ANTLR3_ERR_NOMEM)
     {

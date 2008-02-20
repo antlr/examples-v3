@@ -6,7 +6,7 @@
  *		java org.antlr.Tool Java.g
  */
 grammar Java;
-options {k=2; backtrack=true; memoize=true;}
+options {language=C; k=2; backtrack=true; memoize=true;}
 
 import JavaDecl, JavaAnnotations, JavaExpr, JavaStat, JavaLexerRules;
 

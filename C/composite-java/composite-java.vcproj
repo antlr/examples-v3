@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="island-grammar"
-	ProjectGUID="{D0A4B8F2-C6A0-45D6-95BE-976285CB10D1}"
-	RootNamespace="islandgrammar"
+	Name="composite-java"
+	ProjectGUID="{B378C4E8-608E-42A8-B8EA-2BB1CDAE6711}"
+	RootNamespace="compositejava"
 	SccProjectName="SAK"
 	SccAuxPath="SAK"
 	SccLocalPath="SAK"
@@ -17,6 +17,12 @@
 		/>
 	</Platforms>
 	<ToolFiles>
+		<ToolFile
+			RelativePath="..\vsrullefiles\antlr3lexer.rules"
+		/>
+		<ToolFile
+			RelativePath="..\vsrullefiles\antlr3lexerandparser.rules"
+		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -24,13 +30,19 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="Antlr3Lexer"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="Antlr3ParserLexer"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -43,6 +55,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				UseUnicodeResponseFiles="true"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\antlr\include;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
@@ -50,7 +63,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
@@ -109,7 +122,13 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="Antlr3Lexer"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="Antlr3ParserLexer"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -126,10 +145,9 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				Detect64BitPortabilityProblems="false"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
-				CallingConvention="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -186,15 +204,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\javadocctl.c"
+				RelativePath=".\jimdirent.c"
 				>
 			</File>
 			<File
 				RelativePath=".\main.c"
-				>
-			</File>
-			<File
-				RelativePath=".\simplectl.c"
 				>
 			</File>
 		</Filter>
@@ -204,15 +218,77 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\islandfuncs.h"
+				RelativePath=".\java.h"
 				>
 			</File>
 			<File
-				RelativePath=".\javadoc.h"
+				RelativePath=".\jimdirent.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+		</Filter>
+		<Filter
+			Name="Generated"
+			>
+			<File
+				RelativePath=".\JavaAnnotations.c"
 				>
 			</File>
 			<File
-				RelativePath=".\simple.h"
+				RelativePath=".\JavaAnnotations.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaDecl.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaDecl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaExpr.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaExpr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaLexer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaLexer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaLexerRules.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaLexerRules.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaParser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaStat.c"
+				>
+			</File>
+			<File
+				RelativePath=".\JavaStat.h"
 				>
 			</File>
 		</Filter>
@@ -220,56 +296,72 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\Javadoc.g3pl"
-				>
-			</File>
-			<File
-				RelativePath=".\Simple.g3pl"
+				RelativePath=".\Java.g3pl"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Generated"
+			Name="Imports"
 			>
 			<File
-				RelativePath=".\Javadoc.tokens"
+				RelativePath=".\JavaAnnotations.g"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\JavadocLexer.c"
+				RelativePath=".\JavaDecl.g"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\JavadocLexer.h"
+				RelativePath=".\JavaExpr.g"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\JavadocParser.c"
+				RelativePath=".\JavaLexerRules.g"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\JavadocParser.h"
+				RelativePath=".\JavaStat.g"
 				>
-			</File>
-			<File
-				RelativePath=".\Simple.tokens"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleLexer.c"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleLexer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleParser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleParser.h"
-				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

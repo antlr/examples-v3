@@ -2,9 +2,28 @@ lexer grammar JavaLexerRules;
 // Note: can't use name JavaLexer; conflicts with JavaLexer generated from
 // Java.g
 
-@members {
-protected boolean enumIsKeyword = true;
+// While you can implement your own character streams and so on, they
+// normally call things like LA() via function pointers. In general you will
+// be using one of the pre-supplied input streams and you can instruct the
+// generated code to access the input pointers directly.
+//
+// For  8 bit inputs            : #define ANTLR3_INLINE_INPUT_ASCII
+// For 16 bit UTF16/UCS2 inputs : #define ANTLR3_INLINE_INPUT_UTF16
+//
+// If your compiled recognizer might be given inputs from either of the sources
+// or you have written your own character input stream, then do not define
+// either of these.
+//
+@lexer::header
+{
+#define	ANTLR3_INLINE_INPUT_ASCII
 }
+
+@lexer::members 
+{
+static ANTLR3_BOOLEAN enumIsKeyword = ANTLR3_TRUE;
+}
+
 
 HexLiteral : '0' ('x'|'X') HexDigit+ IntegerTypeSuffix? ;
 

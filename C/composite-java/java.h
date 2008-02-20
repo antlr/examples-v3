@@ -17,8 +17,8 @@
 // The compiler must use -I (or set the project settings in VS2005)
 // to locate the antlr3 runtime files and -I. to find this file
 //
-#include    <javaLexer.h>
-#include    <javaParser.h>
+#include    <JavaLexer.h>
+#include    <JavaParser.h>
 #include    <jimdirent.h>
 
 # ifdef	WIN32
