@@ -8,7 +8,7 @@
 			Name="Antlr3Parser"
 			DisplayName="ANTLR 3 Parser Grammar Translation"
 			CommandLine="[java] [JavaOptions] [ANTLR3Jar] org.antlr.Tool [LibDir] -[Absolute]o [OutputDirectory]  -message-format vs2005 [DFA] [NFA] [Report] [Print] [Debug] [Profile] [AST] [TextDFA] [EBNFExits] [CollapseEdges] [DebugNFA] [MaxRules] [MaxDFAEdges] [DFATimeout] [inputs]"
-			Outputs="[OutputDirectory]\$(InputName)Parser.c;[OutputDirectory]\$(InputName)Parser.h"
+			Outputs="[OutputDirectory]\$(InputName).c;[OutputDirectory]\$(InputName).h"
 			FileExtensions="*.g3p;*.gp;*.g"
 			ExecutionDescription="Translating to parser."
 			SupportsFileBatching="true"

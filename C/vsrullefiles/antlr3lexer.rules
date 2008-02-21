@@ -8,7 +8,7 @@
 			Name="Antlr3Lexer"
 			DisplayName="ANTLR 3 Lexer Grammar Translation"
 			CommandLine="[java] [JavaOptions] [ANTLR3Jar] org.antlr.Tool [LibDir] -[Absolute]o [OutputDirectory] -message-format vs2005 [DFA] [NFA] [Report] [Print] [Debug] [Profile] [AST] [TextDFA] [EBNFExits] [CollapseEdges] [DebugNFA] [MaxRules] [MaxDFAEdges] [DFATimeout] [inputs]"
-			Outputs="[OutputDirectory]\$(InputName)Lexer.c;[OutputDirectory]\$(InputName)Lexer.h"
+			Outputs="[OutputDirectory]\$(InputName).c;[OutputDirectory]\$(InputName).h"
 			FileExtensions="*.g3l;*.gl;*.g"
 			ExecutionDescription="Translating to lexer."
 			SupportsFileBatching="true"
