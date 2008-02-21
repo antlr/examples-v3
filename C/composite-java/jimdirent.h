@@ -23,7 +23,7 @@ struct DIR_struct
 {
     ANTLR3_BOOLEAN  isFirst;		    // Signal that we have not yet found any files in a directory
     unsigned char   dirName[MAX_PATH+1];    // Storage for the current directory/file
-    HANDLE	    fileHandle;		    // hande for the file/directory we find
+    HANDLE	    fileHandle;		    // handle for the file/directory we find
     struct dirent   arthurDent;		    // Fixed dirent entry
 
 } DIR;

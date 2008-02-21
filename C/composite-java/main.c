@@ -117,8 +117,8 @@ processDir(char * directory)
 		    // This was a directory too, close the reference here, and call
 		    // ourselves recursively, to process this subdirectory
 		    //
-		    closedir(Hdirs);
 		    processDir((char *)buf);
+		    closedir(Hdirs);
 		    printf(" %s\n", buf);
 		}
 		else

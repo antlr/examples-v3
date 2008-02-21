@@ -17,6 +17,9 @@
 		/>
 	</Platforms>
 	<ToolFiles>
+		<ToolFile
+			RelativePath="..\vsrullefiles\antlr3parser.rules"
+		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -31,6 +34,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="Antlr3Parser"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -110,6 +116,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="Antlr3Parser"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -222,10 +231,24 @@
 			<File
 				RelativePath=".\Javadoc.g3pl"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="Antlr3Parser"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Simple.g3pl"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="Antlr3Parser"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

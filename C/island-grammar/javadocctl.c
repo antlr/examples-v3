@@ -9,7 +9,7 @@ void callJavadoc(pANTLR3_INPUT_STREAM input)
 	printf("enter Javadoc\n");
 
 	lex	    = JavadocLexerNew(input);
-	tstream	    = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lex->pLexer->tokSource);
+	tstream	    = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
         parser	    = JavadocParserNew(tstream);
 
         parser->comment(parser);

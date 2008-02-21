@@ -231,9 +231,9 @@ main	(int argc, char *argv[])
     // keeping your own flags as part of the error trapping, but here is how you can
     // work out if there were errors if you are using the generic error messages
     //
-    if (psr->pParser->rec->errorCount > 0)
+    if (psr->pParser->rec->state->errorCount > 0)
     {
-	fprintf(stderr, "The parser returned %d errors, tree walking aborted.\n", psr->pParser->rec->errorCount);
+		fprintf(stderr, "The parser returned %d errors, tree walking aborted.\n", psr->pParser->rec->state->errorCount);
 
     }
     else

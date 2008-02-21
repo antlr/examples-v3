@@ -236,7 +236,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\FuzzyJava.h"
+				RelativePath=".\FuzzyJavaDefs.h"
 				>
 			</File>
 		</Filter>
@@ -252,15 +252,15 @@
 			Name="Generated"
 			>
 			<File
+				RelativePath=".\FuzzyJava.c"
+				>
+			</File>
+			<File
+				RelativePath=".\FuzzyJava.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FuzzyJava.tokens"
-				>
-			</File>
-			<File
-				RelativePath=".\FuzzyJavaLexer.c"
-				>
-			</File>
-			<File
-				RelativePath=".\FuzzyJavaLexer.h"
 				>
 			</File>
 		</Filter>

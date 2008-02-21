@@ -31,6 +31,7 @@ This grammar requires ANTLR v3 (3.0b8 or higher)
 
 Terence Parr
 July 2006
+
 */
 grammar C;
 
@@ -60,9 +61,9 @@ scope Symbols
 }
 
 // While you can implement your own character streams and so on, they
-// normally call things like LA() via funtion pointers. In general you will
+// normally call things like LA() via function pointers. In general you will
 // be using one of the pre-supplied input streams and you can instruct the
-// generated code to access the input pointrs directly.
+// generated code to access the input pointers directly.
 //
 // For  8 bit inputs            : #define ANTLR3_INLINE_INPUT_ASCII
 // For 16 bit UTF16/UCS2 inputs : #define ANTLR3_INLINE_INPUT_UTF16
@@ -103,7 +104,7 @@ scope Symbols
 {
 
     // This is a function that is small enough to be kept in the
-    // generated paraser code (@lexer::members puts code in the lexer.
+    // generated parser code (@lexer::members puts code in the lexer.
     //
     // Note a few useful MACROS in use here:
     //
@@ -111,11 +112,11 @@ scope Symbols
     //                for the named scope.
     // SCOPE_INSTANCE returns a pointer to Scope instance at the
     //                specified level.
-    // SCOPE_TYPE     makes it easy to decalre and cast the pointer to
+    // SCOPE_TYPE     makes it easy to declare and cast the pointer to
     //                the structure typedef that the code generator declares.
     //
-    // All functions (that need anything to sdo with the runtime, should
-    // receve a parameter called ctx as the first parameter. ctx is a pointer
+    // All functions (that need anything to do with the runtime, should
+    // receive a parameter called ctx as the first parameter. ctx is a pointer
     // to the instance of the parser that is running and ensures thread safety
     // as well as easy access to all the parser elements etc. All MACROS assume
     // the presence of this parameter. This would be a pCLexer pointer if this
@@ -128,39 +129,39 @@ scope Symbols
 
 	for (i = (int)SCOPE_SIZE(Symbols) ; i > 0; i--)
 	{
-    	    pANTLR3_HASH_TABLE  symtab;
-    	    pANTLR3_STRING	symbol;
+    	pANTLR3_HASH_TABLE  symtab;
+    	pANTLR3_STRING		symbol;
 	    SCOPE_TYPE(Symbols)	symScope;   // Aids in declaring the scope pointers
 
-    	    // Note index to get method is 1 based!
-    	    // Pick up the pointer to the scope structure at the current level
-	    // We are descending from the innner most scope as that is how C type
+    	// Note index to get method is 1 based!
+    	// Pick up the pointer to the scope structure at the current level
+	    // We are descending from the inner most scope as that is how C type
 	    // scoping works.
 	    //
-    	    symScope	= SCOPE_INSTANCE(Symbols, i);
+    	symScope	= SCOPE_INSTANCE(Symbols, i);
 
 	    // The pointer we have is an instance of the dynamic global scope
 	    // called Symbols. Within there, as declared above, we have a pointer
-	    // to an ANTLR3_HASH_TABLE. We shodl really check for NULL etc, like all good C code 
+	    // to an ANTLR3_HASH_TABLE. We should really check for NULL etc, like all good C code 
 	    // should. But, this is example code...
 	    //
 	    symtab	= symScope->types;
 
-	    // The folowing call is the reason that you cannot add a NULL poitner as the entry for
-	    // the hash tbale. You can always just add the poitner to the key and ignore it, but
-	    // when you return from this call, you wnat to test for a NULL pointer, which means
+	    // The following call is the reason that you cannot add a NULL pointer as the entry for
+	    // the hash table. You can always just add the pointer to the key and ignore it, but
+	    // when you return from this call, you want to test for a NULL pointer, which means
 	    // the entry was not found in the table.
 	    //
-    	    symbol	= symtab->get(symtab, (void *)name);
+    	symbol	= symtab->get(symtab, (void *)name);
     
 	    // Did we find the symbol in the type lists?
-	    // This is gnerally used for semantic predicates, hence ANTLR3_TRUE or ANTLR3_FALSE
+	    // This is generally used for semantic predicates, hence ANTLR3_TRUE or ANTLR3_FALSE
 	    // for the return
 	    //
-    	    if (symbol != NULL)
-    	    {
+    	if (symbol != NULL)
+    	{
     		return ANTLR3_TRUE;
-    	    }
+    	}
 	}
 
 	// We did not find the requested symbol in any of the scopes
@@ -177,16 +178,16 @@ scope Symbols
     //
     void ANTLR3_CDECL freeTable(void * table)
     {
-	SCOPE_TYPE(Symbols) symtab;
+		SCOPE_TYPE(Symbols) symtab;
 
-	// If we supplied an entry in the table with a free pointer,
-	// then calling the table free function will call the free function
-	// for each entry as it deletes it from the table. In this case however
-	// we only stored things that were manufactured by internal factories, which
-	// will be released anyway when the parser/lexer/etc are freed.
-	//
-	symtab = table;
-	symtab->types->free(symtab->types);
+		// If we supplied an entry in the table with a free pointer,
+		// then calling the table free function will call the free function
+		// for each entry as it deletes it from the table. In this case however
+		// we only stored things that were manufactured by internal factories, which
+		// will be released anyway when the parser/lexer/etc are freed.
+		//
+		symtab = table;
+		symtab->types->free(symtab->types);
     }
 }
 
@@ -196,14 +197,14 @@ translation_unit
 
     @init 
     {
-	// The code in @init is executed before the rule starts. Note that this
-	// is C, hence we cannot gurantee to be able to both declare and initialize
-	// variables at the same time. If you need to declare variables as local
-	// to a rule, use the @declarations section and then initalize locals
-	// separately in this @init section.
-	//
-	$Symbols::types = antlr3HashTableNew(11);	// parameter is a rough hint for hash alg. as to size
-	SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
+		// The code in @init is executed before the rule starts. Note that this
+		// is C, hence we cannot guarantee to be able to both declare and initialize
+		// variables at the same time. If you need to declare variables as local
+		// to a rule, use the @declarations section and then initialize locals
+		// separately in this @init section.
+		//
+		$Symbols::types = antlr3HashTableNew(11);	// parameter is a rough hint for hash alg. as to size
+		SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
 
 
@@ -227,7 +228,7 @@ translation_unit
 external_declaration
     options 
     {
-	k=1;
+		k=1;
     }
     : ( declaration_specifiers? declarator declaration* '{' )=> function_definition
     | declaration
@@ -251,11 +252,11 @@ function_definition
 declaration
     scope 
     {
-	ANTLR3_BOOLEAN	    isTypedef;
+		ANTLR3_BOOLEAN	    isTypedef;
     }
     @init 
     {
-	$declaration::isTypedef = ANTLR3_FALSE;
+		$declaration::isTypedef = ANTLR3_FALSE;
     }
     : 'typedef' declaration_specifiers? 
 		{
@@ -268,8 +269,8 @@ declaration
 
 declaration_specifiers
     :   (     storage_class_specifier
-	    | type_specifier
-	    | type_qualifier
+			| type_specifier
+			| type_qualifier
         )+
     ;
 
@@ -309,8 +310,8 @@ type_id
 	{
 	    // In Java you can just use $xxx.text, which is of type String.
 	    // In C, .text returns an ANTLR3 'object' of type pANTLR3_STRING.
-	    // teh potiner to the actual characters is contained in ->chars and
-	    // the object has lots of methods to help you with strings, such as appen and
+	    // the pointer to the actual characters is contained in ->chars and
+	    // the object has lots of methods to help you with strings, such as append and
 	    // insert etc. pANTLR3_STRING is also auto managed by a string factory, which
 	    // will be released when you ->free() the parser.
 	    //
@@ -321,13 +322,13 @@ type_id
 struct_or_union_specifier
     options 
     {
-	k=3;
+		k=3;
     }
     scope Symbols; // structs are scopes
     @init 
     {
-	$Symbols::types = antlr3HashTableNew(11);
-	SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
+		$Symbols::types = antlr3HashTableNew(11);
+		SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
     : struct_or_union IDENTIFIER? '{' struct_declaration_list '}'
     | struct_or_union IDENTIFIER
@@ -362,7 +363,7 @@ struct_declarator
 enum_specifier
     options 
     {
-	k=3;
+		k=3;
     }
     : 'enum' '{' enumerator_list '}'
     | 'enum' IDENTIFIER '{' enumerator_list '}'
@@ -389,25 +390,25 @@ declarator
 
 direct_declarator
     :   (   IDENTIFIER
-	    {
-	    	if ($declaration->size($declaration) > 0 && $declaration::isTypedef) 
-		{
-		    // When adding an emelemt to a pANTLR3_HASH_TABLE, the first argument
-		    // is the hash table itself, the second is the entry key, the third is
-		    // a (void *) pointer to a structure or element of your choice (cannot
-		    // be NULL) and the 4th is a pointer to a fcount that knows how to free
-		    // your entry structure (if this is needed, give NULL if not) when the table
-		    // is destroyed, or the entry is deleted from the table.
-		    //
-		    $Symbols::types->put($Symbols::types, $IDENTIFIER.text->chars, $IDENTIFIER.text, NULL);
+			{
+	    		if ($declaration::isTypedef)
+				{
+					// When adding an element to a pANTLR3_HASH_TABLE, the first argument
+					// is the hash table itself, the second is the entry key, the third is
+					// a (void *) pointer to a structure or element of your choice (cannot
+					// be NULL) and the 4th is a pointer to a function that knows how to free
+					// your entry structure (if this is needed, give NULL if not) when the table
+					// is destroyed, or the entry is deleted from the table.
+					//
+					$Symbols::types->put($Symbols::types, $IDENTIFIER.text->chars, $IDENTIFIER.text, NULL);
 
-		    // Note that we must escape the percent sign here from ANTLR expression
-		    // parsing. It is not seen in the generated C code.
-		    //
-		    printf("define type \%s\n", $IDENTIFIER.text->chars);
-		}
-	    }
-	  | '(' declarator ')'
+					// Note that we must escape the percent sign here from ANTLR expression
+					// parsing. It is not seen in the generated C code.
+					//
+					printf("define type \%s\n", $IDENTIFIER.text->chars);
+				}
+			}
+		  | '(' declarator ')'
 	)
 
         declarator_suffix*
@@ -436,7 +437,7 @@ parameter_list
     ;
 
 parameter_declaration
-    : declaration_specifiers (declarator|abstract_declarator)*
+    : declaration_specifiers (declarator | abstract_declarator)*
     ;
 
 identifier_list
@@ -502,14 +503,14 @@ unary_expression
 
 postfix_expression
     :   primary_expression
-	(     '[' expression ']'
-	    | '(' ')'
-	    | '(' argument_expression_list ')'
-	    | '.' IDENTIFIER
-	    | '*' IDENTIFIER
-	    | '->' IDENTIFIER
-	    | '++'
-	    | '--'
+		(     '[' expression ']'
+			| '(' ')'
+			| '(' argument_expression_list ')'
+			| '.' IDENTIFIER
+			| '*' IDENTIFIER
+			| '->' IDENTIFIER
+			| '++'
+			| '--'
         )*
     ;
 
@@ -665,8 +666,6 @@ IDENTIFIER
     :	LETTER (LETTER|'0'..'9')*
     ;
 	
-
-
 fragment
 LETTER
     :	'$'
@@ -734,13 +733,8 @@ UnicodeEscape
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
     ;
 
-// Note a special case here. If we used * and / as 2 characters strings
-// we will generate a C comment that includes them and seems, to the C
-// C compiler to be an embedded comment or the end of the comment documenting
-// the generated function. Hence we must utilize them as individual characters.
-//
 COMMENT
-    :   '/' '*' ( options {greedy=false;} : . )* '*' '/' {$channel=HIDDEN;}
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
 LINE_COMMENT
@@ -750,36 +744,36 @@ LINE_COMMENT
 // ignore #line info for now
 LINE_COMMAND 
     : '#' (' ' | '\t')*
-	(
-	    'include' (' ' | '\t')+ '"' file = STRING_GUTS '"' (' ' | '\t')* '\r'? '\n'
-		{
-		    pANTLR3_STRING	    fName;
-		    pANTLR3_INPUT_STREAM    in;
+		(
+			'include' (' ' | '\t')+ '"' file = STRING_GUTS '"' (' ' | '\t')* '\r'? '\n'
+			{
+				pANTLR3_STRING			fName;
+				pANTLR3_INPUT_STREAM    in;
 
-		    // Create an initial string, then take a substring
-		    // We can do this by messing with the start and end
-		    // pointers of tokens and so on. This shows a reasonable way to
-		    // manipulate strings.
-		    //
-		    fName = $file.text;
-		    printf("Including file '\%s'\n", fName->chars);
+				// Create an initial string, then take a substring
+				// We can do this by messing with the start and end
+				// pointers of tokens and so on. This shows a reasonable way to
+				// manipulate strings.
+				//
+				fName = $file.text;
+				printf("Including file '\%s'\n", fName->chars);
 
-		    // Create a new input stream and take advantage of built in stream stacking
-		    // in C target runtime.
-		    //
-		    in = antlr3AsciiFileStreamNew(fName->chars);
-		    PUSHSTREAM(in);
+				// Create a new input stream and take advantage of built in stream stacking
+				// in C target runtime.
+				//
+				in = antlr3AsciiFileStreamNew(fName->chars);
+				PUSHSTREAM(in);
 
-		    // Note that the input stream is not closed when it EOFs, I don't bother
-		    // to do it here, but it is up to you to track streams created like this
-		    // and destroy them when the whole parse session is complete. Remember that you
-		    // don't want to do this until all tokens have been manipulated all the way through 
-		    // your tree parsers etc as the token does not store the text it just refers
-		    // back to the input stream and trying to get the text for it will abort if you
-		    // close the input stream too early.
-		    //
+				// Note that the input stream is not closed when it EOFs, I don't bother
+				// to do it here, but it is up to you to track streams created like this
+				// and destroy them when the whole parse session is complete. Remember that you
+				// don't want to do this until all tokens have been manipulated all the way through 
+				// your tree parsers etc as the token does not store the text it just refers
+				// back to the input stream and trying to get the text for it will abort if you
+				// close the input stream too early.
+				//
 
-		}
+			}
             | (('0'..'9')=>('0'..'9'))+ ~('\n'|'\r')* '\r'? '\n'
 	    )
 	 {$channel=HIDDEN;}

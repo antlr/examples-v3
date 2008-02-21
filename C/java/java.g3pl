@@ -69,6 +69,13 @@
  *          generic method invocation (e.g. this.<E>doSomething()).  Using identifierSuffix
  *          may be overly aggressive--perhaps should create a more constrained thisSuffix rule?
  * 		
+ *  Version 1.0.4 -- Hiroaki Nakamura, May 3, 2007
+ *
+ *	Fixed formalParameterDecls, localVariableDeclaration, forInit,
+ *	and forVarControl to use variableModifier* not 'final'? (annotation)?
+ *
+ *  Version 1.0.5 -- Terence, June 21, 2007
+ *	--a[i].foo didn't work. Fixed unaryExpression
  */
 grammar java;
 
@@ -124,7 +131,7 @@ packageDeclaration
 	;
 	
 importDeclaration
-:	'import' 'static'? i=Identifier ('.' Identifier)* ('.' '*')? ';' 
+	:	'import' 'static'? Identifier ('.' Identifier)* ('.' '*')? ';' 
 	;
 	
 typeDeclaration
@@ -394,7 +401,7 @@ formalParameters
 	;
 	
 formalParameterDecls
-	:	'final'? annotations? type formalParameterDeclsRest?
+	:	variableModifier* type formalParameterDeclsRest?
 	;
 	
 formalParameterDeclsRest
@@ -522,7 +529,7 @@ localVariableDeclaration
 statement
 	: block
     | 'assert' expression (':' expression)? ';'
-    | 'if' parExpression statement (options {k=1;}:'else' statement)?
+    | 'if' parExpression statement (options {k=1; backtrack=false;}:'else' statement)?
     | 'for' '(' forControl ')' statement
     | 'while' parExpression statement
     | 'do' statement 'while' parExpression ';'
@@ -579,12 +586,12 @@ options {k=3;} // be efficient for common case: for (ID ID : ID) ...
 	;
 
 forInit
-	:	'final'? (annotation)? type variableDeclarators
+	:	variableModifier* type variableDeclarators
     |   expressionList
 	;
 	
 forVarControl
-	:	'final'? type Identifier ':' expression
+	:	variableModifier* type Identifier ':' expression
 	;
 
 forUpdate
@@ -689,8 +696,8 @@ multiplicativeExpression
 unaryExpression
     :   '+' unaryExpression
     |	'-' unaryExpression
-    |   '++' primary
-    |   '--' primary
+    |   '++' unaryExpression
+    |   '--' unaryExpression
     |   unaryExpressionNotPlusMinus
     ;
 

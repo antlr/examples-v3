@@ -17,7 +17,7 @@
 // The compiler must use -I (or set the project settings in VS2005)
 // to locate the antlr3 runtime files and -I. to find this file
 //
-#include    <FuzzyJavaLexer.h>
+#include    <FuzzyJava.h>
 
 #ifdef	WIN32
 #pragma warning( disable : 4100 )

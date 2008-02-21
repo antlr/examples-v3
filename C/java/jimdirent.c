@@ -8,46 +8,48 @@
 DIR *
 jimopendir(const char * directory)
 {
-    int	      fileFlags;
-    DIR	    * doh;
+	int	      fileFlags;
+	DIR	    * doh;
 
-    // Ensure that we have been supplied with a directory
-    //
-    fileFlags = GetFileAttributes((LPCSTR)directory);
-
-    if (fileFlags == INVALID_FILE_ATTRIBUTES)
-    {
-	// Something was drastically wrong with this path
+	// Ensure that we have been supplied with a directory
 	//
-	errno	= ENOENT;
-	return	NULL;
-    }
-    if (( fileFlags & FILE_ATTRIBUTE_DIRECTORY) == 0)
-    {
-	// This is not a valid directory path, so return NULL
+	fileFlags = GetFileAttributes((LPCSTR)directory);
+
+	if (fileFlags == INVALID_FILE_ATTRIBUTES)
+	{
+		// Something was drastically wrong with this path
+		//
+		errno	= ENOENT;
+		return	NULL;
+	}
+	if (( fileFlags & FILE_ATTRIBUTE_DIRECTORY) == 0)
+	{
+		// This is not a valid directory path, so return NULL
+		//
+		errno	= ENOTDIR;
+		return NULL;
+	}
+
+	// OK, so it seems to be a directory, allocate a DIR structure
 	//
-	errno	= ENOTDIR;
-	return NULL;
-    }
+	doh	= (DIR *)ANTLR3_MALLOC(sizeof(DIR));
 
-    // OK, so it seems to be a directory, allocate a DIR structure
-    //
-    doh	= (DIR *)ANTLR3_MALLOC(sizeof(DIR));
+	if (doh == NULL)
+	{
+		// Could not allocate the memory for this.
+		//
+		errno	= EINVAL;
+		return	NULL;
+	}
 
-    if (doh == NULL)
-    {
-	// Could not allocate the memory for this.
+	// We have allocated our structure, so fill it in
 	//
-	errno	= EINVAL;
-	return	NULL;
-    }
+	doh->isFirst    = ANTLR3_TRUE;	// We have not called FindFirst yet
+	sprintf((char *)(doh->dirName), "%s%s*",
+		directory, 
+		(directory[strlen((const char *) directory)-1] == '\\' ? "" : "\\")); // Don't duplicate delimiter
 
-    // We have allocated our structure, so fill it in
-    //
-    doh->isFirst    = ANTLR3_TRUE;	// We have not called FindFirst yet
-    sprintf((char *)(doh->dirName), "%s%s*", directory, (directory[strlen((const char *) directory)-1] == '\\' ? "" : "\\")); // Don't duplicate delimiter
-
-    return doh;
+	return doh;
 }
 
 static	WIN32_FIND_DATAA	fResults;
@@ -106,16 +108,19 @@ readdir( DIR * doh)
 int
 closedir(DIR * doh)
 {
-    if (doh == NULL)
-    {
-	return -1;
-    }
-    else
-    {
-	FindClose(doh->fileHandle);
-	ANTLR3_FREE(doh);
-    }
-    return 0;
+	if (doh == NULL)
+	{
+		return -1;
+	}
+	else
+	{
+		if	(doh->fileHandle != NULL)
+		{
+			FindClose(doh->fileHandle);
+		}
+		ANTLR3_FREE(doh);
+	}
+	return 0;
 }
 
 

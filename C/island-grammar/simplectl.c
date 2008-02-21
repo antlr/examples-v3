@@ -9,7 +9,7 @@ void callSimple(pANTLR3_INPUT_STREAM input)
 	printf("enter embedded Simple escape\n");
 
 	lex	    = SimpleLexerNew(input);
-	tstream	    = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, lex->pLexer->tokSource);
+	tstream	    = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
         parser	    = SimpleParserNew(tstream);
 
         parser->statement(parser);

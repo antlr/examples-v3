@@ -115,7 +115,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -314,12 +314,28 @@
 						Name="Antlr3ParserLexer"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\JavaDecl.g"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -338,6 +354,14 @@
 						Name="Antlr3ParserLexer"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\JavaLexerRules.g"
@@ -350,12 +374,28 @@
 						Name="Antlr3ParserLexer"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\JavaStat.g"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
