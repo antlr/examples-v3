@@ -5,7 +5,7 @@ packageDeclaration
 	;
 	
 importDeclaration
-	:	'import' 'static'? Identifier ('.' Identifier)* ('.' '*')? ';'
+	:	'import' 'static'? Identifier ('.' Identifier)* ('.' '*')? ';' 
 	;
 	
 typeDeclaration

@@ -292,6 +292,17 @@ parseFile(pANTLR3_UINT8 fName)
     // that when you type ->, you will see a list of all the methods the object supports.
     //
     //putc('L', stdout); fflush(stdout);
+		{
+		ANTLR3_INT32 T;
+
+		T = 0;
+		while	(T != ANTLR3_TOKEN_EOF)
+		{
+			T = tstream->tstream->istream->_LA(tstream->tstream->istream, 1);
+			tstream->tstream->istream->consume(tstream->tstream->istream);
+			printf("%d %s\n", T,  (psr->pParser->rec->state->tokenNames)[T]);
+		}
+	}
     tstream->tstream->_LT(tstream->tstream, 1);	// Don't do this normally, just causes lexer to run for timings here
     //putc('P', stdout); fflush(stdout);
     psr->compilationUnit(psr);

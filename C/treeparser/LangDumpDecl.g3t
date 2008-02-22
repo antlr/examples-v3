@@ -7,11 +7,14 @@ options
     ASTLabelType	= pANTLR3_BASE_TREE;
 }
 
-decl : ^(DECL type declarator+)
+decl	: decls+
+		;
+
+decls : ^(DECL type declarator+)
 
        // label.start, label.start, label.text
        {
-	   printf("int \%s\n", $declarator.text->chars);
+			printf("int \%s\n", $declarator.text->chars);
        }
      ;
 
