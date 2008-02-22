@@ -127,7 +127,7 @@ scope Symbols
     {
 	int	i;
 
-	for (i = (int)SCOPE_SIZE(Symbols) ; i > 0; i--)
+	for (i = (int)SCOPE_SIZE(Symbols)-1 ; i >= 0; i--)
 	{
     	pANTLR3_HASH_TABLE  symtab;
     	pANTLR3_STRING		symbol;
@@ -204,6 +204,7 @@ translation_unit
 		// separately in this @init section.
 		//
 		$Symbols::types = antlr3HashTableNew(11);	// parameter is a rough hint for hash alg. as to size
+
 		SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
 
