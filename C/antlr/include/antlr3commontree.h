@@ -9,6 +9,10 @@
 #include    <antlr3basetree.h>
 #include    <antlr3commontoken.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct ANTLR3_COMMON_TREE_struct
 {
 
@@ -108,6 +112,10 @@ typedef	struct ANTLR3_ARBORETUM_struct
     void		    (*close)	    (struct ANTLR3_ARBORETUM_struct * factory);
 }
     ANTLR3_ARBORETUM;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

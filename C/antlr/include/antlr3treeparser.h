@@ -5,6 +5,10 @@
 #include    <antlr3baserecognizer.h>
 #include    <antlr3commontreenodestream.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Internal structure representing an element in a hash bucket.
  *  Stores the original key so that duplicate keys can be rejected
  *  if necessary, and contains function can be suported. If the hash key
@@ -41,5 +45,8 @@ typedef	struct	ANTLR3_TREE_PARSER_struct
 }
     ANTLR3_TREE_PARSER;
 
-    
+#ifdef __cplusplus
+}
+#endif
+
 #endif

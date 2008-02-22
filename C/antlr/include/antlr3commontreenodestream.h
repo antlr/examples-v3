@@ -17,6 +17,10 @@
 #define	DEFAULT_INITIAL_BUFFER_SIZE		100
 #define	INITIAL_CALL_STACK_SIZE			10
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	struct ANTLR3_TREE_NODE_STREAM_struct
 {
     /// Any interface that implements this interface (is a 
@@ -293,5 +297,9 @@ typedef struct ANTLR3_TREE_WALK_STATE_struct
     ANTLR3_UINT32			  head;
 }
     ANTLR3_TREE_WALK_STATE;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

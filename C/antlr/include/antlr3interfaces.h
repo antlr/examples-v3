@@ -7,6 +7,10 @@
 #ifndef	_ANTLR3_INTERFACES_H
 #define	_ANTLR3_INTERFACES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	struct ANTLR3_INT_STREAM_struct						*pANTLR3_INT_STREAM;
 
 /// Pointer to an instantiation of the 'class' #ANTLR3_BASE_RECOGNIZER
@@ -187,4 +191,9 @@ typedef	struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct	*pANTLR3_REWRITE_RULE_N
 /// \ingroup ANTLR3_DEBUG_EVENT_LISTENER			
 ///
 typedef struct ANTLR3_DEBUG_EVENT_LISTENER_struct			*pANTLR3_DEBUG_EVENT_LISTENER;
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

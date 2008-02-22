@@ -12,6 +12,10 @@
 #include    <antlr3commontree.h>
 #include	<antlr3debugeventlistener.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	struct ANTLR3_COMMON_TREE_ADAPTOR_struct
 {
     /** Any enclosing structure/class can use this pointer to point to its own interface.
@@ -29,5 +33,9 @@ typedef	struct ANTLR3_COMMON_TREE_ADAPTOR_struct
 
 }
     ANTLR3_COMMON_TREE_ADAPTOR;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -28,6 +28,10 @@
  */
 #define	    ANTLR3_TYPE_TREE_PARSER	0x0004
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Base tracking context structure for all types of
  * recognizers.
  */
@@ -260,6 +264,10 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
 
 }
     ANTLR3_BASE_RECOGNIZER;
+
+#ifdef __cplusplus
+}
+#endif
 
 #include    <antlr3lexer.h>
 #include    <antlr3parser.h>

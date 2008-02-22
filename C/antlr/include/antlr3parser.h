@@ -9,6 +9,10 @@
 #include    <antlr3defs.h>
 #include    <antlr3baserecognizer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** This is the main interface for an ANTLR3 parser.
  */
 typedef	struct ANTLR3_PARSER_struct
@@ -53,5 +57,8 @@ typedef	struct ANTLR3_PARSER_struct
 }
     ANTLR3_PARSER;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

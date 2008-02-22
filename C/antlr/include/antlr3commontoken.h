@@ -51,6 +51,10 @@
  */
 #define	HIDDEN				99
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** The definition of an ANTLR3 common token structure, which all implementations
  * of a token stream should provide, installing any further structures in the
  * custom pointer element of this structure.
@@ -274,5 +278,9 @@ typedef	struct ANTLR3_TOKEN_FACTORY_struct
     void		    (*close)	    (struct ANTLR3_TOKEN_FACTORY_struct * factory);
 }
     ANTLR3_TOKEN_FACTORY;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

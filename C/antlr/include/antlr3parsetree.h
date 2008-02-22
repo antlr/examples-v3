@@ -9,6 +9,10 @@
 
 #include    <antlr3basetree.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct ANTLR3_PARSE_TREE_struct
 {
     /** Any interface that implements methods in this interface
@@ -45,5 +49,8 @@ typedef struct ANTLR3_PARSE_TREE_struct
 }
     ANTLR3_PARSE_TREE;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -9,6 +9,10 @@
 #include    <antlr3collections.h>
 #include    <antlr3string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// A generic tree implementation with no payload.  You must subclass to
 /// actually have any user data.  ANTLR v3 uses a list of children approach
 /// instead of the child-sibling approach in v2.  A flat tree (a list) is
@@ -99,5 +103,10 @@ typedef	struct ANTLR3_BASE_TREE_struct
 
 }
     ANTLR3_BASE_TREE;
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

@@ -5,6 +5,10 @@
 #include    <antlr3collections.h>
 #include    <antlr3commontreeadaptor.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// A generic list of elements tracked in an alternative to be used in
 /// a -> rewrite rule.  
 ///
@@ -134,5 +138,9 @@ typedef struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct ANTLR3_REWRITE_RULE_SUB
 ///  stream that deals with tree nodes only.
 ///
 typedef struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct ANTLR3_REWRITE_RULE_NODE_STREAM;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

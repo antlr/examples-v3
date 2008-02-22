@@ -14,6 +14,10 @@
 #include    <antlr3bitset.h>
 #include	<antlr3debugeventlistener.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Definition of a token source, which has a pointer to a function that 
  *  returns the next token (using a token factory if it is going to be
  *  efficient) and a pointer to an ANTLR3_INPUT_STREAM. This is slightly
@@ -253,5 +257,8 @@ typedef	struct	ANTLR3_COMMON_TOKEN_STREAM_struct
 }
     ANTLR3_COMMON_TOKEN_STREAM;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

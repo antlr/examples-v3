@@ -9,6 +9,10 @@
 #include    <antlr3baserecognizer.h>
 #include    <antlr3intstream.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct ANTLR3_CYCLIC_DFA_struct
 {
     /** Decision number that a particular static stucture
@@ -38,5 +42,9 @@ typedef struct ANTLR3_CYCLIC_DFA_struct
     ANTLR3_CYCLIC_DFA;
 
 typedef ANTLR3_INT32		(*CDFA_SPECIAL_FUNC)   (void * , pANTLR3_BASE_RECOGNIZER , pANTLR3_INT_STREAM , struct ANTLR3_CYCLIC_DFA_struct * , ANTLR3_INT32);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

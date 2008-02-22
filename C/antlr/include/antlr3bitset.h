@@ -33,6 +33,10 @@
  */
 #define	ANTLR3_BITSET_MOD_MASK	ANTLR3_BITSET_BITS - 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	struct ANTLR3_BITSET_struct
 {
     /** Pointer to the allocated array of bits for this bit set, which
@@ -65,6 +69,10 @@ typedef	struct ANTLR3_BITSET_struct
 
 }
     ANTLR3_BITSET;
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

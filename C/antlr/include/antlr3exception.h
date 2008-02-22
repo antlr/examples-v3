@@ -59,6 +59,10 @@
 #define	ANTLR3_REWRITE_EARLY_EXCEPTION	7
 #define	ANTLR3_REWRITE_EARLY_EXCEPTION_NAME    "Mismatched tree node!"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Base structure for an ANTLR3 exception tracker
  */
 typedef	struct ANTLR3_EXCEPTION_struct
@@ -171,6 +175,9 @@ typedef	struct ANTLR3_EXCEPTION_struct
 }
     ANTLR3_EXCEPTION;
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

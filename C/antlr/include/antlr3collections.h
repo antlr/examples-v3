@@ -7,6 +7,10 @@
 #define	ANTLR3_HASH_TYPE_INT	0   /**< Indicates the hashed file has integer keys */
 #define	ANTLR3_HASH_TYPE_STR	1   /**< Indicates the hashed file has numeric keys */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct ANTLR3_HASH_KEY_struct
 {
 	ANTLR3_UINT8	type;	/**< One of ##ANTLR3_HASH_TYPE_INT or ##ANTLR3_HASH_TYPE_STR	*/
@@ -309,6 +313,10 @@ typedef struct ANTLR3_INT_TRIE_struct
 
 }
     ANTLR3_INT_TRIE;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

@@ -40,6 +40,10 @@
 #include    <antlr3tokenstream.h>
 #include    <antlr3baserecognizer.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	struct ANTLR3_LEXER_struct
 {
     /** If there is a super structure that is implementing the
@@ -155,5 +159,8 @@ typedef	struct ANTLR3_LEXER_struct
 }
     ANTLR3_LEXER;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

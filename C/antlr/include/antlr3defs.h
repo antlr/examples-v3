@@ -81,6 +81,10 @@
 #define	ANTLR3_CDECL __cdecl
 #define ANTLR3_FASTCALL __fastcall
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	INT32	ANTLR3_CHAR,	*pANTLR3_CHAR;
 typedef	UINT32	ANTLR3_UCHAR,	*pANTLR3_UCHAR;
 
@@ -126,6 +130,10 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 
 typedef	int	ANTLR3_SALENT;							// type used for size of accept structure
 typedef struct sockaddr *	pANTLR3_SOCKADDR;		// Type used for cast on accept()
+
+#ifdef __cplusplus
+}
+#endif
 
 /* Warnings that are over-zealous such as complaining about strdup, we
  * can turn off.
@@ -214,6 +222,10 @@ typedef struct sockaddr *	pANTLR3_SOCKADDR;		// Type used for cast on accept()
 #define	ANTLR3_CDECL
 #define ANTLR3_FASTCALL
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Inherit type definitions for autoconf
  */
 typedef int32_t		    ANTLR3_CHAR,    *pANTLR3_CHAR;
@@ -253,6 +265,9 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 #endif
 #define	ANTLR3_UINT64_LIT(lit)	    lit##ULL
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
@@ -325,6 +340,10 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 /// without harming the runtime. 
 ///
 #define	ANTLR3_FPRINTF							fprintf
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 ANTLR3_API pANTLR3_INT_TRIE					antlr3IntTrieNew					(ANTLR3_UINT32 depth);
@@ -416,5 +435,9 @@ ANTLR3_API pANTLR3_REWRITE_RULE_SUBTREE_STREAM
 	    antlr3RewriteRuleSubtreeStreamNewAEV(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
 
 ANTLR3_API pANTLR3_DEBUG_EVENT_LISTENER		antlr3DebugListenerNew				();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _ANTLR3DEFS_H	*/

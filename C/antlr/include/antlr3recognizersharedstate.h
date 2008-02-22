@@ -16,6 +16,10 @@
 
 #include    <antlr3defs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** All the data elements required to track the current state
  *  of any recognizer (lexer, parser, tree parser).
  * May be share between multiple recognizers such that 
@@ -163,5 +167,9 @@ typedef	struct ANTLR3_RECOGNIZER_SHARED_STATE_struct
 
 }
 	ANTLR3_RECOGNIZER_SHARED_STATE;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

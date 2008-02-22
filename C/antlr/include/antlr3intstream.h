@@ -57,6 +57,10 @@
  */
 #define	ANTLR3_INPUT_MASK	0x0007
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef	struct ANTLR3_INT_STREAM_struct
 {
     /** Input stream type indicator. Sometimes useful for error reporting etc.
@@ -163,6 +167,10 @@ typedef	struct ANTLR3_INT_STREAM_struct
 
 }
     ANTLR3_INT_STREAM;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

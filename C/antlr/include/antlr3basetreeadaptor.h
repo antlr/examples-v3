@@ -12,6 +12,9 @@
 #include    <antlr3commontoken.h>
 #include	<antlr3debugeventlistener.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
 {
@@ -108,5 +111,8 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
 
 }
     ANTLR3_TREE_ADAPTOR;
+#ifdef __cplusplus
+}
+#endif
 
 #endif

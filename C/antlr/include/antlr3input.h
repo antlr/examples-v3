@@ -14,6 +14,10 @@
 #include    <antlr3commontoken.h>
 #include    <antlr3intstream.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// Master context structure for an ANTLR3 C runtime based input stream.
 /// \ingroup apistructures
 ///
@@ -228,5 +232,9 @@ typedef	struct	ANTLR3_LEX_STATE_struct
     void	    antlr3AsciiSetupStream	(pANTLR3_INPUT_STREAM input, ANTLR3_UINT32 type);
     void	    antlr3UCS2SetupStream	(pANTLR3_INPUT_STREAM input, ANTLR3_UINT32 type);
     void	    antlr3GenericSetupStream	(pANTLR3_INPUT_STREAM input, ANTLR3_UINT32 type);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _ANTLR3_INPUT_H  */

@@ -24,6 +24,10 @@
 ///
 #define DEFAULT_DEBUGGER_PORT		0xC001;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** The ANTLR3 debugging interface for communicating with ANLTR Works. Function comments
  *  mostly taken from the Java version.
  */
@@ -356,5 +360,9 @@ typedef struct ANTLR3_DEBUG_EVENT_LISTENER_struct
 
 }
 	ANTLR3_DEBUG_EVENT_LISTENER;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

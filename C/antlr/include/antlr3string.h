@@ -10,6 +10,10 @@
 #include    <antlr3defs.h>
 #include    <antlr3collections.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Base string class tracks the allocations and provides simple string
  *  tracking functions. Mostly you can work directly on the string for things
  *  that don't reallocate it, like strchr() etc. Perhaps someone will want to provide implementations for UTF8
@@ -231,6 +235,10 @@ typedef struct	ANTLR3_STRING_FACTORY_struct
 
 }
     ANTLR3_STRING_FACTORY;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
