@@ -1,5 +1,5 @@
 /** \file
- * This is the include file for the ANTLR3 smaple project "C"
+ * This is the include file for the ANTLR3 sample project "C"
  * which shows how to use a C grammar and call it from C code.
  */
 #ifndef	_C_H

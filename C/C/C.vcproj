@@ -231,6 +231,14 @@
 			<File
 				RelativePath=".\main.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -240,6 +248,10 @@
 			>
 			<File
 				RelativePath=".\C.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cpp_symbolpp.h"
 				>
 			</File>
 		</Filter>
@@ -261,6 +273,14 @@
 			<File
 				RelativePath=".\CLexer.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\CLexer.h"
@@ -269,6 +289,14 @@
 			<File
 				RelativePath=".\CParser.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\CParser.h"

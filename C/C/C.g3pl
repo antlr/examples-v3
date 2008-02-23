@@ -58,6 +58,8 @@ scope Symbols
     // key to the hashtable and seeing if the table contains that key.
     //
     pANTLR3_HASH_TABLE	    types;
+
+
 }
 
 // While you can implement your own character streams and so on, they
@@ -75,6 +77,13 @@ scope Symbols
 @lexer::header
 {
 #define	ANTLR3_INLINE_INPUT_ASCII
+}
+
+@parser::includes
+{
+	// Include our noddy C++ example class
+	//
+	#include	<cpp_symbolpp.h>
 }
 
 // The @header specifier is valid in the C target, but in this case there
@@ -102,6 +111,8 @@ scope Symbols
 //
 @members 
 {
+
+
 
     // This is a function that is small enough to be kept in the
     // generated parser code (@lexer::members puts code in the lexer.
@@ -133,26 +144,25 @@ scope Symbols
     	pANTLR3_STRING		symbol;
 	    SCOPE_TYPE(Symbols)	symScope;   // Aids in declaring the scope pointers
 
-    	// Note index to get method is 1 based!
     	// Pick up the pointer to the scope structure at the current level
 	    // We are descending from the inner most scope as that is how C type
 	    // scoping works.
 	    //
-    	symScope	= SCOPE_INSTANCE(Symbols, i);
+    	symScope	= (SCOPE_TYPE(Symbols))SCOPE_INSTANCE(Symbols, i);
 
 	    // The pointer we have is an instance of the dynamic global scope
 	    // called Symbols. Within there, as declared above, we have a pointer
 	    // to an ANTLR3_HASH_TABLE. We should really check for NULL etc, like all good C code 
 	    // should. But, this is example code...
 	    //
-	    symtab	= symScope->types;
+	    symtab		= (pANTLR3_HASH_TABLE) symScope->types;
 
-	    // The following call is the reason that you cannot add a NULL pointer as the entry for
+	    // The following call shows that you cannot add a NULL pointer as the entry for
 	    // the hash table. You can always just add the pointer to the key and ignore it, but
 	    // when you return from this call, you want to test for a NULL pointer, which means
 	    // the entry was not found in the table.
 	    //
-    	symbol	= symtab->get(symtab, (void *)name);
+    	symbol		= (pANTLR3_STRING)	(symtab->get(symtab, (void *)name));
     
 	    // Did we find the symbol in the type lists?
 	    // This is generally used for semantic predicates, hence ANTLR3_TRUE or ANTLR3_FALSE
@@ -176,17 +186,14 @@ scope Symbols
     // called with a pointer to the scope instance that is to be freed,
     // from whence we take the table pointer, which we can then close :-)
     //
-    void ANTLR3_CDECL freeTable(void * table)
+    void ANTLR3_CDECL freeTable(SCOPE_TYPE(Symbols) symtab)
     {
-		SCOPE_TYPE(Symbols) symtab;
-
 		// If we supplied an entry in the table with a free pointer,
 		// then calling the table free function will call the free function
 		// for each entry as it deletes it from the table. In this case however
 		// we only stored things that were manufactured by internal factories, which
 		// will be released anyway when the parser/lexer/etc are freed.
 		//
-		symtab = table;
 		symtab->types->free(symtab->types);
     }
 }
@@ -394,6 +401,8 @@ direct_declarator
 			{
 	    		if ($declaration::isTypedef)
 				{
+					pANTLR3_STRING idText;
+
 					// When adding an element to a pANTLR3_HASH_TABLE, the first argument
 					// is the hash table itself, the second is the entry key, the third is
 					// a (void *) pointer to a structure or element of your choice (cannot
@@ -401,7 +410,24 @@ direct_declarator
 					// your entry structure (if this is needed, give NULL if not) when the table
 					// is destroyed, or the entry is deleted from the table.
 					//
-					$Symbols::types->put($Symbols::types, $IDENTIFIER.text->chars, $IDENTIFIER.text, NULL);
+					idText = $IDENTIFIER.text;
+					$Symbols::types->put($Symbols::types, idText->chars, idText, NULL);
+
+#ifdef __cplusplus
+	
+	// If you compile the generated C source as C++, then you can embed 
+	// C++ code in your actions. The runtime is still C based and everything
+	// is tagged properly for linking and so on, but because you are using the
+	// C++ compiler, it will happilly accept classes and so on for things like
+	// scopes. This class is defined entirely in the header file C.h, if "compile
+	// as C++ is set for CParser.c and CLexer.c" It is just a silly example
+	// of course.
+	//
+	symbolpp		*mySymClass;
+
+	mySymClass = new symbolpp($IDENTIFIER.line, idText);
+
+#endif
 
 					// Note that we must escape the percent sign here from ANTLR expression
 					// parsing. It is not seen in the generated C code.
@@ -766,7 +792,8 @@ LINE_COMMAND
 				PUSHSTREAM(in);
 
 				// Note that the input stream is not closed when it EOFs, I don't bother
-				// to do it here, but it is up to you to track streams created like this
+				// to do it here (hence this is leaked at the program end), 
+				// but it is up to you to track streams created like this
 				// and destroy them when the whole parse session is complete. Remember that you
 				// don't want to do this until all tokens have been manipulated all the way through 
 				// your tree parsers etc as the token does not store the text it just refers
