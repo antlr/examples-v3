@@ -20,6 +20,9 @@
 		<ToolFile
 			RelativePath="..\vsrullefiles\antlr3parser.rules"
 		/>
+		<ToolFile
+			RelativePath="..\vsrullefiles\antlr3lexerandparser.rules"
+		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -33,10 +36,13 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="Antlr3Parser"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Antlr3Parser"
+				Name="Antlr3ParserLexer"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -115,10 +121,13 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="Antlr3Parser"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Antlr3Parser"
+				Name="Antlr3ParserLexer"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -231,24 +240,10 @@
 			<File
 				RelativePath=".\Javadoc.g3pl"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="Antlr3Parser"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Simple.g3pl"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="Antlr3Parser"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -297,5 +292,9 @@
 		</Filter>
 	</Files>
 	<Globals>
+		<Global
+			Name="DevPartner_IsInstrumented"
+			Value="0"
+		/>
 	</Globals>
 </VisualStudioProject>
