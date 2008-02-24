@@ -103,25 +103,13 @@ main	(int argc, char *argv[])
     //
     input	= antlr3AsciiFileStreamNew(fName);
 
-    // The input will be created succesfully, providing that there is enoguh
+    // The input will be created successfully, providing that there is enough
     // memory and the file exists etc
     //
-    if ( (ANTLR3_UINT64)input < 0 )
+    if (input == NULL )
     {
-	switch((ANTLR3_UINT64)input)
-	{
-	case    ANTLR3_ERR_NOMEM:
-
-	    fprintf(stderr, "Unable to open file %s due to malloc() failure1\n", (char *)fName);
-	    exit(1);
-	    break;
-
-	default:
-
-	    fprintf(stderr, "Failed to open file %s - exit with code %d\n", (char *)fName, (ANTLR3_UINT64)input);
-	    exit((int)((ANTLR3_UINT64)input));
-	    break;
-	}
+	    fprintf(stderr, "Unable to open file %s\n", (char *)fName);
+	    exit(ANTLR3_ERR_NOMEM);
     }
 
     // Our input stream is now open and all set to go, so we can create a new instance of our
@@ -132,22 +120,10 @@ main	(int argc, char *argv[])
 
     // Need to check for errors
     //
-    if ( (ANTLR3_UINT64)lxr < 0 )
+    if ( lxr == NULL )
     {
-	switch((ANTLR3_UINT64)lxr)
-	{
-	case    ANTLR3_ERR_NOMEM:
-
 	    fprintf(stderr, "Unable to create the lexer due to malloc() failure1\n");
-	    exit(1);
-	    break;
-
-	default:
-
-	    fprintf(stderr, "Failed to create lexer - exit with code %d\n", (ANTLR3_UINT64)lxr);
-	    exit((int)((ANTLR3_UINT64)lxr));
-	    break;
-	}
+	    exit(ANTLR3_ERR_NOMEM);
     }
 
     // Our lexer is in place, so we can create the token stream from it
@@ -164,10 +140,10 @@ main	(int argc, char *argv[])
     //
     tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
 
-    if ((ANTLR3_UINT64)tstream == ANTLR3_ERR_NOMEM)
+    if (tstream == NULL)
     {
-	fprintf(stderr, "Out of memory trying to allocate token stream\n");
-	exit(ANTLR3_ERR_NOMEM);
+		fprintf(stderr, "Out of memory trying to allocate token stream\n");
+		exit(ANTLR3_ERR_NOMEM);
     }
 
     // Finally, now that we have our lexer constructed, we can invoke the lexer
