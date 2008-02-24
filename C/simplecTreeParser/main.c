@@ -132,7 +132,7 @@ main	(int argc, char *argv[])
     // The input will be created successfully, providing that there is enough
     // memory and the file exists etc
     //
-    if ( (ANTLR3_UINT64)input < 0 )
+    if ( input == NULL )
     {
 	    fprintf(stderr, "Unable to open file %s\n", (char *)fName);
 	    exit(1);
