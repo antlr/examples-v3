@@ -115,6 +115,7 @@ typedef	struct	ANTLR3_INPUT_STREAM_struct
    /** Pointer to function that closes the input stream
      */
     void		(*close)	(struct	ANTLR3_INPUT_STREAM_struct * input);
+    void		(*free)		(struct	ANTLR3_INPUT_STREAM_struct * input);
 
     /** Pointer to function that resets the input stream
      */

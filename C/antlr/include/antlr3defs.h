@@ -56,10 +56,13 @@
 
 #else
 
+#ifdef	_WIN32
 # ifndef	ANTLR3_WINDOWS
 #  define	ANTLR3_WINDOWS
 # endif
+
 #define	ANTLR3_WIN32
+#endif
 
 #endif
 
@@ -128,8 +131,11 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 #endif
 
 
-typedef	int	ANTLR3_SALENT;							// type used for size of accept structure
-typedef struct sockaddr *	pANTLR3_SOCKADDR;		// Type used for cast on accept()
+typedef	int				ANTLR3_SALENT;								// Type used for size of accept structure
+typedef struct sockaddr_in	ANTLR3_SOCKADDRT, * pANTLR3_SOCKADDRT;	// Type used for socket address declaration
+typedef struct sockaddr		ANTLR3_SOCKADDRC, * pANTLR3_SOCKADDRC;	// Type used for cast on accept()
+
+#define	ANTLR3_CLOSESOCKET	closesocket
 
 #ifdef __cplusplus
 }
@@ -150,6 +156,10 @@ typedef struct sockaddr *	pANTLR3_SOCKADDR;		// Type used for cast on accept()
 #include	<antlr3config.h>
 
 #include <stdio.h>
+
+#if HAVE_STDINT_H
+# include <stdint.h>
+#endif
 
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -187,13 +197,31 @@ typedef struct sockaddr *	pANTLR3_SOCKADDR;		// Type used for cast on accept()
 # include <inttypes.h>
 #endif
 
-#if HAVE_STDINT_H
-# include <stdint.h>
-#endif
-
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+
+#ifdef HAVE_NETINET_IN_H
+#include	<netinet/in.h>
+#endif
+
+#ifdef HAVE_SOCKET_H
+# include	<socket.h>
+#else
+# if HAVE_SYS_SOCKET_H
+#  include	<sys/socket.h>
+# endif
+#endif
+
+#ifdef HAVE_NETINET_TCP_H
+#include	<netinet/tcp.h>
+#endif
+
+#ifdef HAVE_SYS_RESOLVE_H
+#include	<sys/resolv.h>
+#endif
+
+
 
 #ifdef	HAVE_MALLOC_H
 # include    <malloc.h>
@@ -218,9 +246,42 @@ typedef struct sockaddr *	pANTLR3_SOCKADDR;		// Type used for cast on accept()
 
 #define _stat   stat
 
+// SOCKET not defined on Unix
+// 
+typedef	int				SOCKET;
+
 #define ANTLR3_API
 #define	ANTLR3_CDECL
 #define ANTLR3_FASTCALL
+
+#ifdef	__hpux
+
+	// HPUX is always different usually for no good reason. Tru64 should have kicked it
+	// into touch and everyone knows it ;-)
+	//
+ typedef struct sockaddr_in	ANTLR3_SOCKADDRT, * pANTLR3_SOCKADDRT;	// Type used for socket address declaration
+ typedef void *				pANTLR3_SOCKADDRC;						// Type used for cast on accept()
+ typedef int				ANTLR3_SALENT;
+
+#else
+
+# ifdef	_AIX
+
+   typedef	socklen_t	ANTLR3_SALENT;
+
+# else
+
+   typedef	size_t		ANTLR3_SALENT;
+
+# endif
+
+   typedef struct sockaddr_in	  ANTLR3_SOCKADDRT, * pANTLR3_SOCKADDRT;	// Type used for socket address declaration
+   typedef struct sockaddr		* pANTLR3_SOCKADDRC;					// Type used for cast on accept()
+
+#endif
+
+#define INVALID_SOCKET ((SOCKET)-1)
+#define	ANTLR3_CLOSESOCKET	close
 
 #ifdef __cplusplus
 extern "C" {

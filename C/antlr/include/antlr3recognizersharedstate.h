@@ -173,3 +173,5 @@ typedef	struct ANTLR3_RECOGNIZER_SHARED_STATE_struct
 #endif
 
 #endif
+
+

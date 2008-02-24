@@ -366,3 +366,4 @@ typedef struct ANTLR3_DEBUG_EVENT_LISTENER_struct
 #endif
 
 #endif
+

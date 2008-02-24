@@ -320,3 +320,4 @@ typedef struct ANTLR3_INT_TRIE_struct
 
 #endif
 
+
