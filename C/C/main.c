@@ -118,7 +118,6 @@ main	(int argc, char *argv[])
 	    fprintf(stderr, "Failed to open file %s\n", (char *)fName);
 		exit(1);
 	}
-    }
 
     // Our input stream is now open and all set to go, so we can create a new instance of our
     // lexer and set the lexer input to our input stream:
@@ -150,7 +149,7 @@ main	(int argc, char *argv[])
     //
 	tstream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(lxr));
 
-    if (tsream == NULL)
+    if (tstream == NULL)
     {
 	fprintf(stderr, "Out of memory trying to allocate token stream\n");
 	exit(1);
