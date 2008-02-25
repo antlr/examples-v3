@@ -190,10 +190,6 @@ typedef	struct ANTLR3_COMMON_TREE_NODE_STREAM_struct
 	///
 	ANTLR3_INT32				p;
 
-    /// Track the last mark() call result value for use in rewind(). 
-    ///
-    ANTLR3_MARKER				lastMarker;
-
     /// Which node are we currently visiting?
     ///
     pANTLR3_BASE_TREE			currentNode;

@@ -483,11 +483,19 @@ ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM	antlr3UnbufTreeNodeStreamNew		(pANTLR
 ANTLR3_API pANTLR3_TREE_NODE_STREAM			antlr3TreeNodeStreamNew				();
 
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
-	    antlr3RewriteRuleTokenStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
+	    antlr3RewriteRuleTOKENStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
-	    antlr3RewriteRuleTokenStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, void * oneElement);
+	    antlr3RewriteRuleTOKENStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, void * oneElement);
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
-	    antlr3RewriteRuleTokenStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
+	    antlr3RewriteRuleTOKENStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
+
+ANTLR3_API pANTLR3_REWRITE_RULE_NODE_STREAM 
+	    antlr3RewriteRuleTOKENStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
+ANTLR3_API pANTLR3_REWRITE_RULE_NODE_STREAM 
+	    antlr3RewriteRuleTOKENStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, void * oneElement);
+ANTLR3_API pANTLR3_REWRITE_RULE_NODE_STREAM 
+	    antlr3RewriteRuleTOKENStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
+
 ANTLR3_API pANTLR3_REWRITE_RULE_SUBTREE_STREAM 
 	    antlr3RewriteRuleSubtreeStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
 ANTLR3_API pANTLR3_REWRITE_RULE_SUBTREE_STREAM 

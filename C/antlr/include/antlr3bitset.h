@@ -51,9 +51,9 @@ typedef	struct ANTLR3_BITSET_struct
      */
     ANTLR3_UINT32    length;
 
-    struct ANTLR3_BITSET_struct  *  (*clone)	    (struct ANTLR3_BITSET_struct  * inSet);
-    struct ANTLR3_BITSET_struct  *  (*or)			(struct ANTLR3_BITSET_struct  * bitset1, struct ANTLR3_BITSET_struct * bitset2);
-    void							(*orInPlace)    (struct ANTLR3_BITSET_struct  * bitset,  struct ANTLR3_BITSET_struct * bitset2);
+    pANTLR3_BITSET					(*clone)	    (struct ANTLR3_BITSET_struct  * inSet);
+    pANTLR3_BITSET					(*bor)			(struct ANTLR3_BITSET_struct  * bitset1, struct ANTLR3_BITSET_struct * bitset2);
+    void							(*borInPlace)   (struct ANTLR3_BITSET_struct  * bitset,  struct ANTLR3_BITSET_struct * bitset2);
     ANTLR3_UINT32					(*size)			(struct ANTLR3_BITSET_struct  * bitset);
     void							(*add)			(struct ANTLR3_BITSET_struct  * bitset, ANTLR3_INT32 bit);
     void							(*grow)			(struct ANTLR3_BITSET_struct  * bitset, ANTLR3_INT32 newSize);
