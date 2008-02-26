@@ -1,5 +1,9 @@
 grammar Poly;
-options {output=AST;}
+options 
+{
+	output=AST;
+	language = C;
+}
 tokens { MULT; } // imaginary token
 
 poly: term ('+'^ term)*
@@ -19,4 +23,4 @@ ID	: 'a'..'z'+ ;
 
 INT	: '0'..'9'+ ;
 
-WS	: (' '|'\t'|'\r'|'\n')+ {skip();} ;
+WS	: (' '|'\t'|'\r'|'\n')+ {$channel=HIDDEN;} ;
