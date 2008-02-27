@@ -18,16 +18,7 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3lexer.rules"
-		/>
-		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3lexerandparser.rules"
-		/>
-		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3parser.rules"
-		/>
-		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3treeparser.rules"
+			RelativePath="..\vsrulefiles\antlr3lexerandparser.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
@@ -42,19 +33,10 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Antlr3Parser"
-			/>
-			<Tool
-				Name="Antlr3TreeParser"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
 				Name="Antlr3ParserLexer"
-			/>
-			<Tool
-				Name="Antlr3Lexer"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -133,19 +115,10 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Antlr3Parser"
-			/>
-			<Tool
-				Name="Antlr3TreeParser"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
 				Name="Antlr3ParserLexer"
-			/>
-			<Tool
-				Name="Antlr3Lexer"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"

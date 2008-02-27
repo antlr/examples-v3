@@ -18,16 +18,16 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3lexer.rules"
+			RelativePath="..\vsrulefiles\antlr3lexer.rules"
 		/>
 		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3lexerandparser.rules"
+			RelativePath="..\vsrulefiles\antlr3lexerandparser.rules"
 		/>
 		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3parser.rules"
+			RelativePath="..\vsrulefiles\antlr3parser.rules"
 		/>
 		<ToolFile
-			RelativePath="..\vsrullefiles\antlr3treeparser.rules"
+			RelativePath="..\vsrulefiles\antlr3treeparser.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
