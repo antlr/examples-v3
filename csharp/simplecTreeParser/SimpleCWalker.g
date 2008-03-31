@@ -25,7 +25,7 @@ declarator
     ;
 
 functionHeader
-    :   ^(FUNC_HDR type ID formalParameter+)
+    :   ^(FUNC_HDR type ID formalParameter*)
     ;
 
 formalParameter

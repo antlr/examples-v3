@@ -37,11 +37,6 @@
 
 		<fileset id="project.grammars" basedir="${grammar.src.dir}" failonempty="true">
 			<include name="${grammar.name}.g" />
-			<include name="JavaAnnotations.g" />
-			<include name="JavaDecl.g" />
-			<include name="JavaExpr.g" />
-			<include name="JavaLexerRules.g" />
-			<include name="JavaStat.g" />
 		</fileset>
 
 		<mkdir dir="${build.working.dir}" />
