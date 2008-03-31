@@ -164,7 +164,7 @@
  *      Character.isJavaIdentifierPart(int) returns true."
  */
 grammar Java;
-options {k=2; backtrack=true; memoize=true;}
+options {backtrack=true; memoize=true;}
 
 @lexer::members {
   protected boolean enumIsKeyword = true;
@@ -175,11 +175,11 @@ options {k=2; backtrack=true; memoize=true;}
 /* The annotations are separated out to make parsing faster, but must be associated with
    a packageDeclaration or a typeDeclaration (and not an empty one). */
 compilationUnit
-    :   ('@')=> annotations
+    :   annotations
         (   packageDeclaration importDeclaration* typeDeclaration*
         |   classOrInterfaceDeclaration typeDeclaration*
-       )
-    |   (packageDeclaration)? importDeclaration* typeDeclaration*
+        )
+    |   packageDeclaration? importDeclaration* typeDeclaration*
     ;
 
 packageDeclaration
@@ -224,7 +224,7 @@ classDeclaration
     ;
     
 normalClassDeclaration
-    :   'class' Identifier (typeParameters)?
+    :   'class' Identifier typeParameters?
         ('extends' type)?
         ('implements' typeList)?
         classBody
@@ -255,7 +255,7 @@ enumConstants
     ;
     
 enumConstant
-    :   annotations? Identifier (arguments)? (classBody)?
+    :   annotations? Identifier arguments? classBody?
     ;
     
 enumBodyDeclarations
@@ -439,7 +439,7 @@ type
 	;
 
 classOrInterfaceType
-	:	Identifier (typeArguments)? ('.' Identifier (typeArguments)? )*
+	:	Identifier typeArguments? ('.' Identifier typeArguments? )*
 	;
 
 primitiveType
@@ -493,7 +493,7 @@ constructorBody
     ;
 
 explicitConstructorInvocation
-    :   (nonWildcardTypeArguments)? ('this' | 'super') arguments ';'
+    :   nonWildcardTypeArguments? ('this' | 'super') arguments ';'
     |   primary '.' nonWildcardTypeArguments? 'super' arguments ';'
     ;
 
@@ -580,7 +580,7 @@ annotationMethodOrConstantRest
     ;
     
 annotationMethodRest
-    :   Identifier '(' ')' (defaultValue)?
+    :   Identifier '(' ')' defaultValue?
     ;
     
 annotationConstantRest
@@ -834,11 +834,11 @@ castExpression
 
 primary
     :   parExpression
-    |   'this' ('.' Identifier)* (identifierSuffix)?
+    |   'this' ('.' Identifier)* identifierSuffix?
     |   'super' superSuffix
     |   literal
     |   'new' creator
-    |   Identifier ('.' Identifier)* (identifierSuffix)?
+    |   Identifier ('.' Identifier)* identifierSuffix?
     |   primitiveType ('[' ']')* '.' 'class'
     |   'void' '.' 'class'
     ;
@@ -865,7 +865,7 @@ createdName
     ;
     
 innerCreator
-    :   (nonWildcardTypeArguments)? Identifier classCreatorRest
+    :   nonWildcardTypeArguments? Identifier classCreatorRest
     ;
 
 arrayCreatorRest
@@ -888,7 +888,7 @@ nonWildcardTypeArguments
     ;
     
 selector
-    :   '.' Identifier (arguments)?
+    :   '.' Identifier arguments?
     |   '.' 'this'
     |   '.' 'super' superSuffix
     |   '.' 'new' innerCreator
@@ -897,7 +897,7 @@ selector
     
 superSuffix
     :   arguments
-    |   '.' Identifier (arguments)?
+    |   '.' Identifier arguments?
     ;
 
 arguments
