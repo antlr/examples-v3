@@ -1,3 +1,30 @@
+/*
+ [The "BSD licence"]
+ Copyright (c) 2007-2008 Terence Parr
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 /** A Java 1.5 grammar for ANTLR v3 derived from the spec
  *
  *  This is a very close representation of the spec; the changes
@@ -68,237 +95,316 @@
  *          just 'arguments'.  The case it couldn't handle was a call to an explicit
  *          generic method invocation (e.g. this.<E>doSomething()).  Using identifierSuffix
  *          may be overly aggressive--perhaps should create a more constrained thisSuffix rule?
- * 		
+ *      
  *  Version 1.0.4 -- Hiroaki Nakamura, May 3, 2007
  *
- *	Fixed formalParameterDecls, localVariableDeclaration, forInit,
- *	and forVarControl to use variableModifier* not 'final'? (annotation)?
+ *  Fixed formalParameterDecls, localVariableDeclaration, forInit,
+ *  and forVarControl to use variableModifier* not 'final'? (annotation)?
  *
  *  Version 1.0.5 -- Terence, June 21, 2007
- *	--a[i].foo didn't work. Fixed unaryExpression
+ *  --a[i].foo didn't work. Fixed unaryExpression
+ *
+ *  Version 1.0.6 -- John Ridgway, March 17, 2008
+ *      Made "assert" a switchable keyword like "enum".
+ *      Fixed compilationUnit to disallow "annotation importDeclaration ...".
+ *      Changed "Identifier ('.' Identifier)*" to "qualifiedName" in more 
+ *          places.
+ *      Changed modifier* and/or variableModifier* to classOrInterfaceModifiers,
+ *          modifiers or variableModifiers, as appropriate.
+ *      Renamed "bound" to "typeBound" to better match language in the JLS.
+ *      Added "memberDeclaration" which rewrites to methodDeclaration or 
+ *      fieldDeclaration and pulled type into memberDeclaration.  So we parse 
+ *          type and then move on to decide whether we're dealing with a field
+ *          or a method.
+ *      Modified "constructorDeclaration" to use "constructorBody" instead of
+ *          "methodBody".  constructorBody starts with explicitConstructorInvocation,
+ *          then goes on to blockStatement*.  Pulling explicitConstructorInvocation
+ *          out of expressions allowed me to simplify "primary".
+ *      Changed variableDeclarator to simplify it.
+ *      Changed type to use classOrInterfaceType, thus simplifying it; of course
+ *          I then had to add classOrInterfaceType, but it is used in several 
+ *          places.
+ *      Fixed annotations, old version allowed "@X(y,z)", which is illegal.
+ *      Added optional comma to end of "elementValueArrayInitializer"; as per JLS.
+ *      Changed annotationTypeElementRest to use normalClassDeclaration and 
+ *          normalInterfaceDeclaration rather than classDeclaration and 
+ *          interfaceDeclaration, thus getting rid of a couple of grammar ambiguities.
+ *      Split localVariableDeclaration into localVariableDeclarationStatement
+ *          (includes the terminating semi-colon) and localVariableDeclaration.  
+ *          This allowed me to use localVariableDeclaration in "forInit" clauses,
+ *           simplifying them.
+ *      Changed switchBlockStatementGroup to use multiple labels.  This adds an
+ *          ambiguity, but if one uses appropriately greedy parsing it yields the
+ *           parse that is closest to the meaning of the switch statement.
+ *      Renamed "forVarControl" to "enhancedForControl" -- JLS language.
+ *      Added semantic predicates to test for shift operations rather than other
+ *          things.  Thus, for instance, the string "< <" will never be treated
+ *          as a left-shift operator.
+ *      In "creator" we rule out "nonWildcardTypeArguments" on arrayCreation, 
+ *          which are illegal.
+ *      Moved "nonWildcardTypeArguments into innerCreator.
+ *      Removed 'super' superSuffix from explicitGenericInvocation, since that
+ *          is only used in explicitConstructorInvocation at the beginning of a
+ *           constructorBody.  (This is part of the simplification of expressions
+ *           mentioned earlier.)
+ *      Simplified primary (got rid of those things that are only used in
+ *          explicitConstructorInvocation).
+ *      Lexer -- removed "Exponent?" from FloatingPointLiteral choice 4, since it
+ *          led to an ambiguity.
+ *
+ *      This grammar successfully parses every .java file in the JDK 1.5 source 
+ *          tree (excluding those whose file names include '-', which are not
+ *          valid Java compilation units).
+ *
+ *  Known remaining problems:
+ *      "Letter" and "JavaIDDigit" are wrong.  The actual specification of
+ *      "Letter" should be "a character for which the method
+ *      Character.isJavaIdentifierStart(int) returns true."  A "Java 
+ *      letter-or-digit is a character for which the method 
+ *      Character.isJavaIdentifierPart(int) returns true."
  */
 grammar Java;
 options {k=2; backtrack=true; memoize=true;}
 
 @lexer::members {
-protected boolean enumIsKeyword = true;
+  protected boolean enumIsKeyword = true;
+  protected boolean assertIsKeyword = true;
 }
 
 // starting point for parsing a java file
+/* The annotations are separated out to make parsing faster, but must be associated with
+   a packageDeclaration or a typeDeclaration (and not an empty one). */
 compilationUnit
-	:	annotations?
-		packageDeclaration?
-        importDeclaration*
-        typeDeclaration*
-	;
+    :   ('@')=> annotations
+        (   packageDeclaration importDeclaration* typeDeclaration*
+        |   classOrInterfaceDeclaration typeDeclaration*
+       )
+    |   (packageDeclaration)? importDeclaration* typeDeclaration*
+    ;
 
 packageDeclaration
-	:	'package' qualifiedName ';'
-	;
-	
+    :   'package' qualifiedName ';'
+    ;
+    
 importDeclaration
-	:	'import' 'static'? Identifier ('.' Identifier)* ('.' '*')? ';'
-	;
-	
+    :   'import' 'static'? qualifiedName ('.' '*')? ';'
+    ;
+    
 typeDeclaration
-	:	classOrInterfaceDeclaration
+    :   classOrInterfaceDeclaration
     |   ';'
-	;
-	
+    ;
+    
 classOrInterfaceDeclaration
-	:	modifier* (classDeclaration | interfaceDeclaration)
-	;
-	
+    :   classOrInterfaceModifiers (classDeclaration | interfaceDeclaration)
+    ;
+    
+classOrInterfaceModifiers
+    :   classOrInterfaceModifier*
+    ;
+
+classOrInterfaceModifier
+    :   annotation   // class or interface
+    |   'public'     // class or interface
+    |   'protected'  // class or interface
+    |   'private'    // class or interface
+    |   'abstract'   // class or interface
+    |   'static'     // class or interface
+    |   'final'      // class only -- does not apply to interfaces
+    |   'strictfp'   // class or interface
+    ;
+
+modifiers
+    :   modifier*
+    ;
+
 classDeclaration
-	:	normalClassDeclaration
+    :   normalClassDeclaration
     |   enumDeclaration
-	;
-	
+    ;
+    
 normalClassDeclaration
-	:	'class' Identifier (typeParameters)?
+    :   'class' Identifier (typeParameters)?
         ('extends' type)?
         ('implements' typeList)?
         classBody
-	;
-	
+    ;
+    
 typeParameters
-	:	'<' typeParameter (',' typeParameter)* '>'
-	;
+    :   '<' typeParameter (',' typeParameter)* '>'
+    ;
 
 typeParameter
-	:	Identifier ('extends' bound)?
-	;
-		
-bound
-	:	type ('&' type)*
-	;
+    :   Identifier ('extends' typeBound)?
+    ;
+        
+typeBound
+    :   type ('&' type)*
+    ;
 
 enumDeclaration
-	:	ENUM Identifier ('implements' typeList)? enumBody
-	;
-	
+    :   ENUM Identifier ('implements' typeList)? enumBody
+    ;
+
 enumBody
-	:	'{' enumConstants? ','? enumBodyDeclarations? '}'
-	;
+    :   '{' enumConstants? ','? enumBodyDeclarations? '}'
+    ;
 
 enumConstants
-	:	enumConstant (',' enumConstant)*
-	;
-	
+    :   enumConstant (',' enumConstant)*
+    ;
+    
 enumConstant
-	:	annotations? Identifier (arguments)? (classBody)?
-	;
-	
+    :   annotations? Identifier (arguments)? (classBody)?
+    ;
+    
 enumBodyDeclarations
-	:	';' (classBodyDeclaration)*
-	;
-	
+    :   ';' (classBodyDeclaration)*
+    ;
+    
 interfaceDeclaration
-	:	normalInterfaceDeclaration
-		| annotationTypeDeclaration
-	;
-	
+    :   normalInterfaceDeclaration
+    |   annotationTypeDeclaration
+    ;
+    
 normalInterfaceDeclaration
-	:	'interface' Identifier typeParameters? ('extends' typeList)? interfaceBody
-	;
-	
+    :   'interface' Identifier typeParameters? ('extends' typeList)? interfaceBody
+    ;
+    
 typeList
-	:	type (',' type)*
-	;
-	
+    :   type (',' type)*
+    ;
+    
 classBody
-	:	'{' classBodyDeclaration* '}'
-	;
-	
+    :   '{' classBodyDeclaration* '}'
+    ;
+    
 interfaceBody
-	:	'{' interfaceBodyDeclaration* '}'
-	;
+    :   '{' interfaceBodyDeclaration* '}'
+    ;
 
 classBodyDeclaration
-	:	';'
-	|	'static'? block
-	|	modifier* memberDecl
-	;
-	
+    :   ';'
+    |   'static'? block
+    |   modifiers memberDecl
+    ;
+    
 memberDecl
-	:	genericMethodOrConstructorDecl
-	|	methodDeclaration
-	|	fieldDeclaration
-	|	'void' Identifier voidMethodDeclaratorRest
-	|	Identifier constructorDeclaratorRest
-	|	interfaceDeclaration
-	|	classDeclaration
-	;
-	
+    :   genericMethodOrConstructorDecl
+    |   memberDeclaration
+    |   'void' Identifier voidMethodDeclaratorRest
+    |   Identifier constructorDeclaratorRest
+    |   interfaceDeclaration
+    |   classDeclaration
+    ;
+    
+memberDeclaration
+    :   type (methodDeclaration | fieldDeclaration)
+    ;
+
 genericMethodOrConstructorDecl
-	:	typeParameters genericMethodOrConstructorRest
-	;
-	
+    :   typeParameters genericMethodOrConstructorRest
+    ;
+    
 genericMethodOrConstructorRest
-	:	(type | 'void') Identifier methodDeclaratorRest
-	|	Identifier constructorDeclaratorRest
-	;
+    :   (type | 'void') Identifier methodDeclaratorRest
+    |   Identifier constructorDeclaratorRest
+    ;
 
 methodDeclaration
-	:	type Identifier methodDeclaratorRest
-	;
+    :   Identifier methodDeclaratorRest
+    ;
 
 fieldDeclaration
-	:	type variableDeclarators ';'
-	;
-		
+    :   variableDeclarators ';'
+    ;
+        
 interfaceBodyDeclaration
-	:	modifier* interfaceMemberDecl
-	|   ';'
-	;
+    :   modifiers interfaceMemberDecl
+    |   ';'
+    ;
 
 interfaceMemberDecl
-	:	interfaceMethodOrFieldDecl
-	|   interfaceGenericMethodDecl
+    :   interfaceMethodOrFieldDecl
+    |   interfaceGenericMethodDecl
     |   'void' Identifier voidInterfaceMethodDeclaratorRest
     |   interfaceDeclaration
     |   classDeclaration
-	;
-	
+    ;
+    
 interfaceMethodOrFieldDecl
-	:	type Identifier interfaceMethodOrFieldRest
-	;
-	
+    :   type Identifier interfaceMethodOrFieldRest
+    ;
+    
 interfaceMethodOrFieldRest
-	:	constantDeclaratorsRest ';'
-	|	interfaceMethodDeclaratorRest
-	;
-	
+    :   constantDeclaratorsRest ';'
+    |   interfaceMethodDeclaratorRest
+    ;
+    
 methodDeclaratorRest
-	:	formalParameters ('[' ']')*
+    :   formalParameters ('[' ']')*
         ('throws' qualifiedNameList)?
         (   methodBody
         |   ';'
         )
-	;
-	
+    ;
+    
 voidMethodDeclaratorRest
-	:	formalParameters ('throws' qualifiedNameList)?
+    :   formalParameters ('throws' qualifiedNameList)?
         (   methodBody
         |   ';'
         )
-	;
-	
+    ;
+    
 interfaceMethodDeclaratorRest
-	:	formalParameters ('[' ']')* ('throws' qualifiedNameList)? ';'
-	;
-	
+    :   formalParameters ('[' ']')* ('throws' qualifiedNameList)? ';'
+    ;
+    
 interfaceGenericMethodDecl
-	:	typeParameters (type | 'void') Identifier
+    :   typeParameters (type | 'void') Identifier
         interfaceMethodDeclaratorRest
-	;
-	
+    ;
+    
 voidInterfaceMethodDeclaratorRest
-	:	formalParameters ('throws' qualifiedNameList)? ';'
-	;
-	
+    :   formalParameters ('throws' qualifiedNameList)? ';'
+    ;
+    
 constructorDeclaratorRest
-	:	formalParameters ('throws' qualifiedNameList)? methodBody
-	;
+    :   formalParameters ('throws' qualifiedNameList)? constructorBody
+    ;
 
 constantDeclarator
-	:	Identifier constantDeclaratorRest
-	;
-	
+    :   Identifier constantDeclaratorRest
+    ;
+    
 variableDeclarators
-	:	variableDeclarator (',' variableDeclarator)*
-	;
+    :   variableDeclarator (',' variableDeclarator)*
+    ;
 
 variableDeclarator
-	:	Identifier variableDeclaratorRest
-	;
-	
-variableDeclaratorRest
-	:	('[' ']')+ ('=' variableInitializer)?
-	|	'=' variableInitializer
-	|
-	;
-	
+    :   variableDeclaratorId ('=' variableInitializer)?
+    ;
+    
 constantDeclaratorsRest
     :   constantDeclaratorRest (',' constantDeclarator)*
     ;
 
 constantDeclaratorRest
-	:	('[' ']')* '=' variableInitializer
-	;
-	
+    :   ('[' ']')* '=' variableInitializer
+    ;
+    
 variableDeclaratorId
-	:	Identifier ('[' ']')*
-	;
+    :   Identifier ('[' ']')*
+    ;
 
 variableInitializer
-	:	arrayInitializer
+    :   arrayInitializer
     |   expression
-	;
-	
+    ;
+        
 arrayInitializer
-	:	'{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
-	;
+    :   '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    ;
 
 modifier
     :   annotation
@@ -316,81 +422,94 @@ modifier
     ;
 
 packageOrTypeName
-	:	Identifier ('.' Identifier)*
-	;
+    :   qualifiedName
+    ;
 
 enumConstantName
     :   Identifier
     ;
 
 typeName
-	:   Identifier
-    |   packageOrTypeName '.' Identifier
-	;
+    :   qualifiedName
+    ;
 
 type
-	:	Identifier (typeArguments)? ('.' Identifier (typeArguments)? )* ('[' ']')*
+	:	classOrInterfaceType ('[' ']')*
 	|	primitiveType ('[' ']')*
+	;
+
+classOrInterfaceType
+	:	Identifier (typeArguments)? ('.' Identifier (typeArguments)? )*
 	;
 
 primitiveType
     :   'boolean'
-    |	'char'
-    |	'byte'
-    |	'short'
-    |	'int'
-    |	'long'
-    |	'float'
-    |	'double'
+    |   'char'
+    |   'byte'
+    |   'short'
+    |   'int'
+    |   'long'
+    |   'float'
+    |   'double'
     ;
 
 variableModifier
-	:	'final'
+    :   'final'
     |   annotation
-	;
+    ;
 
 typeArguments
-	:	'<' typeArgument (',' typeArgument)* '>'
-	;
-	
+    :   '<' typeArgument (',' typeArgument)* '>'
+    ;
+    
 typeArgument
-	:	type
-	|	'?' (('extends' | 'super') type)?
-	;
-	
+    :   type
+    |   '?' (('extends' | 'super') type)?
+    ;
+    
 qualifiedNameList
-	:	qualifiedName (',' qualifiedName)*
-	;
-	
+    :   qualifiedName (',' qualifiedName)*
+    ;
+
 formalParameters
-	:	'(' formalParameterDecls? ')'
-	;
-	
+    :   '(' formalParameterDecls? ')'
+    ;
+    
 formalParameterDecls
-	:	variableModifier* type formalParameterDeclsRest?
-	;
-	
+    :   variableModifiers type formalParameterDeclsRest
+    ;
+    
 formalParameterDeclsRest
-	:	variableDeclaratorId (',' formalParameterDecls)?
-	|   '...' variableDeclaratorId
-	;
-	
+    :   variableDeclaratorId (',' formalParameterDecls)?
+    |   '...' variableDeclaratorId
+    ;
+    
 methodBody
-	:	block
-	;
+    :   block
+    ;
+
+constructorBody
+    :   '{' explicitConstructorInvocation? blockStatement* '}'
+    ;
+
+explicitConstructorInvocation
+    :   (nonWildcardTypeArguments)? ('this' | 'super') arguments ';'
+    |   primary '.' nonWildcardTypeArguments? 'super' arguments ';'
+    ;
+
 
 qualifiedName
-	:	Identifier ('.' Identifier)*
-	;
-	
-literal	
-	:   integerLiteral
+    :   Identifier ('.' Identifier)*
+    ;
+    
+literal 
+    :   integerLiteral
     |   FloatingPointLiteral
     |   CharacterLiteral
     |   StringLiteral
     |   booleanLiteral
     |   'null'
-	;
+    ;
 
 integerLiteral
     :   HexLiteral
@@ -406,188 +525,192 @@ booleanLiteral
 // ANNOTATIONS
 
 annotations
-	:	annotation+
-	;
+    :   annotation+
+    ;
 
 annotation
-	:	'@' annotationName ('(' elementValuePairs? ')')?
-	;
-	
+    :   '@' annotationName ( '(' ( elementValuePairs | elementValue )? ')' )?
+    ;
+    
 annotationName
-	: Identifier ('.' Identifier)*
-	;
-	
+    : Identifier ('.' Identifier)*
+    ;
+
 elementValuePairs
-	: elementValuePair (',' elementValuePair)*
-	;
-	
+    :   elementValuePair (',' elementValuePair)*
+    ;
+
 elementValuePair
-	: (Identifier '=')? elementValue
-	;
-	
+    :   Identifier '=' elementValue
+    ;
+    
 elementValue
-	:	conditionalExpression
-	|   annotation
-	|   elementValueArrayInitializer
-	;
-	
+    :   conditionalExpression
+    |   annotation
+    |   elementValueArrayInitializer
+    ;
+    
 elementValueArrayInitializer
-	:	'{' (elementValue (',' elementValue )*)? '}'
-	;
-	
+    :   '{' (elementValue (',' elementValue)*)? (',')? '}'
+    ;
+    
 annotationTypeDeclaration
-	:	'@' 'interface' Identifier annotationTypeBody
-	;
-	
+    :   '@' 'interface' Identifier annotationTypeBody
+    ;
+    
 annotationTypeBody
-	:	'{' (annotationTypeElementDeclarations)? '}'
-	;
-	
-annotationTypeElementDeclarations
-	:	(annotationTypeElementDeclaration) (annotationTypeElementDeclaration)*
-	;
-	
+    :   '{' (annotationTypeElementDeclaration)* '}'
+    ;
+    
 annotationTypeElementDeclaration
-	:	(modifier)* annotationTypeElementRest
-	;
-	
+    :   modifiers annotationTypeElementRest
+    ;
+    
 annotationTypeElementRest
-	:	type annotationMethodOrConstantRest ';'
-	|   classDeclaration ';'?
-	|   interfaceDeclaration ';'?
-	|   enumDeclaration ';'?
-	|   annotationTypeDeclaration ';'?
-	;
-	
+    :   type annotationMethodOrConstantRest ';'
+    |   normalClassDeclaration ';'?
+    |   normalInterfaceDeclaration ';'?
+    |   enumDeclaration ';'?
+    |   annotationTypeDeclaration ';'?
+    ;
+    
 annotationMethodOrConstantRest
-	:	annotationMethodRest
-	|   annotationConstantRest
-	;
-	
+    :   annotationMethodRest
+    |   annotationConstantRest
+    ;
+    
 annotationMethodRest
- 	:	Identifier '(' ')' (defaultValue)?
- 	;
- 	
+    :   Identifier '(' ')' (defaultValue)?
+    ;
+    
 annotationConstantRest
- 	:	variableDeclarators
- 	;
- 	
+    :   variableDeclarators
+    ;
+    
 defaultValue
- 	:	'default' elementValue
- 	;
+    :   'default' elementValue
+    ;
 
 // STATEMENTS / BLOCKS
 
 block
-	:	'{' blockStatement* '}'
-	;
-	
+    :   '{' blockStatement* '}'
+    ;
+    
 blockStatement
-	:	localVariableDeclaration
-	|	classOrInterfaceDeclaration
-    	|	statement
-	;
-	
+    :   localVariableDeclarationStatement
+    |   classOrInterfaceDeclaration
+    |   statement
+    ;
+    
+localVariableDeclarationStatement
+    :    localVariableDeclaration ';'
+    ;
+
 localVariableDeclaration
-	:	variableModifier* type variableDeclarators ';'
-	;
-	
+    :   variableModifiers type variableDeclarators
+    ;
+    
+variableModifiers
+    :   variableModifier*
+    ;
+
 statement
-	: block
-    | 'assert' expression (':' expression)? ';'
-    | 'if' parExpression statement (options {k=1; backtrack=false;}:'else' statement)?
-    | 'for' '(' forControl ')' statement
-    | 'while' parExpression statement
-    | 'do' statement 'while' parExpression ';'
-    | 'try' block
-      (	catches 'finally' block
-      | catches
-      | 'finally' block
-      )
-    | 'switch' parExpression '{' switchBlockStatementGroups '}'
-    | 'synchronized' parExpression block
-    | 'return' expression? ';'
-    | 'throw' expression ';'
-    | 'break' Identifier? ';'
-    | 'continue' Identifier? ';'
-    | ';'
-    | statementExpression ';'
-    | Identifier ':' statement
-	;
-	
+    : block
+    |   ASSERT expression (':' expression)? ';'
+    |   'if' parExpression statement (options {k=1;}:'else' statement)?
+    |   'for' '(' forControl ')' statement
+    |   'while' parExpression statement
+    |   'do' statement 'while' parExpression ';'
+    |   'try' block
+        ( catches 'finally' block
+        | catches
+        |   'finally' block
+        )
+    |   'switch' parExpression '{' switchBlockStatementGroups '}'
+    |   'synchronized' parExpression block
+    |   'return' expression? ';'
+    |   'throw' expression ';'
+    |   'break' Identifier? ';'
+    |   'continue' Identifier? ';'
+    |   ';' 
+    |   statementExpression ';'
+    |   Identifier ':' statement
+    ;
+    
 catches
-	:	catchClause (catchClause)*
-	;
-	
+    :   catchClause (catchClause)*
+    ;
+    
 catchClause
-	:	'catch' '(' formalParameter ')' block
-	;
+    :   'catch' '(' formalParameter ')' block
+    ;
 
 formalParameter
-	:	variableModifier* type variableDeclaratorId
-	;
-		
+    :   variableModifiers type variableDeclaratorId
+    ;
+        
 switchBlockStatementGroups
-	:	(switchBlockStatementGroup)*
-	;
-	
+    :   (switchBlockStatementGroup)*
+    ;
+    
+/* The change here (switchLabel -> switchLabel+) technically makes this grammar
+   ambiguous; but with appropriately greedy parsing it yields the most
+   appropriate AST, one in which each group, except possibly the last one, has
+   labels and statements. */
 switchBlockStatementGroup
-	:	switchLabel blockStatement*
-	;
-	
+    :   switchLabel+ blockStatement*
+    ;
+    
 switchLabel
-	:	'case' constantExpression ':'
-	|   'case' enumConstantName ':'
-	|   'default' ':'
-	;
-	
-moreStatementExpressions
-	:	(',' statementExpression)*
-	;
-
+    :   'case' constantExpression ':'
+    |   'case' enumConstantName ':'
+    |   'default' ':'
+    ;
+    
 forControl
 options {k=3;} // be efficient for common case: for (ID ID : ID) ...
-	:	forVarControl
-	|	forInit? ';' expression? ';' forUpdate?
-	;
+    :   enhancedForControl
+    |   forInit? ';' expression? ';' forUpdate?
+    ;
 
 forInit
-	:	variableModifier* type variableDeclarators
-	|	expressionList
-	;
-	
-forVarControl
-	:	variableModifier* type Identifier ':' expression
-	;
+    :   localVariableDeclaration
+    |   expressionList
+    ;
+    
+enhancedForControl
+    :   variableModifiers type Identifier ':' expression
+    ;
 
 forUpdate
-	:	expressionList
-	;
+    :   expressionList
+    ;
 
 // EXPRESSIONS
 
 parExpression
-	:	'(' expression ')'
-	;
-	
+    :   '(' expression ')'
+    ;
+    
 expressionList
     :   expression (',' expression)*
     ;
 
 statementExpression
-	:	expression
-	;
-	
+    :   expression
+    ;
+    
 constantExpression
-	:	expression
-	;
-	
+    :   expression
+    ;
+    
 expression
-	:	conditionalExpression (assignmentOperator expression)?
-	;
-	
+    :   conditionalExpression (assignmentOperator expression)?
+    ;
+    
 assignmentOperator
-	:	'='
+    :   '='
     |   '+='
     |   '-='
     |   '*='
@@ -596,72 +719,102 @@ assignmentOperator
     |   '|='
     |   '^='
     |   '%='
-    |   '<' '<' '='
-    |   '>' '>' '='
-    |   '>' '>' '>' '='
-	;
+    |   ('<' '<' '=')=> t1='<' t2='<' t3='=' 
+        { $t1.getLine() == $t2.getLine() &&
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() && 
+          $t2.getLine() == $t3.getLine() && 
+          $t2.getCharPositionInLine() + 1 == $t3.getCharPositionInLine() }?
+    |   ('>' '>' '>' '=')=> t1='>' t2='>' t3='>' t4='='
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() &&
+          $t2.getLine() == $t3.getLine() && 
+          $t2.getCharPositionInLine() + 1 == $t3.getCharPositionInLine() &&
+          $t3.getLine() == $t4.getLine() && 
+          $t3.getCharPositionInLine() + 1 == $t4.getCharPositionInLine() }?
+    |   ('>' '>' '=')=> t1='>' t2='>' t3='='
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() && 
+          $t2.getLine() == $t3.getLine() && 
+          $t2.getCharPositionInLine() + 1 == $t3.getCharPositionInLine() }?
+    ;
 
 conditionalExpression
     :   conditionalOrExpression ( '?' expression ':' expression )?
-	;
+    ;
 
 conditionalOrExpression
     :   conditionalAndExpression ( '||' conditionalAndExpression )*
-	;
+    ;
 
 conditionalAndExpression
     :   inclusiveOrExpression ( '&&' inclusiveOrExpression )*
-	;
+    ;
 
 inclusiveOrExpression
     :   exclusiveOrExpression ( '|' exclusiveOrExpression )*
-	;
+    ;
 
 exclusiveOrExpression
     :   andExpression ( '^' andExpression )*
-	;
+    ;
 
 andExpression
     :   equalityExpression ( '&' equalityExpression )*
-	;
+    ;
 
 equalityExpression
     :   instanceOfExpression ( ('==' | '!=') instanceOfExpression )*
-	;
+    ;
 
 instanceOfExpression
     :   relationalExpression ('instanceof' type)?
-	;
+    ;
 
 relationalExpression
     :   shiftExpression ( relationalOp shiftExpression )*
-	;
-	
+    ;
+    
 relationalOp
-	:	('<' '=' | '>' '=' | '<' | '>')
-	;
+    :   ('<' '=')=> t1='<' t2='=' 
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() }?
+    |   ('>' '=')=> t1='>' t2='=' 
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() }?
+    |   '<' 
+    |   '>' 
+    ;
 
 shiftExpression
     :   additiveExpression ( shiftOp additiveExpression )*
-	;
+    ;
 
-        // TODO: need a sem pred to check column on these >>>
 shiftOp
-	:	('<' '<' | '>' '>' '>' | '>' '>')
-	;
+    :   ('<' '<')=> t1='<' t2='<' 
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() }?
+    |   ('>' '>' '>')=> t1='>' t2='>' t3='>' 
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() &&
+          $t2.getLine() == $t3.getLine() && 
+          $t2.getCharPositionInLine() + 1 == $t3.getCharPositionInLine() }?
+    |   ('>' '>')=> t1='>' t2='>'
+        { $t1.getLine() == $t2.getLine() && 
+          $t1.getCharPositionInLine() + 1 == $t2.getCharPositionInLine() }?
+    ;
 
 
 additiveExpression
     :   multiplicativeExpression ( ('+' | '-') multiplicativeExpression )*
-	;
+    ;
 
 multiplicativeExpression
     :   unaryExpression ( ( '*' | '/' | '%' ) unaryExpression )*
-	;
-	
+    ;
+    
 unaryExpression
     :   '+' unaryExpression
-    |	'-' unaryExpression
+    |   '-' unaryExpression
     |   '++' unaryExpression
     |   '--' unaryExpression
     |   unaryExpressionNotPlusMinus
@@ -669,7 +822,7 @@ unaryExpression
 
 unaryExpressionNotPlusMinus
     :   '~' unaryExpression
-    | 	'!' unaryExpression
+    |   '!' unaryExpression
     |   castExpression
     |   primary selector* ('++'|'--')?
     ;
@@ -680,9 +833,7 @@ castExpression
     ;
 
 primary
-    :	parExpression
-    |   nonWildcardTypeArguments
-        (explicitGenericInvocationSuffix | 'this' arguments)
+    :   parExpression
     |   'this' ('.' Identifier)* (identifierSuffix)?
     |   'super' superSuffix
     |   literal
@@ -690,74 +841,68 @@ primary
     |   Identifier ('.' Identifier)* (identifierSuffix)?
     |   primitiveType ('[' ']')* '.' 'class'
     |   'void' '.' 'class'
-	;
+    ;
 
 identifierSuffix
-	:	('[' ']')+ '.' 'class'
-	|	('[' expression ']')+ // can also be matched by selector, but do here
+    :   ('[' ']')+ '.' 'class'
+    |   ('[' expression ']')+ // can also be matched by selector, but do here
     |   arguments
     |   '.' 'class'
     |   '.' explicitGenericInvocation
     |   '.' 'this'
     |   '.' 'super' arguments
-    |   '.' 'new' (nonWildcardTypeArguments)? innerCreator
-	;
-	
+    |   '.' 'new' innerCreator
+    ;
+
 creator
-	:	nonWildcardTypeArguments? createdName
-        (arrayCreatorRest | classCreatorRest)
-	;
+    :   nonWildcardTypeArguments createdName classCreatorRest
+    |   createdName (arrayCreatorRest | classCreatorRest)
+    ;
 
 createdName
-	:	Identifier typeArguments?
-        ('.' Identifier typeArguments?)*
-    |	primitiveType
-	;
-	
+    :   classOrInterfaceType
+    |   primitiveType
+    ;
+    
 innerCreator
-	:	Identifier classCreatorRest
-	;
+    :   (nonWildcardTypeArguments)? Identifier classCreatorRest
+    ;
 
 arrayCreatorRest
-	:	'['
+    :   '['
         (   ']' ('[' ']')* arrayInitializer
         |   expression ']' ('[' expression ']')* ('[' ']')*
         )
-	;
+    ;
 
 classCreatorRest
-	:	arguments classBody?
-	;
-	
+    :   arguments classBody?
+    ;
+    
 explicitGenericInvocation
-	:	nonWildcardTypeArguments explicitGenericInvocationSuffix
-	;
-	
+    :   nonWildcardTypeArguments Identifier arguments
+    ;
+    
 nonWildcardTypeArguments
-	:	'<' typeList '>'
-	;
-	
-explicitGenericInvocationSuffix
-	:	'super' superSuffix
-	|   Identifier arguments
-	;
-	
+    :   '<' typeList '>'
+    ;
+    
 selector
-	:	'.' Identifier (arguments)?
-	|   '.' 'this'
-	|   '.' 'super' superSuffix
-	|   '.' 'new' (nonWildcardTypeArguments)? innerCreator
-	|   '[' expression ']'
-	;
-	
+    :   '.' Identifier (arguments)?
+    |   '.' 'this'
+    |   '.' 'super' superSuffix
+    |   '.' 'new' innerCreator
+    |   '[' expression ']'
+    ;
+    
 superSuffix
-	:	arguments
-	|   '.' Identifier (arguments)?
+    :   arguments
+    |   '.' Identifier (arguments)?
     ;
 
 arguments
-	:	'(' expressionList? ')'
-	;
+    :   '(' expressionList? ')'
+    ;
 
 // LEXER
 
@@ -777,8 +922,8 @@ FloatingPointLiteral
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
     |   '.' ('0'..'9')+ Exponent? FloatTypeSuffix?
     |   ('0'..'9')+ Exponent FloatTypeSuffix?
-    |   ('0'..'9')+ Exponent? FloatTypeSuffix
-	;
+    |   ('0'..'9')+ FloatTypeSuffix
+    ;
 
 fragment
 Exponent : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
@@ -813,9 +958,13 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
-ENUM:	'enum' {if ( !enumIsKeyword ) $type=Identifier;}
-	;
-	
+ENUM:   'enum' {if (!enumIsKeyword) $type=Identifier;}
+    ;
+    
+ASSERT
+    :   'assert' {if (!assertIsKeyword) $type=Identifier;}
+    ;
+    
 Identifier 
     :   Letter (Letter|JavaIDDigit)*
     ;
