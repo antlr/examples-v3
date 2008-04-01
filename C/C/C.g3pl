@@ -399,7 +399,7 @@ declarator
 direct_declarator
     :   (   IDENTIFIER
 			{
-	    		if ($declaration::isTypedef)
+	    		if (SCOPE_TOP(declaration) != NULL && $declaration::isTypedef)
 				{
 					pANTLR3_STRING idText;
 
