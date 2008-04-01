@@ -80,10 +80,10 @@ typedef struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct
     /// Return the next element in the stream.  If out of elements, throw
     /// an exception unless size()==1.  If size is 1, then return elements[0].
     ///
-	void *		(*next)					(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
-    void *		(*nextTree)				(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
-    void *		(*nextToken)			(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
-    void *		(*_next)				(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
+	void *					(*next)					(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
+    pANTLR3_BASE_TREE		(*nextTree)				(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
+    void *					(*nextToken)			(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
+    void *					(*_next)				(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
 
     /// When constructing trees, sometimes we need to dup a token or AST
     ///	subtree.  Dup'ing a token means just creating another AST node

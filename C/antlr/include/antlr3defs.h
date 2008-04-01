@@ -68,13 +68,19 @@
 
 #ifdef	ANTLR3_WINDOWS 
 
-#define	WINDOWS_LEAN_AND_MEAN
+#ifndef WIN32_LEAN_AND_MEAN
+#define	WIN32_LEAN_AND_MEAN
+#endif
 
 /* Allow VC 8 (vs2005) and above to use 'secure' versions of various functions such as sprintf
  */
+#ifndef	_CRT_SECURE_NO_DEPRECATE 
 #define	_CRT_SECURE_NO_DEPRECATE 
+#endif
 
 #include    <windows.h>
+#include	<stdlib.h>
+#include	<winsock.h>
 #include    <stdio.h>
 #include    <sys/types.h>
 #include    <sys/stat.h>
