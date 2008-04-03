@@ -244,7 +244,7 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\FuzzyJava.g3l"
+				RelativePath=".\FuzzyJava.g"
 				>
 			</File>
 		</Filter>

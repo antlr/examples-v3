@@ -238,11 +238,11 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\Javadoc.g3pl"
+				RelativePath=".\Javadoc.g"
 				>
 			</File>
 			<File
-				RelativePath=".\Simple.g3pl"
+				RelativePath=".\Simple.g"
 				>
 			</File>
 		</Filter>

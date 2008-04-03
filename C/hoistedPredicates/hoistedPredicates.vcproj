@@ -252,7 +252,7 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\T.g3pl"
+				RelativePath=".\T.g"
 				>
 			</File>
 		</Filter>

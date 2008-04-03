@@ -232,7 +232,7 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\C.g3pl"
+				RelativePath=".\C.g"
 				>
 			</File>
 		</Filter>

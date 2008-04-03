@@ -267,11 +267,11 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\Lang.g3pl"
+				RelativePath=".\Lang.g"
 				>
 			</File>
 			<File
-				RelativePath=".\LangDumpDecl.g3t"
+				RelativePath=".\LangDumpDecl.g"
 				>
 			</File>
 		</Filter>

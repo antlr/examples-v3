@@ -236,27 +236,43 @@
 			Name="Generated"
 			>
 			<File
-				RelativePath=".\JavaAnnotations.c"
+				RelativePath=".\Java_JavaAnnotations.c"
 				>
 			</File>
 			<File
-				RelativePath=".\JavaAnnotations.h"
+				RelativePath=".\Java_JavaAnnotations.h"
 				>
 			</File>
 			<File
-				RelativePath=".\JavaDecl.c"
+				RelativePath=".\Java_JavaDecl.c"
 				>
 			</File>
 			<File
-				RelativePath=".\JavaDecl.h"
+				RelativePath=".\Java_JavaDecl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\JavaExpr.c"
+				RelativePath=".\Java_JavaExpr.c"
 				>
 			</File>
 			<File
-				RelativePath=".\JavaExpr.h"
+				RelativePath=".\Java_JavaExpr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Java_JavaLexerRules.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Java_JavaLexerRules.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Java_JavaStat.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Java_JavaStat.h"
 				>
 			</File>
 			<File
@@ -268,14 +284,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\JavaLexerRules.c"
-				>
-			</File>
-			<File
-				RelativePath=".\JavaLexerRules.h"
-				>
-			</File>
-			<File
 				RelativePath=".\JavaParser.c"
 				>
 			</File>
@@ -283,20 +291,12 @@
 				RelativePath=".\JavaParser.h"
 				>
 			</File>
-			<File
-				RelativePath=".\JavaStat.c"
-				>
-			</File>
-			<File
-				RelativePath=".\JavaStat.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\Java.g3pl"
+				RelativePath=".\Java.g"
 				>
 			</File>
 		</Filter>

@@ -239,11 +239,11 @@
 			Name="Grammar"
 			>
 			<File
-				RelativePath=".\SimpleC.g3pl"
+				RelativePath=".\SimpleC.g"
 				>
 			</File>
 			<File
-				RelativePath=".\SimpleCWalker.g3t"
+				RelativePath=".\SimpleCWalker.g"
 				>
 			</File>
 		</Filter>
