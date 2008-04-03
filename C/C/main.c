@@ -5,8 +5,8 @@
 // all the original authors are cited.
 //
 
-// set ts=8,sw=4
-// Tab size is 8 chars, indent is 4 chars
+// set ts=4,sw=4
+// Tab size is 4 chars, indent is 4 chars
 
 // Notes: Although all the examples provided are configured to be built
 //        by Visual Studio 2005, based on the custom build rules

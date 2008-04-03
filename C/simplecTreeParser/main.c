@@ -5,8 +5,8 @@
 // all the original authors are cited.
 //
 
-// set ts=8,sw=4
-// Tab size is 8 chars, indent is 4 chars
+// set ts=4,sw=4
+// Tab size is 4 chars, indent is 4 chars
 
 // Notes: Although all the examples provided are configured to be built
 //        by Visual Studio 2005, based on the custom build rules
@@ -115,14 +115,14 @@ main	(int argc, char *argv[])
     // for this example, the input will always default to ./input if there is no explicit
     // argument.
     //
-    if (argc < 2 || argv[1] == NULL)
-    {
-	fName	=(pANTLR3_UINT8)"./input"; // Note in VS2005 debug, working directory must be configured
-    }
-    else
-    {
-	fName	= (pANTLR3_UINT8)argv[1];
-    }
+	if (argc < 2 || argv[1] == NULL)
+	{
+		fName	=(pANTLR3_UINT8)"./input"; // Note in VS2005 debug, working directory must be configured
+	}
+	else
+	{
+		fName	= (pANTLR3_UINT8)argv[1];
+	}
 
     // Create the input stream using the supplied file name
     // (Use antlr3AsciiFileStreamNew for UCS2/16bit input).
@@ -213,21 +213,22 @@ main	(int argc, char *argv[])
 
     }
     else
-    {
-	nodes	= antlr3CommonTreeNodeStreamNewTree(SimpleCAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
+	{
+		nodes	= antlr3CommonTreeNodeStreamNewTree(SimpleCAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
 
-	// Tree parsers are given a common tree node stream (or your override)
-	//
-	treePsr	= SimpleCWalkerNew(nodes);
+		// Tree parsers are given a common tree node stream (or your override)
+		//
+		treePsr	= SimpleCWalkerNew(nodes);
 
-	treePsr->program(treePsr);
-	nodes->free(nodes); nodes = NULL;
-    }
+		treePsr->program(treePsr);
+		nodes->free(nodes); nodes = NULL;
+		treePsr ->free  (treePsr);	    treePsr	= NULL;
+	}
 
     // We did not return anything from this parser rule, so we can finish. It only remains
     // to close down our open objects, in the reverse order we created them
     //
-    treePsr ->free  (treePsr);	    treePsr	= NULL;
+    
     psr	    ->free  (psr);	    psr		= NULL;
     tstream ->free  (tstream);	    tstream	= NULL;
     lxr	    ->free  (lxr);	    lxr		= NULL;
