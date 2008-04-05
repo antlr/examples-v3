@@ -20,7 +20,7 @@ namespace Antlr.Examples.Fuzzy
 					}
 
 					ICharStream input = new ANTLRFileStream(inputFileName);
-					FuzzyJavaLexer lex = new FuzzyJavaLexer(input);
+					FuzzyJava lex = new FuzzyJava(input);
 					ITokenStream tokens = new CommonTokenStream(lex);
 					tokens.ToString();
 					//System.out.println(tokens);

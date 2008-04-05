@@ -1,3 +1,33 @@
+/*
+ [The "BSD licence"]
+ Copyright (c) 2007-2008 Johannes Luber
+ Copyright (c) 2007 Kunle Odutola
+ Copyright (c) 2007 Terence Parr
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 /** A Java 1.5 grammar for ANTLR v3 derived from the spec
  *
  *  This is a very close representation of the spec; the changes
@@ -77,8 +107,75 @@
  *          just 'arguments'.  The case it couldn't handle was a call to an explicit
  *          generic method invocation (e.g. this.<E>doSomething()).  Using identifierSuffix
  *          may be overly aggressive--perhaps should create a more constrained thisSuffix rule?
- * 		
- */
+ * 
+ *  Version 1.0.4 -- Hiroaki Nakamura, May 3, 2007
+ *
+ *  Fixed formalParameterDecls, localVariableDeclaration, forInit,
+ *  and forVarControl to use variableModifier* not 'final'? (annotation)?
+ *
+ *  Version 1.0.5 -- Terence, June 21, 2007
+ *  --a[i].foo didn't work. Fixed unaryExpression
+ *
+ *  Version 1.0.6 -- John Ridgway, March 17, 2008
+ *      Made "assert" a switchable keyword like "enum".
+ *      Fixed compilationUnit to disallow "annotation importDeclaration ...".
+ *      Changed "Identifier ('.' Identifier)*" to "qualifiedName" in more 
+ *          places.
+ *      Changed modifier* and/or variableModifier* to classOrInterfaceModifiers,
+ *          modifiers or variableModifiers, as appropriate.
+ *      Renamed "bound" to "typeBound" to better match language in the JLS.
+ *      Added "memberDeclaration" which rewrites to methodDeclaration or 
+ *      fieldDeclaration and pulled type into memberDeclaration.  So we parse 
+ *          type and then move on to decide whether we're dealing with a field
+ *          or a method.
+ *      Modified "constructorDeclaration" to use "constructorBody" instead of
+ *          "methodBody".  constructorBody starts with explicitConstructorInvocation,
+ *          then goes on to blockStatement*.  Pulling explicitConstructorInvocation
+ *          out of expressions allowed me to simplify "primary".
+ *      Changed variableDeclarator to simplify it.
+ *      Changed type to use classOrInterfaceType, thus simplifying it; of course
+ *          I then had to add classOrInterfaceType, but it is used in several 
+ *          places.
+ *      Fixed annotations, old version allowed "@X(y,z)", which is illegal.
+ *      Added optional comma to end of "elementValueArrayInitializer"; as per JLS.
+ *      Changed annotationTypeElementRest to use normalClassDeclaration and 
+ *          normalInterfaceDeclaration rather than classDeclaration and 
+ *          interfaceDeclaration, thus getting rid of a couple of grammar ambiguities.
+ *      Split localVariableDeclaration into localVariableDeclarationStatement
+ *          (includes the terminating semi-colon) and localVariableDeclaration.  
+ *          This allowed me to use localVariableDeclaration in "forInit" clauses,
+ *           simplifying them.
+ *      Changed switchBlockStatementGroup to use multiple labels.  This adds an
+ *          ambiguity, but if one uses appropriately greedy parsing it yields the
+ *           parse that is closest to the meaning of the switch statement.
+ *      Renamed "forVarControl" to "enhancedForControl" -- JLS language.
+ *      Added semantic predicates to test for shift operations rather than other
+ *          things.  Thus, for instance, the string "< <" will never be treated
+ *          as a left-shift operator.
+ *      In "creator" we rule out "nonWildcardTypeArguments" on arrayCreation, 
+ *          which are illegal.
+ *      Moved "nonWildcardTypeArguments into innerCreator.
+ *      Removed 'super' superSuffix from explicitGenericInvocation, since that
+ *          is only used in explicitConstructorInvocation at the beginning of a
+ *           constructorBody.  (This is part of the simplification of expressions
+ *           mentioned earlier.)
+ *      Simplified primary (got rid of those things that are only used in
+ *          explicitConstructorInvocation).
+ *      Lexer -- removed "Exponent?" from FloatingPointLiteral choice 4, since it
+ *          led to an ambiguity.
+ *
+ *      This grammar successfully parses every .java file in the JDK 1.5 source 
+ *          tree (excluding those whose file names include '-', which are not
+ *          valid Java compilation units).
+ *
+ *  Known remaining problems:
+ *      "Letter" and "JavaIDDigit" are wrong.  The actual specification of
+ *      "Letter" should be "a character for which the method
+ *      Character.isJavaIdentifierStart(int) returns true."  A "Java 
+ *      letter-or-digit is a character for which the method 
+ *      Character.isJavaIdentifierPart(int) returns true."
+ *
+ */		
 grammar Java;
 
 options {
@@ -90,6 +187,7 @@ options {
 
 @lexer::members {
 protected bool enumIsKeyword = true;
+protected bool assertIsKeyword = true;
 }
 
 // starting point for parsing a java file

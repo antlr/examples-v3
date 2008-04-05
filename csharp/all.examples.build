@@ -44,7 +44,7 @@
 		<nant buildfile="java/java.build"                            target="build" inheritall="true" />
 		<nant buildfile="java-from-v2/java-from-v2.build"            target="build" inheritall="true" />
 		<nant buildfile="LL-star/LL-star.build"                      target="build" inheritall="true" />
-		<nant buildfile="polydiff/polidiff.build"                    target="build" inheritall="true" />
+		<nant buildfile="polydiff/polydiff.build"                    target="build" inheritall="true" />
 		<nant buildfile="python/python.build"                        target="build" inheritall="true" />
 		<nant buildfile="ruby/ruby.build"                            target="build" inheritall="true" />
 		<nant buildfile="scopes/scopes.build"                        target="build" inheritall="true" />

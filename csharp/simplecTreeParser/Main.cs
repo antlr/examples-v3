@@ -25,7 +25,7 @@ namespace Antlr.Examples.SimpleTreeParser
 				SimpleCParser.program_return r = parser.program();
 				Console.Out.WriteLine("tree="+((ITree)r.tree).ToStringTree());
 
-				if ( parser.GetNumberOfSyntaxErrors()>0 ) {
+				if ( parser.NumberOfSyntaxErrors > 0 ) {
 					// don't tree parse if has errors
 					return;
 				}

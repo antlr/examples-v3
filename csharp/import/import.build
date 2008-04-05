@@ -37,7 +37,7 @@
 
 		<fileset id="project.grammars" basedir="${grammar.src.dir}" failonempty="true">
 			<include name="${grammar.name}.g" />
-			<include name="CommonLexer.g" />
+			<!--include name="CommonLexer.g" /-->
 		</fileset>
 
 		<mkdir dir="${build.working.dir}" />

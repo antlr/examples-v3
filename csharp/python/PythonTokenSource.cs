@@ -103,6 +103,10 @@ namespace Antlr.Examples.Python
 			// "state" of indent level is FIRST_CHAR_POSITION
 			Push(FIRST_CHAR_POSITION);
 		}
+		
+		public string SourceName {
+			get { return stream.SourceName; }
+		}
 
 		/** From http://www.python.org/doc/2.2.3/ref/indentation.html
 

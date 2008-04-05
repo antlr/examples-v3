@@ -8,6 +8,7 @@ namespace Antlr.Examples.JavaParse
 
 	using Antlr.Runtime;
 	using Antlr.Runtime.Tree;
+	using Antlr.Runtime.Debug;
 
 	/** Parse a java file or directory of java files using the generated parser
 	 *  ANTLR builds from java.g
@@ -21,7 +22,7 @@ namespace Antlr.Examples.JavaParse
 
 		public static void Main(string[] args) {
 			try {
-				StopWatch stopWatch = new StopWatch();
+				Stopwatch stopWatch = new Stopwatch();
 				stopWatch.Start();
 				if (args.Length > 0 ) {
 					// for each directory/file specified on the command line
