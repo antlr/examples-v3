@@ -1,27 +1,27 @@
 parser grammar JavaExpr;
 
 parExpression
-	:	'(' expression ')'
-	;
-	
+    :   '(' expression ')'
+    ;
+    
 expressionList
     :   expression (',' expression)*
     ;
 
 statementExpression
-	:	expression
-	;
-	
+    :   expression
+    ;
+    
 constantExpression
-	:	expression
-	;
-	
+    :   expression
+    ;
+    
 expression
-	:	conditionalExpression (assignmentOperator expression)?
-	;
-	
+    :   conditionalExpression (assignmentOperator expression)?
+    ;
+    
 assignmentOperator
-	:	'='
+    :   '='
     |   '+='
     |   '-='
     |   '*='
@@ -30,72 +30,102 @@ assignmentOperator
     |   '|='
     |   '^='
     |   '%='
-    |   '<' '<' '='
-    |   '>' '>' '='
-    |   '>' '>' '>' '='
-	;
+    |   ('<' '<' '=')=> t1='<' t2='<' t3='=' 
+        { $t1.Line == $t2.Line &&
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine && 
+          $t2.Line == $t3.Line && 
+          $t2.CharPositionInLine + 1 == $t3.CharPositionInLine }?
+    |   ('>' '>' '>' '=')=> t1='>' t2='>' t3='>' t4='='
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine &&
+          $t2.Line == $t3.Line && 
+          $t2.CharPositionInLine + 1 == $t3.CharPositionInLine &&
+          $t3.Line == $t4.Line && 
+          $t3.CharPositionInLine + 1 == $t4.CharPositionInLine }?
+    |   ('>' '>' '=')=> t1='>' t2='>' t3='='
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine && 
+          $t2.Line == $t3.Line && 
+          $t2.CharPositionInLine + 1 == $t3.CharPositionInLine }?
+    ;
 
 conditionalExpression
     :   conditionalOrExpression ( '?' expression ':' expression )?
-	;
+    ;
 
 conditionalOrExpression
     :   conditionalAndExpression ( '||' conditionalAndExpression )*
-	;
+    ;
 
 conditionalAndExpression
     :   inclusiveOrExpression ( '&&' inclusiveOrExpression )*
-	;
+    ;
 
 inclusiveOrExpression
     :   exclusiveOrExpression ( '|' exclusiveOrExpression )*
-	;
+    ;
 
 exclusiveOrExpression
     :   andExpression ( '^' andExpression )*
-	;
+    ;
 
 andExpression
     :   equalityExpression ( '&' equalityExpression )*
-	;
+    ;
 
 equalityExpression
     :   instanceOfExpression ( ('==' | '!=') instanceOfExpression )*
-	;
+    ;
 
 instanceOfExpression
     :   relationalExpression ('instanceof' type)?
-	;
+    ;
 
 relationalExpression
     :   shiftExpression ( relationalOp shiftExpression )*
-	;
-	
+    ;
+    
 relationalOp
-	:	('<' '=' | '>' '=' | '<' | '>')
-	;
+    :   ('<' '=')=> t1='<' t2='=' 
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine }?
+    |   ('>' '=')=> t1='>' t2='=' 
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine }?
+    |   '<' 
+    |   '>' 
+    ;
 
 shiftExpression
     :   additiveExpression ( shiftOp additiveExpression )*
-	;
+    ;
 
-        // TODO: need a sem pred to check column on these >>>
 shiftOp
-	:	('<' '<' | '>' '>' '>' | '>' '>')
-	;
+    :   ('<' '<')=> t1='<' t2='<' 
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine }?
+    |   ('>' '>' '>')=> t1='>' t2='>' t3='>' 
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine &&
+          $t2.Line == $t3.Line && 
+          $t2.CharPositionInLine + 1 == $t3.CharPositionInLine }?
+    |   ('>' '>')=> t1='>' t2='>'
+        { $t1.Line == $t2.Line && 
+          $t1.CharPositionInLine + 1 == $t2.CharPositionInLine }?
+    ;
 
 
 additiveExpression
     :   multiplicativeExpression ( ('+' | '-') multiplicativeExpression )*
-	;
+    ;
 
 multiplicativeExpression
     :   unaryExpression ( ( '*' | '/' | '%' ) unaryExpression )*
-	;
-	
+    ;
+    
 unaryExpression
     :   '+' unaryExpression
-    |	'-' unaryExpression
+    |   '-' unaryExpression
     |   '++' unaryExpression
     |   '--' unaryExpression
     |   unaryExpressionNotPlusMinus
@@ -103,7 +133,7 @@ unaryExpression
 
 unaryExpressionNotPlusMinus
     :   '~' unaryExpression
-    | 	'!' unaryExpression
+    |   '!' unaryExpression
     |   castExpression
     |   primary selector* ('++'|'--')?
     ;
@@ -114,86 +144,78 @@ castExpression
     ;
 
 primary
-    :	parExpression
-    |   nonWildcardTypeArguments
-        (explicitGenericInvocationSuffix | 'this' arguments)
-    |   'this' ('.' Identifier)* (identifierSuffix)?
+    :   parExpression
+    |   'this' ('.' Identifier)* identifierSuffix?
     |   'super' superSuffix
     |   literal
     |   'new' creator
-    |   Identifier ('.' Identifier)* (identifierSuffix)?
+    |   Identifier ('.' Identifier)* identifierSuffix?
     |   primitiveType ('[' ']')* '.' 'class'
     |   'void' '.' 'class'
-	;
+    ;
 
 identifierSuffix
-	:	('[' ']')+ '.' 'class'
-	|	('[' expression ']')+ // can also be matched by selector, but do here
+    :   ('[' ']')+ '.' 'class'
+    |   ('[' expression ']')+ // can also be matched by selector, but do here
     |   arguments
     |   '.' 'class'
     |   '.' explicitGenericInvocation
     |   '.' 'this'
     |   '.' 'super' arguments
-    |   '.' 'new' (nonWildcardTypeArguments)? innerCreator
-	;
-	
+    |   '.' 'new' innerCreator
+    ;
+
 creator
-	:	nonWildcardTypeArguments? createdName
-        (arrayCreatorRest | classCreatorRest)
-	;
+    :   nonWildcardTypeArguments createdName classCreatorRest
+    |   createdName (arrayCreatorRest | classCreatorRest)
+    ;
 
 createdName
-	:	Identifier typeArguments?
-        ('.' Identifier typeArguments?)*
-    |	primitiveType
-	;
-	
+    :   classOrInterfaceType
+    |   primitiveType
+    ;
+    
 innerCreator
-	:	Identifier classCreatorRest
-	;
+    :   nonWildcardTypeArguments? Identifier classCreatorRest
+    ;
 
 arrayCreatorRest
-	:	'['
+    :   '['
         (   ']' ('[' ']')* arrayInitializer
         |   expression ']' ('[' expression ']')* ('[' ']')*
         )
-	;
+    ;
 
 classCreatorRest
-	:	arguments classBody?
-	;
-	
+    :   arguments classBody?
+    ;
+    
 explicitGenericInvocation
-	:	nonWildcardTypeArguments explicitGenericInvocationSuffix
-	;
-	
+    :   nonWildcardTypeArguments Identifier arguments
+    ;
+    
 nonWildcardTypeArguments
-	:	'<' typeList '>'
-	;
-	
-explicitGenericInvocationSuffix
-	:	'super' superSuffix
-	|   Identifier arguments
-	;
-	
+    :   '<' typeList '>'
+    ;
+    
 selector
-	:	'.' Identifier (arguments)?
-	|   '.' 'this'
-	|   '.' 'super' superSuffix
-	|   '.' 'new' (nonWildcardTypeArguments)? innerCreator
-	|   '[' expression ']'
-	;
-	
+    :   '.' Identifier arguments?
+    |   '.' 'this'
+    |   '.' 'super' superSuffix
+    |   '.' 'new' innerCreator
+    |   '[' expression ']'
+    ;
+    
 superSuffix
-	:	arguments
-	|   '.' Identifier (arguments)?
+    :   arguments
+    |   '.' Identifier arguments?
     ;
 
 arguments
-	:	'(' expressionList? ')'
-	;
-
-literal
+    :   '(' expressionList? ')'
+    ;
+    
+literal 
     :   integerLiteral
     |   FloatingPointLiteral
     |   CharacterLiteral
@@ -212,3 +234,4 @@ booleanLiteral
     :   'true'
     |   'false'
     ;
+

@@ -19,7 +19,7 @@ namespace Antlr.Examples.XmlLexer
 						inputFileName = Path.Combine(Environment.CurrentDirectory, inputFileName);
 					}
 					ICharStream input = new ANTLRFileStream(inputFileName);
-					XMLLexer lexer = new XMLLexer(input);
+					XML lexer = new XML(input);
 					while (lexer.NextToken() != Token.EOF_TOKEN) ;
 				}
 				catch (Exception ex)

@@ -6,13 +6,22 @@
  *		java org.antlr.Tool Java.g
  */
 grammar Java;
-options {k=2; backtrack=true; memoize=true;}
+//options {k=2; backtrack=true; memoize=true;}
+options {
+    language=CSharp;
+    backtrack=true;
+    memoize=true;
+}
 
 import JavaDecl, JavaAnnotations, JavaExpr, JavaStat, JavaLexerRules;
 
+// starting point for parsing a java file
+/* The annotations are separated out to make parsing faster, but must be associated with
+   a packageDeclaration or a typeDeclaration (and not an empty one). */
 compilationUnit
-	:	annotations?
-		packageDeclaration?
-        importDeclaration*
-        typeDeclaration*
-	;
+    :   annotations
+        (   packageDeclaration importDeclaration* typeDeclaration*
+        |   classOrInterfaceDeclaration typeDeclaration*
+        )
+    |   packageDeclaration? importDeclaration* typeDeclaration*
+    ;

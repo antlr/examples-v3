@@ -1,212 +1,228 @@
 parser grammar JavaDecl;
 
 packageDeclaration
-	:	'package' qualifiedName ';'
-	;
-	
+    :   'package' qualifiedName ';'
+    ;
+    
 importDeclaration
-	:	'import' 'static'? Identifier ('.' Identifier)* ('.' '*')? ';'
-	;
-	
+    :   'import' 'static'? qualifiedName ('.' '*')? ';'
+    ;
+    
 typeDeclaration
-	:	classOrInterfaceDeclaration
+    :   classOrInterfaceDeclaration
     |   ';'
-	;
-	
+    ;
+    
 classOrInterfaceDeclaration
-	:	modifier* (classDeclaration | interfaceDeclaration)
-	;
-	
+    :   classOrInterfaceModifiers (classDeclaration | interfaceDeclaration)
+    ;
+    
+classOrInterfaceModifiers
+    :   classOrInterfaceModifier*
+    ;
+
+classOrInterfaceModifier
+    :   annotation   // class or interface
+    |   'public'     // class or interface
+    |   'protected'  // class or interface
+    |   'private'    // class or interface
+    |   'abstract'   // class or interface
+    |   'static'     // class or interface
+    |   'final'      // class only -- does not apply to interfaces
+    |   'strictfp'   // class or interface
+    ;
+
+modifiers
+    :   modifier*
+    ;
+
 classDeclaration
-	:	normalClassDeclaration
+    :   normalClassDeclaration
     |   enumDeclaration
-	;
-	
+    ;
+    
 normalClassDeclaration
-	:	'class' Identifier (typeParameters)?
+    :   'class' Identifier typeParameters?
         ('extends' type)?
         ('implements' typeList)?
         classBody
-	;
-	
+    ;
+    
 typeParameters
-	:	'<' typeParameter (',' typeParameter)* '>'
-	;
+    :   '<' typeParameter (',' typeParameter)* '>'
+    ;
 
 typeParameter
-	:	Identifier ('extends' bound)?
-	;
-		
-bound
-	:	type ('&' type)*
-	;
+    :   Identifier ('extends' typeBound)?
+    ;
+        
+typeBound
+    :   type ('&' type)*
+    ;
 
 enumDeclaration
-	:	ENUM Identifier ('implements' typeList)? enumBody
-	;
-	
+    :   ENUM Identifier ('implements' typeList)? enumBody
+    ;
+
 enumBody
-	:	'{' enumConstants? ','? enumBodyDeclarations? '}'
-	;
+    :   '{' enumConstants? ','? enumBodyDeclarations? '}'
+    ;
 
 enumConstants
-	:	enumConstant (',' enumConstant)*
-	;
-	
+    :   enumConstant (',' enumConstant)*
+    ;
+    
 enumConstant
-	:	annotations? Identifier (arguments)? (classBody)?
-	;
-	
+    :   annotations? Identifier arguments? classBody?
+    ;
+    
 enumBodyDeclarations
-	:	';' (classBodyDeclaration)*
-	;
-	
+    :   ';' (classBodyDeclaration)*
+    ;
+    
 interfaceDeclaration
-	:	normalInterfaceDeclaration
-		| annotationTypeDeclaration
-	;
-	
+    :   normalInterfaceDeclaration
+    |   annotationTypeDeclaration
+    ;
+    
 normalInterfaceDeclaration
-	:	'interface' Identifier typeParameters? ('extends' typeList)? interfaceBody
-	;
-	
+    :   'interface' Identifier typeParameters? ('extends' typeList)? interfaceBody
+    ;
+    
 typeList
-	:	type (',' type)*
-	;
-	
+    :   type (',' type)*
+    ;
+    
 classBody
-	:	'{' classBodyDeclaration* '}'
-	;
-	
+    :   '{' classBodyDeclaration* '}'
+    ;
+    
 interfaceBody
-	:	'{' interfaceBodyDeclaration* '}'
-	;
+    :   '{' interfaceBodyDeclaration* '}'
+    ;
 
 classBodyDeclaration
-	:	';'
-	|	'static'? block
-	|	modifier* memberDecl
-	;
-	
+    :   ';'
+    |   'static'? block
+    |   modifiers memberDecl
+    ;
+    
 memberDecl
-	:	genericMethodOrConstructorDecl
-	|	methodDeclaration
-	|	fieldDeclaration
-	|	'void' Identifier voidMethodDeclaratorRest
-	|	Identifier constructorDeclaratorRest
-	|	interfaceDeclaration
-	|	classDeclaration
-	;
-	
+    :   genericMethodOrConstructorDecl
+    |   memberDeclaration
+    |   'void' Identifier voidMethodDeclaratorRest
+    |   Identifier constructorDeclaratorRest
+    |   interfaceDeclaration
+    |   classDeclaration
+    ;
+    
+memberDeclaration
+    :   type (methodDeclaration | fieldDeclaration)
+    ;
+
 genericMethodOrConstructorDecl
-	:	typeParameters genericMethodOrConstructorRest
-	;
-	
+    :   typeParameters genericMethodOrConstructorRest
+    ;
+    
 genericMethodOrConstructorRest
-	:	(type | 'void') Identifier methodDeclaratorRest
-	|	Identifier constructorDeclaratorRest
-	;
+    :   (type | 'void') Identifier methodDeclaratorRest
+    |   Identifier constructorDeclaratorRest
+    ;
 
 methodDeclaration
-	:	type Identifier methodDeclaratorRest
-	;
+    :   Identifier methodDeclaratorRest
+    ;
 
 fieldDeclaration
-	:	type variableDeclarators ';'
-	;
-		
+    :   variableDeclarators ';'
+    ;
+        
 interfaceBodyDeclaration
-	:	modifier* interfaceMemberDecl
-	|   ';'
-	;
+    :   modifiers interfaceMemberDecl
+    |   ';'
+    ;
 
 interfaceMemberDecl
-	:	interfaceMethodOrFieldDecl
-	|   interfaceGenericMethodDecl
+    :   interfaceMethodOrFieldDecl
+    |   interfaceGenericMethodDecl
     |   'void' Identifier voidInterfaceMethodDeclaratorRest
     |   interfaceDeclaration
     |   classDeclaration
-	;
-	
+    ;
+    
 interfaceMethodOrFieldDecl
-	:	type Identifier interfaceMethodOrFieldRest
-	;
-	
+    :   type Identifier interfaceMethodOrFieldRest
+    ;
+    
 interfaceMethodOrFieldRest
-	:	constantDeclaratorsRest ';'
-	|	interfaceMethodDeclaratorRest
-	;
-	
+    :   constantDeclaratorsRest ';'
+    |   interfaceMethodDeclaratorRest
+    ;
+    
 methodDeclaratorRest
-	:	formalParameters ('[' ']')*
+    :   formalParameters ('[' ']')*
         ('throws' qualifiedNameList)?
         (   methodBody
         |   ';'
         )
-	;
-	
+    ;
+    
 voidMethodDeclaratorRest
-	:	formalParameters ('throws' qualifiedNameList)?
+    :   formalParameters ('throws' qualifiedNameList)?
         (   methodBody
         |   ';'
         )
-	;
-	
+    ;
+    
 interfaceMethodDeclaratorRest
-	:	formalParameters ('[' ']')* ('throws' qualifiedNameList)? ';'
-	;
-	
+    :   formalParameters ('[' ']')* ('throws' qualifiedNameList)? ';'
+    ;
+    
 interfaceGenericMethodDecl
-	:	typeParameters (type | 'void') Identifier
+    :   typeParameters (type | 'void') Identifier
         interfaceMethodDeclaratorRest
-	;
-	
+    ;
+    
 voidInterfaceMethodDeclaratorRest
-	:	formalParameters ('throws' qualifiedNameList)? ';'
-	;
-	
+    :   formalParameters ('throws' qualifiedNameList)? ';'
+    ;
+    
 constructorDeclaratorRest
-	:	formalParameters ('throws' qualifiedNameList)? methodBody
-	;
+    :   formalParameters ('throws' qualifiedNameList)? constructorBody
+    ;
 
 constantDeclarator
-	:	Identifier constantDeclaratorRest
-	;
-	
+    :   Identifier constantDeclaratorRest
+    ;
+    
 variableDeclarators
-	:	variableDeclarator (',' variableDeclarator)*
-	;
+    :   variableDeclarator (',' variableDeclarator)*
+    ;
 
 variableDeclarator
-	:	Identifier variableDeclaratorRest
-	;
-	
-variableDeclaratorRest
-	:	('[' ']')+ ('=' variableInitializer)?
-	|	'=' variableInitializer
-	|
-	;
-	
+    :   variableDeclaratorId ('=' variableInitializer)?
+    ;
+    
 constantDeclaratorsRest
     :   constantDeclaratorRest (',' constantDeclarator)*
     ;
 
 constantDeclaratorRest
-	:	('[' ']')* '=' variableInitializer
-	;
-	
+    :   ('[' ']')* '=' variableInitializer
+    ;
+    
 variableDeclaratorId
-	:	Identifier ('[' ']')*
-	;
+    :   Identifier ('[' ']')*
+    ;
 
 variableInitializer
-	:	arrayInitializer
+    :   arrayInitializer
     |   expression
-	;
-	
+    ;
+        
 arrayInitializer
-	:	'{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
-	;
+    :   '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    ;
 
 modifier
     :   annotation
@@ -224,65 +240,82 @@ modifier
     ;
 
 packageOrTypeName
-	:	Identifier ('.' Identifier)*
-	;
+    :   qualifiedName
+    ;
 
 enumConstantName
     :   Identifier
     ;
 
 typeName
-	:   Identifier
-    |   packageOrTypeName '.' Identifier
-	;
+    :   qualifiedName
+    ;
 
 type
-	:	Identifier (typeArguments)? ('.' Identifier (typeArguments)? )* ('[' ']')*
+	:	classOrInterfaceType ('[' ']')*
 	|	primitiveType ('[' ']')*
+	;
+
+classOrInterfaceType
+	:	Identifier typeArguments? ('.' Identifier typeArguments? )*
 	;
 
 primitiveType
     :   'boolean'
-    |	'char'
-    |	'byte'
-    |	'short'
-    |	'int'
-    |	'long'
-    |	'float'
-    |	'double'
+    |   'char'
+    |   'byte'
+    |   'short'
+    |   'int'
+    |   'long'
+    |   'float'
+    |   'double'
     ;
 
 variableModifier
-	:	'final'
+    :   'final'
     |   annotation
-	;
+    ;
 
 typeArguments
-	:	'<' typeArgument (',' typeArgument)* '>'
-	;
-	
+    :   '<' typeArgument (',' typeArgument)* '>'
+    ;
+    
 typeArgument
-	:	type
-	|	'?' (('extends' | 'super') type)?
-	;
-	
+    :   type
+    |   '?' (('extends' | 'super') type)?
+    ;
+    
 qualifiedNameList
-	:	qualifiedName (',' qualifiedName)*
-	;
-	
+    :   qualifiedName (',' qualifiedName)*
+    ;
+
 formalParameters
-	:	'(' formalParameterDecls? ')'
-	;
-	
+    :   '(' formalParameterDecls? ')'
+    ;
+    
 formalParameterDecls
-	:	variableModifier* type formalParameterDeclsRest?
-	;
-	
+    :   variableModifiers type formalParameterDeclsRest
+    ;
+    
 formalParameterDeclsRest
-	:	variableDeclaratorId (',' formalParameterDecls)?
-	|   '...' variableDeclaratorId
-	;
-	
+    :   variableDeclaratorId (',' formalParameterDecls)?
+    |   '...' variableDeclaratorId
+    ;
+    
+methodBody
+    :   block
+    ;
+
+constructorBody
+    :   '{' explicitConstructorInvocation? blockStatement* '}'
+    ;
+
+explicitConstructorInvocation
+    :   nonWildcardTypeArguments? ('this' | 'super') arguments ';'
+    |   primary '.' nonWildcardTypeArguments? 'super' arguments ';'
+    ;
+
+
 qualifiedName
-	:	Identifier ('.' Identifier)*
-	;
+    :   Identifier ('.' Identifier)*
+    ;

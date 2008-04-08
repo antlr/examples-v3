@@ -1,72 +1,70 @@
 parser grammar JavaAnnotations;
 
+// ANNOTATIONS
+
 annotations
-	:	annotation+
-	;
+    :   annotation+
+    ;
 
 annotation
-	:	'@' annotationName ('(' elementValuePairs? ')')?
-	;
-	
+    :   '@' annotationName ( '(' ( elementValuePairs | elementValue )? ')' )?
+    ;
+    
 annotationName
-	: Identifier ('.' Identifier)*
-	;
-	
+    : Identifier ('.' Identifier)*
+    ;
+
 elementValuePairs
-	: elementValuePair (',' elementValuePair)*
-	;
-	
+    :   elementValuePair (',' elementValuePair)*
+    ;
+
 elementValuePair
-	: (Identifier '=')? elementValue
-	;
-	
+    :   Identifier '=' elementValue
+    ;
+    
 elementValue
-	:	conditionalExpression
-	|   annotation
-	|   elementValueArrayInitializer
-	;
-	
+    :   conditionalExpression
+    |   annotation
+    |   elementValueArrayInitializer
+    ;
+    
 elementValueArrayInitializer
-	:	'{' (elementValue (',' elementValue )*)? '}'
-	;
-	
+    :   '{' (elementValue (',' elementValue)*)? (',')? '}'
+    ;
+    
 annotationTypeDeclaration
-	:	'@' 'interface' Identifier annotationTypeBody
-	;
-	
+    :   '@' 'interface' Identifier annotationTypeBody
+    ;
+    
 annotationTypeBody
-	:	'{' (annotationTypeElementDeclarations)? '}'
-	;
-	
-annotationTypeElementDeclarations
-	:	(annotationTypeElementDeclaration) (annotationTypeElementDeclaration)*
-	;
-	
+    :   '{' (annotationTypeElementDeclaration)* '}'
+    ;
+    
 annotationTypeElementDeclaration
-	:	(modifier)* annotationTypeElementRest
-	;
-	
+    :   modifiers annotationTypeElementRest
+    ;
+    
 annotationTypeElementRest
-	:	type annotationMethodOrConstantRest ';'
-	|   classDeclaration ';'?
-	|   interfaceDeclaration ';'?
-	|   enumDeclaration ';'?
-	|   annotationTypeDeclaration ';'?
-	;
-	
+    :   type annotationMethodOrConstantRest ';'
+    |   normalClassDeclaration ';'?
+    |   normalInterfaceDeclaration ';'?
+    |   enumDeclaration ';'?
+    |   annotationTypeDeclaration ';'?
+    ;
+    
 annotationMethodOrConstantRest
-	:	annotationMethodRest
-	|   annotationConstantRest
-	;
-	
+    :   annotationMethodRest
+    |   annotationConstantRest
+    ;
+    
 annotationMethodRest
- 	:	Identifier '(' ')' (defaultValue)?
- 	;
- 	
+    :   Identifier '(' ')' defaultValue?
+    ;
+    
 annotationConstantRest
- 	:	variableDeclarators
- 	;
- 	
+    :   variableDeclarators
+    ;
+    
 defaultValue
- 	:	'default' elementValue
- 	;
+    :   'default' elementValue
+    ;

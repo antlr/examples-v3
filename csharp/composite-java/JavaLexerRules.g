@@ -4,7 +4,9 @@ lexer grammar JavaLexerRules;
 
 @members {
 protected bool enumIsKeyword = true;
+protected bool assertIsKeyword = true;
 }
+
 
 HexLiteral : '0' ('x'|'X') HexDigit+ IntegerTypeSuffix? ;
 
@@ -22,8 +24,8 @@ FloatingPointLiteral
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
     |   '.' ('0'..'9')+ Exponent? FloatTypeSuffix?
     |   ('0'..'9')+ Exponent FloatTypeSuffix?
-    |   ('0'..'9')+ Exponent? FloatTypeSuffix
-	;
+    |   ('0'..'9')+ FloatTypeSuffix
+    ;
 
 fragment
 Exponent : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
@@ -58,9 +60,13 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
-ENUM:	'enum' {if ( !enumIsKeyword ) $type=Identifier;}
-	;
-	
+ENUM:   'enum' {if (!enumIsKeyword) $type=Identifier;}
+    ;
+    
+ASSERT
+    :   'assert' {if (!assertIsKeyword) $type=Identifier;}
+    ;
+    
 Identifier 
     :   Letter (Letter|JavaIDDigit)*
     ;

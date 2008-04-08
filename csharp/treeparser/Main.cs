@@ -25,8 +25,8 @@ namespace Antlr.Examples.SimpleTreeParser
 
 				//LangParser.decl_return r = parser.decl();
 				LangParser.start_return r = parser.start();
-				Console.Out.WriteLine("tree: "+((ITree)r.tree).ToStringTree());
-				CommonTree r0 = ((CommonTree)r.tree);
+				Console.Out.WriteLine("tree: "+((ITree)r.Tree).ToStringTree());
+				CommonTree r0 = ((CommonTree)r.Tree);
 				CommonTreeNodeStream nodes = new CommonTreeNodeStream(r0);
 				nodes.TokenStream = tokens;
 				LangDumpDecl walker = new LangDumpDecl(nodes);

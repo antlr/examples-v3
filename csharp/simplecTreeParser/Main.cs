@@ -23,14 +23,14 @@ namespace Antlr.Examples.SimpleTreeParser
 				CommonTokenStream tokens = new CommonTokenStream(lex);
 				SimpleCParser parser = new SimpleCParser(tokens);
 				SimpleCParser.program_return r = parser.program();
-				Console.Out.WriteLine("tree="+((ITree)r.tree).ToStringTree());
+				Console.Out.WriteLine("tree="+((ITree)r.Tree).ToStringTree());
 
 				if ( parser.NumberOfSyntaxErrors > 0 ) {
 					// don't tree parse if has errors
 					return;
 				}
 
-				CommonTreeNodeStream nodes = new CommonTreeNodeStream((ITree)r.tree);
+				CommonTreeNodeStream nodes = new CommonTreeNodeStream((ITree)r.Tree);
 				nodes.TokenStream = tokens;
 				SimpleCWalker walker = new SimpleCWalker(nodes);
 				
