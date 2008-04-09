@@ -1,7 +1,7 @@
 grammar Javadoc;
 
 options {
-	language=CSharp;
+	language=CSharp2;
 }
 
 @namespace		{Antlr.Examples.IslandGrammar}

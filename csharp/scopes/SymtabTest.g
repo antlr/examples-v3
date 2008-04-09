@@ -7,7 +7,7 @@ grammar SymtabTest;
  */
 
 options {
-	language=CSharp;
+	language=CSharp2;
 }
 
 scope Symbols {

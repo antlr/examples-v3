@@ -1,7 +1,7 @@
 grammar Simple;
 
 options {
-    language=CSharp;
+    language=CSharp2;
 }
 // pull in all rules even if not referenced so comments etc... work
 import CommonLexer; 

@@ -4,7 +4,7 @@
 lexer grammar CommonLexer;
 
 options {
-    language=CSharp;
+    language=CSharp2;
 }
 
 ID : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;

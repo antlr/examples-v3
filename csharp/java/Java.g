@@ -179,7 +179,7 @@
 grammar Java;
 
 options {
-	language=CSharp;
+	language=CSharp2;
 	backtrack=true;
 	memoize=true;
 }

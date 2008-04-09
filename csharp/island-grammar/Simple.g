@@ -1,7 +1,7 @@
 grammar Simple;
 
 options {
-	language=CSharp;
+	language=CSharp2;
 }
 
 tokens {

@@ -1,7 +1,7 @@
 grammar CMinus;
 
 options {
-	language=CSharp;
+	language=CSharp2;
 	output=template;
 }
 

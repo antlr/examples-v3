@@ -124,7 +124,7 @@ grammar Python;
 
 options {
 
-	language=CSharp;
+	language=CSharp2;
 
 }
 

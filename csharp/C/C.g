@@ -72,7 +72,7 @@ grammar C;
 
 options {
 
-	language=CSharp;
+	language=CSharp2;
 
     backtrack=true;
 

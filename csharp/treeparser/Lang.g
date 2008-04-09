@@ -2,7 +2,7 @@ grammar Lang;
 options {
 	output=AST;
 	ASTLabelType=CommonTree;
-    language=CSharp; 
+    language=CSharp2; 
 }
 
 tokens {DECL;} // an imaginary node

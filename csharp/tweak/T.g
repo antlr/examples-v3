@@ -10,7 +10,7 @@
 grammar T;
 
 options {
-	language=CSharp;
+	language=CSharp2;
 }
 
 @header {

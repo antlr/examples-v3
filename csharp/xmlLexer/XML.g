@@ -2,7 +2,7 @@
 lexer grammar XML;
 
 options {
-	language=CSharp;
+	language=CSharp2;
 }
 
 DOCUMENT

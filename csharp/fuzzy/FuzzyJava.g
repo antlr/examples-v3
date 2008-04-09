@@ -1,7 +1,7 @@
 lexer grammar FuzzyJava;
 options {
 	filter=true;
-	language=CSharp;
+	language=CSharp2;
 }
 
 IMPORT

@@ -1,6 +1,6 @@
 tree grammar PolyDifferentiator;
 options {
-    language=CSharp;
+    language=CSharp2;
     tokenVocab=Poly;
     ASTLabelType=CommonTree;
     output=AST;

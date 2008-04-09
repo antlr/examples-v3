@@ -8,7 +8,7 @@
 grammar Java;
 //options {k=2; backtrack=true; memoize=true;}
 options {
-    language=CSharp;
+    language=CSharp2;
     backtrack=true;
     memoize=true;
 }

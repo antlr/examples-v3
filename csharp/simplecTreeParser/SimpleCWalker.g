@@ -1,7 +1,7 @@
 tree grammar SimpleCWalker;
 
 options {
-    language=CSharp; 
+    language=CSharp2; 
     tokenVocab=SimpleC;
     ASTLabelType=CommonTree;
 }

@@ -1,7 +1,7 @@
 grammar SimpleC;
 
 options {
-    language=CSharp; 
+    language=CSharp2; 
     output=AST;
 }
 
