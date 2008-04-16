@@ -1,0 +1,5 @@
+program bob;
+
+var hi;
+var x = 34;
+var y = 1.2; // second var decl
