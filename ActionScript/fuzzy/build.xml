@@ -1,0 +1,4 @@
+<project name="C" basedir="." default="all">
+	<property name="grammars" value="${basedir}/FuzzyJava.g"/>
+	<import file="${basedir}/../build-common.xml"/>
+</project>

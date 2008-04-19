@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://ns.adobe.com/air/application/1.0">
+	<id>Main</id>
+	<filename>Main</filename>
+	<name>Main</name>
+	<version>v1</version>
+	<initialWindow>
+		<content>main.swc</content>
+	</initialWindow>
+</application>

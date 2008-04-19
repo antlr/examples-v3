@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" visible="false" applicationComplete="main()">
+	
+	<mx:Script>
+		<![CDATA[
+			import org.antlr.runtime.*;
+
+			private function main():void {
+				var input:CharStream = new ANTLRFileStream(File.applicationDirectory.resolvePath("input"));
+				var lexer:TLexer = new TLexer(input);
+				var tokens:TokenStream = new TokenRewriteStream(lexer);
+				var parser:TParser = new TParser(tokens);
+				parser.program();	
+				trace(tokens);
+				exit();			
+			}
+		]]>
+	</mx:Script>
+</mx:WindowedApplication>

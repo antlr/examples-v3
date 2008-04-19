@@ -166,12 +166,9 @@
 grammar Java;
 options {language=ActionScript; backtrack=true; memoize=true;}
 
-@lexer::package {org.antlr.test}
-@package {org.antlr.test}
-
 @lexer::members {
-  var enumIsKeyword:Boolean = true;
-  var assertIsKeyword:Boolean = true;
+  private var enumIsKeyword:Boolean = true;
+  private var assertIsKeyword:Boolean = true;
 }
 
 // starting point for parsing a java file
