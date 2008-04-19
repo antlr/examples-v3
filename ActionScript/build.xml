@@ -1,0 +1,17 @@
+<project name="actionscript-antlr-examples" default="all">
+
+	<target name="all" depends="verify"/>
+
+	<target name="build">
+		<ant dir="C" target="build"/>
+	</target>
+	
+	<target name="verify">
+		<ant dir="C" target="verify" inheritAll="false"/>
+	</target>
+
+	<target name="clean">
+		<ant dir="C" target="clean"/>
+	</target>
+	
+</project>

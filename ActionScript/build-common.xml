@@ -1,0 +1,69 @@
+<project name="build-common" basedir="." default="all">
+
+	<dirname property="build-common.basedir" file="${ant.file.build-common}"/>
+
+	<property environment="env"/>
+	
+	<property name="FLEX_HOME" value="${env.FLEX_HOME}"/>
+	
+	<!-- Assume SDK 3.0 or greater has the ant tasks -->
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+
+	<path id="java.lib.path">
+		<fileset dir="${build-common.basedir}/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="all" depends="verify"/>
+
+	<target name="check-env">
+		<fail>
+	     <condition>
+	       <not>
+	         <isset property="FLEX_HOME"/>
+	       </not>
+	     </condition>
+	   </fail>
+	</target>
+	
+	<target name="generate">
+		<echo>Basedir is ${basedir}</echo>
+		<java className="org.antlr.Tool" classpathref="java.lib.path">
+			<arg line="-o generated"/>
+			<arg line="${grammars}"/>
+		</java>
+	</target>
+
+	<target name="build" depends="check-env,generate">
+		<mxmlc file="${basedir}/Main.mxml" output="main.swc">
+			<load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/>
+			<source-path path-element="${basedir}/generated"/>
+			<compiler.include-libraries dir="${build-common.basedir}/lib">
+				<include name="antlr3.swc"/>
+			</compiler.include-libraries>
+		</mxmlc>
+	</target>
+	
+	<target name="run" depends="build">
+		<touch file="actual"/>
+		<exec dir="${basedir}" executable="${FLEX_HOME}/bin/adl" error="actual">
+			<arg value="${basedir}/main.xml"/>
+		</exec>
+	</target>
+
+	<target name="verify" depends="run">
+		<fail message='Actual output does not match expected output!  Please check actual output in file named "actual"'>
+			<condition>
+				<not><filesmatch file1="${basedir}/output" file2="${basedir}/actual"/></not>
+			</condition>
+		</fail>
+	</target>
+
+	<target name="clean">
+		<delete file="${basedir}/main.swc"/>
+		<delete file="${basedir}/actual"/>
+		<delete dir="${basedir}/generated"/>
+	</target>
+	
+</project>
