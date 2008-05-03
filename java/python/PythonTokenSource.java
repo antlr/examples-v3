@@ -95,6 +95,10 @@ public class PythonTokenSource implements TokenSource {
 		push(FIRST_CHAR_POSITION);
 	}
 
+	public String getSourceName() {
+		return stream.getSourceName();
+	}
+
 	/** From http://www.python.org/doc/2.2.3/ref/indentation.html
 
 	 "Before the first line of the file is read, a single zero is
