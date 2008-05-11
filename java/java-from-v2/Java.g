@@ -817,8 +817,6 @@ constant
 	|	CHAR_LITERAL
 	|	STRING_LITERAL
 	|	NUM_FLOAT
-	|	NUM_LONG
-	|	NUM_DOUBLE
 	;
 
 
