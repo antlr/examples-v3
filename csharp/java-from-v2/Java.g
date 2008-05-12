@@ -7,7 +7,7 @@
 grammar Java;
 
 options {
-    language=CSharp; 
+    language=CSharp2; 
 	backtrack=true;
 }
 
@@ -822,8 +822,6 @@ constant
 	|	CHAR_LITERAL
 	|	STRING_LITERAL
 	|	NUM_FLOAT
-	|	NUM_LONG
-	|	NUM_DOUBLE
 	;
 
 

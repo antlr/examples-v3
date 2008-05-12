@@ -2,7 +2,7 @@ tree grammar LangDumpDecl;
 options {
     tokenVocab=Lang;
     ASTLabelType = Tree;
-    language=CSharp; 
+    language=CSharp2; 
 }
 
 decl : ^(DECL type declarator)
