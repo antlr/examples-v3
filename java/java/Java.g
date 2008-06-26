@@ -156,6 +156,10 @@
  *          tree (excluding those whose file names include '-', which are not
  *          valid Java compilation units).
  *
+ *  June 26, 2008
+ *
+ *	conditionalExpression had wrong precedence x?y:z.
+ *
  *  Known remaining problems:
  *      "Letter" and "JavaIDDigit" are wrong.  The actual specification of
  *      "Letter" should be "a character for which the method
@@ -739,7 +743,7 @@ assignmentOperator
     ;
 
 conditionalExpression
-    :   conditionalOrExpression ( '?' expression ':' expression )?
+    :   conditionalOrExpression ( '?' conditionalExpression ':' conditionalExpression )?
     ;
 
 conditionalOrExpression
