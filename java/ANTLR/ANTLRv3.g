@@ -233,7 +233,7 @@ elementNoOptionSpec
 		|				-> ^($labelOp id block)
 		)
 	|	atom
-		(	ebnfSuffix	-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] atom EOA["EOA"]) EOB["EOB"])
+		(	ebnfSuffix	-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] atom EOA["EOA"]) EOB["EOB"]) )
 		|				-> atom
 		)
 	|	ebnf
