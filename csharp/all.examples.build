@@ -33,6 +33,7 @@
   	</target>
 
 	<target name="build">
+		<nant buildfile="ANTLR/ANTLRv3.build"                        target="build" inheritall="true" />
 		<nant buildfile="C/c.build"                                  target="build" inheritall="true" />
 		<nant buildfile="cminus/cminus.build"                        target="build" inheritall="true" />
 		<nant buildfile="composite-java/composite-java.build"        target="build" inheritall="true" />
@@ -55,6 +56,7 @@
 	</target>
 
 	<target name="clean">
+		<nant buildfile="ANTLR/ANTLRv3.build"                        target="clean" inheritall="true" />
 		<nant buildfile="C/c.build"                                  target="clean" inheritall="true" />
 		<nant buildfile="cminus/cminus.build"                        target="clean" inheritall="true" />
 		<nant buildfile="composite-java/composite-java.build"        target="clean" inheritall="true" />
