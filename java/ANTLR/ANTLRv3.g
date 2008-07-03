@@ -272,10 +272,10 @@ ebnf
 	$ebnf.tree.getToken().setLine(firstToken.getLine());
 	$ebnf.tree.getToken().setCharPositionInLine(firstToken.getCharPositionInLine());
 }
-	:	block {Token op=input.LT(1);}
-		(	'?'		-> ^(OPTIONAL[op] block)
-		|	'*'		-> ^(CLOSURE[op] block)
-		|	'+'		-> ^(POSITIVE_CLOSURE[op] block)
+	:	block
+		(	op='?'	-> ^(OPTIONAL[op] block)
+		|	op='*'	-> ^(CLOSURE[op] block)
+		|	op='+'	-> ^(POSITIVE_CLOSURE[op] block)
 		|   '^'		-> ^('^' block)
 		|   '!'		-> ^('!' block)
 		|   '=>'	// syntactic predicate
@@ -338,6 +338,7 @@ rewrite
 	;
 
 rewrite_alternative
+options {backtrack=true;}
 	:	rewrite_template
 	|	rewrite_tree_alternative
    	|   /* empty rewrite */ -> ^(ALT["ALT"] EPSILON["EPSILON"] EOA["EOA"])
@@ -543,7 +544,6 @@ NESTED_ACTION :
 	|	.
 	)*
 	'}'
-	{$channel = DEFAULT_TOKEN_CHANNEL;}
    ;
 
 fragment
@@ -559,7 +559,7 @@ ACTION_STRING_LITERAL
 fragment
 ACTION_ESC
 	:	'\\\''
-	|	'\\"'
+	|	'\\' '"' // ANTLR doesn't like: '\\"'
 	|	'\\' ~('\''|'"')
 	;
 
@@ -575,11 +575,11 @@ RULE_REF
  *  action processing on the {...} as it's not a action.
  */
 OPTIONS
-	:	'options' WS_LOOP '{' {$channel=DEFAULT_TOKEN_CHANNEL;} // WS_LOOP sets channel
+	:	'options' WS_LOOP '{'
 	;
 	
 TOKENS
-	:	'tokens' WS_LOOP '{' {$channel=DEFAULT_TOKEN_CHANNEL;}
+	:	'tokens' WS_LOOP '{'
 	;
 
 /** Reset the file and line information; useful when the grammar
@@ -587,7 +587,7 @@ TOKENS
  *  original file like the old C preprocessor used to do.
  */
 fragment
-SRC	:	'src' ' ' file=ACTION_STRING_LITERAL ' ' line=INT {$channel=HIDDEN;}
+SRC	:	'src' ' ' file=ACTION_STRING_LITERAL ' ' line=INT
 	;
 
 WS	:	(	' '
@@ -603,6 +603,5 @@ WS_LOOP
 		|	SL_COMMENT
 		|	ML_COMMENT
 		)*
-		{$channel=HIDDEN;}
 	;
 
