@@ -1,0 +1,23 @@
+(grammar CMinus (options { (= output template)) (scope slist {
+    List locals; // must be defined one per semicolon
+    List stats;
+}) (@ header {
+import org.antlr.stringtemplate.*;
+}) (RULE program (scope {
+  List globals;
+  List functions;
+}) (@ init {
+  $program::globals = new ArrayList();
+  $program::functions = new ArrayList();
+}) (BLOCK (ALT (BLOCK (ALT declaration EOA) EOB) EOA) (-> (TEMPLATE program (ARGLIST (globals globals {$program::globals}) (functions functions {$program::functions})))) EOB) EOR) (RULE declaration (BLOCK (ALT variable {$program::globals.add($variable.st);} EOA) (ALT (= f function) {$program::functions.add($f.st);} EOA) EOB) EOR) (RULE variable (BLOCK (ALT type declarator ';' EOA) (-> {$function.size()>0 && $function::name==null}? (TEMPLATE globalVariable (ARGLIST (type type {$type.st}) (name name {$declarator.st})))) (-> {$function.size()>0 && $function::name==null}? (TEMPLATE variable (ARGLIST (type type {$type.st}) (name name {$declarator.st})))) EOB) EOR) (RULE declarator (BLOCK (ALT ID EOA) (-> {new StringTemplate($ID.text)}) EOB) EOR) (RULE function (scope {
+    String name;
+} slist) (@ init {
+  $slist::locals = new ArrayList();
+  $slist::stats = new ArrayList();
+}) (BLOCK (ALT type ID {$function::name=$ID.text;} '(' (? (( (ALT (+= p formalParameter) (* (( (ALT ',' (+= p formalParameter) EOA) ))) EOA) ))) ')' block EOA) (-> (TEMPLATE function (ARGLIST (type type {$type.st}) (name name {$function::name}) (locals locals {$slist::locals}) (stats stats {$slist::stats}) (args args {$p})))) EOB) EOR) (RULE formalParameter (BLOCK (ALT type declarator EOA) (-> (TEMPLATE parameter (ARGLIST (type type {$type.st}) (name name {$declarator.st})))) EOB) EOR) (RULE type (BLOCK (ALT 'int' EOA) (-> (TEMPLATE type_int ARGLIST)) (ALT 'char' EOA) (-> (TEMPLATE type_char ARGLIST)) (ALT ID EOA) (-> (TEMPLATE type_user_object (ARGLIST (name name {$ID.text})))) EOB) EOR) (RULE block (BLOCK (ALT '{' (* (( (ALT variable {$slist::locals.add($variable.st);} EOA) ))) (* (( (ALT stat {$slist::stats.add($stat.st);} EOA) ))) '}' EOA) EOB) EOR) (RULE stat (scope slist) (@ init {
+  $slist::locals = new ArrayList();
+  $slist::stats = new ArrayList();
+}) (BLOCK (ALT forStat EOA) (-> {$forStat.st}) (ALT expr ';' EOA) (-> (TEMPLATE statement (ARGLIST (expr expr {$expr.st})))) (ALT block EOA) (-> (TEMPLATE statementList (ARGLIST (locals locals {$slist::locals}) (stats stats {$slist::stats})))) (ALT assignStat ';' EOA) (-> {$assignStat.st}) (ALT ';' EOA) (-> {new StringTemplate(";")}) EOB) EOR) (RULE forStat (scope slist) (@ init {
+  $slist::locals = new ArrayList();
+  $slist::stats = new ArrayList();
+}) (BLOCK (ALT 'for' '(' (= e1 assignStat) ';' (= e2 expr) ';' (= e3 assignStat) ')' block EOA) (-> (TEMPLATE forLoop (ARGLIST (e1 e1 {$e1.st}) (e2 e2 {$e2.st}) (e3 e3 {$e3.st}) (locals locals {$slist::locals}) (stats stats {$slist::stats})))) EOB) EOR) (RULE assignStat (BLOCK (ALT ID '=' expr EOA) (-> (TEMPLATE assign (ARGLIST (lhs lhs {$ID.text}) (rhs rhs {$expr.st})))) EOB) EOR) (RULE expr (BLOCK (ALT condExpr EOA) (-> {$condExpr.st}) EOB) EOR) (RULE condExpr (BLOCK (ALT (= a aexpr) (( (ALT (( (ALT '==' (= b aexpr) EOA) (ALT '<' (= b aexpr) EOA) )) EOA) (ALT EPSILON EOA) )) EOA) EOB) EOR) (RULE aexpr (BLOCK (ALT (( (ALT (= a atom) EOA) )) (* (( (ALT '+' (= b atom) EOA) ))) EOA) EOB) EOR) (RULE atom (BLOCK (ALT ID EOA) (-> (TEMPLATE refVar (ARGLIST (id id {$ID.text})))) (ALT INT EOA) (-> (TEMPLATE iconst (ARGLIST (value value {$INT.text})))) (ALT '(' expr ')' EOA) (-> {$expr.st}) EOB) EOR) (RULE ID (BLOCK (ALT (( (ALT (.. 'a' 'z') EOA) (ALT (.. 'A' 'Z') EOA) (ALT '_' EOA) )) (* (( (ALT (.. 'a' 'z') EOA) (ALT (.. 'A' 'Z') EOA) (ALT (.. '0' '9') EOA) (ALT '_' EOA) ))) EOA) EOB) EOR) (RULE INT (BLOCK (ALT (+ (( (ALT (.. '0' '9') EOA) ))) EOA) EOB) EOR) (RULE WS (BLOCK (ALT (+ (( (ALT ' ' EOA) (ALT '\t' EOA) (ALT '\r' EOA) (ALT '\n' EOA) ))) {$channel=HIDDEN;} EOA) EOB) EOR))
