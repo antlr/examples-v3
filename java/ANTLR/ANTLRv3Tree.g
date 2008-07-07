@@ -107,7 +107,7 @@ ruleScopeSpec
 	;
 
 block
-    :   ^( BLOCK optionsSpec? alternative+ EOB )
+    :   ^( BLOCK optionsSpec? (alternative rewrite)+ EOB )
     ;
 
 altList
