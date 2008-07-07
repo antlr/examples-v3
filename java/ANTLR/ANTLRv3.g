@@ -406,15 +406,7 @@ rewrite_tree
 	-> {st-expr} // st-expr evaluates to ST
  */
 rewrite_template
-@init {
-	System.out.println("1: "+input.LT(1));
-	System.out.println("2: "+input.LT(2));
-	System.out.println("3: "+input.LT(3));
-	System.out.println("4: "+input.LT(4));
-	System.out.println("5: "+input.LT(5));
-}
 	:   // -> template(a={...},...) "..."    inline template
-		{input.LT(1).getText().equals("template")}?
 		id lp='(' rewrite_template_args	')'
 		( str=DOUBLE_QUOTE_STRING_LITERAL | str=DOUBLE_ANGLE_STRING_LITERAL )
 		-> ^(TEMPLATE[$lp,"TEMPLATE"] id rewrite_template_args $str)
