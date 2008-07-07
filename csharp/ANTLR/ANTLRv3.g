@@ -185,7 +185,7 @@ block
 		( (opts=optionsSpec)? ':' )?
 		a1=alternative rewrite ( '|' a2=alternative rewrite )*
         rp=')'
-        -> ^( BLOCK[$lp,"BLOCK"] optionsSpec? alternative+ EOB[$rp,"EOB"] )
+        -> ^( BLOCK[$lp,"BLOCK"] optionsSpec? (alternative rewrite?)+ EOB[$rp,"EOB"] )
     ;
 
 altList
@@ -409,10 +409,9 @@ rewrite_tree
  */
 rewrite_template
 	:   // -> template(a={...},...) "..."    inline template
-		{input.LT(1).Text == "template"}?
 		id lp='(' rewrite_template_args	')'
-		st=( DOUBLE_QUOTE_STRING_LITERAL | DOUBLE_ANGLE_STRING_LITERAL )
-		-> ^(TEMPLATE[$lp,"TEMPLATE"] id rewrite_template_args $st)
+		( str=DOUBLE_QUOTE_STRING_LITERAL | str=DOUBLE_ANGLE_STRING_LITERAL )
+		-> ^(TEMPLATE[$lp,"TEMPLATE"] id rewrite_template_args $str)
 
 	|	// -> foo(a={...}, ...)
 		rewrite_template_ref
@@ -480,7 +479,7 @@ LITERAL_CHAR
 	;
 
 DOUBLE_QUOTE_STRING_LITERAL
-	:	'"' LITERAL_CHAR* '"'
+	:	'"' (ESC | ~('\\'|'"'))* '"'
 	;
 
 DOUBLE_ANGLE_STRING_LITERAL
