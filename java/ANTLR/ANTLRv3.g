@@ -240,6 +240,9 @@ elementNoOptionSpec
 	|   ACTION
 	|   SEMPRED ( '=>' -> GATED_SEMPRED | -> SEMPRED )
 	|   treeSpec
+		(	ebnfSuffix	-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] treeSpec EOA["EOA"]) EOB["EOB"]) )
+		|				-> treeSpec
+		)
 	;
 
 atom:   range ( (op='^'|op='!') -> ^($op range) | -> range )
@@ -363,7 +366,7 @@ rewrite_tree_element
 		-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree_atom EOA["EOA"]) EOB["EOB"]))
 	|   rewrite_tree
 		(	ebnfSuffix
-			-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"])
+			-> ^(ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"]))
 		|	-> rewrite_tree
 		)
 	|   rewrite_tree_ebnf
