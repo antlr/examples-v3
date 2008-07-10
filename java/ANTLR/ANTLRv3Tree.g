@@ -209,10 +209,6 @@ rewrite_alternative
    	|   ^(ALT EPSILON EOA)
 	;
 	
-rewrite_template_block
-    :   ^(BLOCK rewrite_template EOB)
-    ;
-
 rewrite_tree_block
     :   ^(BLOCK rewrite_tree_alternative EOB)
     ;
