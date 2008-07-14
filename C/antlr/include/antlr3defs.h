@@ -223,10 +223,22 @@ typedef struct sockaddr		ANTLR3_SOCKADDRC, * pANTLR3_SOCKADDRC;	// Type used for
 #include	<netinet/tcp.h>
 #endif
 
+#ifdef HAVE_ARPA_NAMESER_H
+#include <arpa/nameser.h> /* DNS HEADER struct */
+#endif
+
+#ifdef HAVE_NETDB_H
+#include <netdb.h>
+#endif
+
+
 #ifdef HAVE_SYS_RESOLVE_H
 #include	<sys/resolv.h>
 #endif
 
+#ifdef HAVE_RESOLVE_H
+#include	<resolv.h>
+#endif
 
 
 #ifdef	HAVE_MALLOC_H
@@ -271,7 +283,7 @@ typedef	int				SOCKET;
 
 #else
 
-# ifdef	_AIX
+# if defined(_AIX) || __GNUC__ > 3 
 
    typedef	socklen_t	ANTLR3_SALENT;
 

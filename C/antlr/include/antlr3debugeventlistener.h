@@ -22,7 +22,7 @@
 
 /// Default debugging port
 ///
-#define DEFAULT_DEBUGGER_PORT		0xC001;
+#define DEFAULT_DEBUGGER_PORT		0xBFCC;
 
 #ifdef __cplusplus
 extern "C" {
