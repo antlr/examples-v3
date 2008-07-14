@@ -99,7 +99,7 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
 	/// and can be reported that way.
 	///
 	ANTLR3_BOOLEAN
-				(*mismatchIsUnwantedToken)	(struct ANTLR3_BASE_RECOGNIZER_struct * recognizer, pANTLR3_INT_STREAM input);
+				(*mismatchIsUnwantedToken)	(struct ANTLR3_BASE_RECOGNIZER_struct * recognizer, pANTLR3_INT_STREAM input, ANTLR3_UINT32 ttype);
 
 	/// Pointer to a function that decides if the current token is one that can logically
 	/// follow the one we were looking for, in which case the one we were looking for is 
