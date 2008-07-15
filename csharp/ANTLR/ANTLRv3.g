@@ -242,6 +242,9 @@ elementNoOptionSpec
 	|   ACTION
 	|   SEMPRED ( '=>' -> GATED_SEMPRED | -> SEMPRED )
 	|   treeSpec
+		(	ebnfSuffix	-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] treeSpec EOA["EOA"]) EOB["EOB"]) )
+		|				-> treeSpec
+		)
 	;
 
 atom:   range ( (op='^'|op='!') -> ^($op range) | -> range )
@@ -278,8 +281,6 @@ ebnf
 		(	op='?'	-> ^(OPTIONAL[op] block)
 		|	op='*'	-> ^(CLOSURE[op] block)
 		|	op='+'	-> ^(POSITIVE_CLOSURE[op] block)
-		|   '^'		-> ^('^' block)
-		|   '!'		-> ^('!' block)
 		|   '=>'	// syntactic predicate
 					-> {gtype==COMBINED_GRAMMAR &&
 					    Char.IsUpper($rule::name[0])}?
@@ -345,10 +346,6 @@ options {backtrack=true;}
 	|	rewrite_tree_alternative
    	|   /* empty rewrite */ -> ^(ALT["ALT"] EPSILON["EPSILON"] EOA["EOA"])
 	;
-	
-rewrite_template_block
-    :   lp='(' rewrite_template ')' -> ^(BLOCK[$lp,"BLOCK"] rewrite_template EOB[$lp,"EOB"])
-    ;
 
 rewrite_tree_block
     :   lp='(' rewrite_tree_alternative ')'
@@ -365,7 +362,7 @@ rewrite_tree_element
 		-> ^( ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree_atom EOA["EOA"]) EOB["EOB"]))
 	|   rewrite_tree
 		(	ebnfSuffix
-			-> ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"])
+			-> ^(ebnfSuffix ^(BLOCK["BLOCK"] ^(ALT["ALT"] rewrite_tree EOA["EOA"]) EOB["EOB"]))
 		|	-> rewrite_tree
 		)
 	|   rewrite_tree_ebnf
