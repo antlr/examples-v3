@@ -60,10 +60,10 @@
 #define	ANTLR3_REWRITE_EARLY_EXCEPTION_NAME    "Mismatched tree node!"
 
 #define	ANTLR3_UNWANTED_TOKEN_EXCEPTION	9
-#define	ANTLR3_UNWANTED_TOKEN_EXCEPTION_NAME    "Spurious token in input stream"
+#define	ANTLR3_UNWANTED_TOKEN_EXCEPTION_NAME    "Extraneous token"
 
 #define	ANTLR3_MISSING_TOKEN_EXCEPTION	10
-#define	ANTLR3_MISSING_TOKEN_EXCEPTION_NAME    "Missing token input streaM"
+#define	ANTLR3_MISSING_TOKEN_EXCEPTION_NAME    "Missing token"
 
 #ifdef __cplusplus
 extern "C" {
