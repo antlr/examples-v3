@@ -257,6 +257,10 @@
 		<Filter
 			Name="Grammar"
 			>
+			<File
+				RelativePath=".\java.g"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Generated"

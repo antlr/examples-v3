@@ -161,6 +161,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="antlr3c_dll.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\antlr\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

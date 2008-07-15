@@ -49,23 +49,23 @@ static void	parseFile   (pANTLR3_UINT8 fName);
 int ANTLR3_CDECL 
 main	(int argc, char *argv[])
 {
-    // Create the input stream based upon the arguement supplied to us on the command line
-    // for this example, the input will always default to ./input if there is no explicit
-    // argument, otherwise we are expecting potentially a whole list of 'em.
-    //
-    if (argc < 2 || argv[1] == NULL)
-    {
-	processDir("./input"); // Note in VS2005 debug, working directory must be configured
-    }
-    else
-    {
-	int i;
-
-	for (i = 1; i < argc; i++)
+	// Create the input stream based upon the arguement supplied to us on the command line
+	// for this example, the input will always default to ./input if there is no explicit
+	// argument, otherwise we are expecting potentially a whole list of 'em.
+	//
+	if (argc < 2 || argv[1] == NULL)
 	{
-	    processDir(argv[i]);
+		processDir("./input"); // Note in VS2005 debug, working directory must be configured
 	}
-    }
+	else
+	{
+		int i;
+
+		for (i = 1; i < argc; i++)
+		{
+			processDir(argv[i]);
+		}
+	}
 
     printf("finished parsing OK\n");	// Finnish parking is pretty good - I think it is all the snow
 

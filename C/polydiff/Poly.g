@@ -10,13 +10,13 @@ poly: term ('+'^ term)*
     ;
 
 term: INT ID  -> ^(MULT["*"] INT ID)
-    | INT exp -> ^(MULT["*"] INT exp)
-    | exp
+    | INT pexp -> ^(MULT["*"] INT pexp)
+    | pexp
     | INT
 	| ID
     ;
 
-exp : ID '^'^ INT
+pexp : ID '^'^ INT
     ;
     
 ID	: 'a'..'z'+ ;
