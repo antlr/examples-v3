@@ -430,8 +430,8 @@ ANTLR3_API pANTLR3_INT_TRIE					antlr3IntTrieNew					(ANTLR3_UINT32 depth);
 ANTLR3_API pANTLR3_BITSET					antlr3BitsetNew						(ANTLR3_UINT32 numBits);
 ANTLR3_API pANTLR3_BITSET					antlr3BitsetOf						(ANTLR3_INT32 bit, ...);
 ANTLR3_API pANTLR3_BITSET					antlr3BitsetList					(pANTLR3_HASH_TABLE list);
-ANTLR3_API pANTLR3_BITSET					antlr3BitsetCopy					(pANTLR3_UINT64 inSet, ANTLR3_UINT32 numElements);
-ANTLR3_API pANTLR3_BITSET					antlr3BitsetLoad					(ANTLR3_UINT32 ec, pANTLR3_UINT64 bset);
+ANTLR3_API pANTLR3_BITSET					antlr3BitsetCopy					(pANTLR3_BITSET_LIST blist);
+ANTLR3_API pANTLR3_BITSET					antlr3BitsetLoad					(pANTLR3_BITSET_LIST blist);
 ANTLR3_API void								antlr3BitsetSetAPI					(pANTLR3_BITSET bitset);
 
 

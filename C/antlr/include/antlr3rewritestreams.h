@@ -53,7 +53,7 @@ typedef struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct
     /// rule reference that this list tracks.  Can include rulename too, but
     /// the exception would track that info.
     ///
-    pANTLR3_STRING		  elementDescription;
+    void				* elementDescription;
 
 	/// Pointer to the tree adaptor in use for this stream
 	///
@@ -117,7 +117,7 @@ typedef struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct
 
     /// Returns the description string if there is one available (check for NULL).
     ///
-    pANTLR3_STRING	(*getDescription)	(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
+    void *			(*getDescription)	(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
 
     void		(*free)					(struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct * stream);
 

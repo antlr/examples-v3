@@ -123,10 +123,10 @@ typedef	struct ANTLR3_EXCEPTION_struct
     ANTLR3_UINT32   expecting;
 
     /** Indicates a set of tokens that we were expecting to see one of when the
-     *  error occurred. It is a following bitset, so you can use ->toIntList() on it
-     *  to generate an array of integers that it represents.
+     *  error occurred. It is a following bitset list, so you can use load it and use ->toIntList() on it
+     *  to generate an array of integer tokens that it represents.
      */
-    pANTLR3_BITSET  expectingSet;
+    pANTLR3_BITSET_LIST  expectingSet;
 
     /** If this is a tree parser exception then the node is set to point to the node
      * that caused the issue.

@@ -4,7 +4,6 @@
 # ifdef WIN32
 
 #  include	<windows.h>
-#  include	<wchar.h>
 #  include	<errno.h>
 
 typedef	long	off_t;

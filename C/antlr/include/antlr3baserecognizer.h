@@ -87,7 +87,7 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
     /// in some customized way).
     ///
     void *		(*match)	(struct ANTLR3_BASE_RECOGNIZER_struct * recognizer,
-							    ANTLR3_UINT32 ttype, pANTLR3_BITSET follow);
+							    ANTLR3_UINT32 ttype, pANTLR3_BITSET_LIST follow);
 
     /// Pointer to a function that matches the next token/char in the input stream
     /// regardless of what it actually is.
@@ -106,13 +106,13 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
 	/// probably missing from the input.
 	///
 	ANTLR3_BOOLEAN
-				(*mismatchIsMissingToken)	(struct ANTLR3_BASE_RECOGNIZER_struct * recognizer, pANTLR3_INT_STREAM input, pANTLR3_BITSET follow);
+				(*mismatchIsMissingToken)	(struct ANTLR3_BASE_RECOGNIZER_struct * recognizer, pANTLR3_INT_STREAM input, pANTLR3_BITSET_LIST follow);
 
     /** Pointer to a function that works out what to do when a token mismatch
      *  occurs, so that Tree parsers can behave differently to other recognizers.
      */
     void		(*mismatch)	(struct ANTLR3_BASE_RECOGNIZER_struct * recognizer,
-					    ANTLR3_UINT32 ttype, pANTLR3_BITSET follow);
+					    ANTLR3_UINT32 ttype, pANTLR3_BITSET_LIST follow);
 
     /** Pointer to a function to call to report a recognition problem. You may override
      *  this function with your own function, but refer to the standard implementation
@@ -198,19 +198,19 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
     void		* (*recoverFromMismatchedToken)
 						    (struct ANTLR3_BASE_RECOGNIZER_struct * recognizer,
 							    ANTLR3_UINT32	ttype,
-							    pANTLR3_BITSET	follow);
+							    pANTLR3_BITSET_LIST	follow);
 
     /** Pointer to a function that recovers from a mismatched set in the token stream, in a similar manner
      *  to (*recoverFromMismatchedToken)
      */
     void		* (*recoverFromMismatchedSet) (struct ANTLR3_BASE_RECOGNIZER_struct * recognizer,
-							    pANTLR3_BITSET	follow);
+							    pANTLR3_BITSET_LIST	follow);
 
     /** Pointer to common routine to handle single token insertion for recovery functions.
      */
     ANTLR3_BOOLEAN	(*recoverFromMismatchedElement)
 						    (struct ANTLR3_BASE_RECOGNIZER_struct * recognizer,
-							    pANTLR3_BITSET	follow);
+							    pANTLR3_BITSET_LIST	follow);
     
     /** Pointer to function that consumes input until the next token matches
      *  the given token.
@@ -296,10 +296,10 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
 	/// override this method to create the appropriate tokens.
 	///
 	void *		(*getMissingSymbol)			(	struct ANTLR3_BASE_RECOGNIZER_struct * recognizer,
-												pANTLR3_INT_STREAM	istream,
-												pANTLR3_EXCEPTION	e,
-												ANTLR3_UINT32		expectedTokenType,
-												pANTLR3_BITSET		follow);
+												pANTLR3_INT_STREAM		istream,
+												pANTLR3_EXCEPTION		e,
+												ANTLR3_UINT32			expectedTokenType,
+												pANTLR3_BITSET_LIST		follow);
 
     /** Pointer to a function that returns whether the supplied grammar function
      *  will parse the current input stream or not. This is the way that syntactic

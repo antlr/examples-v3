@@ -21,6 +21,12 @@ typedef struct ANTLR3_BASE_RECOGNIZER_struct				*pANTLR3_BASE_RECOGNIZER;
 /// \ingroup ANTLR3_RECOGNIZER_SHARED_STATE		
 ///
 typedef	struct ANTLR3_RECOGNIZER_SHARED_STATE_struct		*pANTLR3_RECOGNIZER_SHARED_STATE;
+
+/// Pointer to an instantiation of 'class' #ANTLR3_BITSET_LIST
+/// \ingroup ANTLR3_BITSET_LIST
+///
+typedef struct ANTLR3_BITSET_LIST_struct					*pANTLR3_BITSET_LIST;
+
 /// Pointer to an instantiation of 'class' #ANTLR3_BITSET							
 /// \ingroup ANTLR3_BITSET							
 ///

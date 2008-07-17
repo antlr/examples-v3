@@ -37,19 +37,29 @@
 extern "C" {
 #endif
 
-typedef	struct ANTLR3_BITSET_struct
+typedef struct ANTLR3_BITSET_LIST_struct
 {
-    /** Pointer to the allocated array of bits for this bit set, which
-     *  is an array of 64 bit elements (of the architecture). If we find a 
-     *  machine/C compiler that does not know anything about 64 bit values
-     *	then it should be easy enough to produce a 32 bit (or less) version
-     *  of the bitset code.
-     */
+	/// Pointer to the allocated array of bits for this bit set, which
+    /// is an array of 64 bit elements (of the architecture). If we find a 
+    /// machine/C compiler that does not know anything about 64 bit values
+    ///	then it should be easy enough to produce a 32 bit (or less) version
+    /// of the bitset code. Note that the pointer here may be static if laid down
+	/// by the code generation, and it must be copied if it is to be manipulated
+	/// to perform followset calculations.
+    ///
     pANTLR3_BITWORD   bits;
 
-    /** Length of the current bit set in ANTLR3_UINT64 units.
-     */
+    /// Length of the current bit set in ANTLR3_UINT64 units.
+    ///
     ANTLR3_UINT32    length;
+}
+	ANTLR3_BITSET_LIST;
+
+typedef	struct ANTLR3_BITSET_struct
+{
+	/// The actual bits themselves
+	///
+	ANTLR3_BITSET_LIST				blist;
 
     pANTLR3_BITSET					(*clone)	    (struct ANTLR3_BITSET_struct  * inSet);
     pANTLR3_BITSET					(*bor)			(struct ANTLR3_BITSET_struct  * bitset1, struct ANTLR3_BITSET_struct * bitset2);
