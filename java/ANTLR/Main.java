@@ -29,13 +29,13 @@ public class Main {
         System.out.println(t.toStringTree());
 
 /*
-        // BUILD AST + PARSE TREES
+        // BUILD AST + PARSE TREES (needs ANTLR -debug option)
         ANTLRv3Lexer lex = new ANTLRv3Lexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lex);
         ParseTreeBuilder builder = new ParseTreeBuilder(inputName);
         ANTLRv3Parser g = new ANTLRv3Parser(tokens, builder);
         ANTLRv3Parser.grammarDef_return r = g.grammarDef();
-        CommonTree t = (CommonTree)r.getTree();
+        CommonTree t = (CommonTree)r.getTree(); // not used here
         System.out.println("parse tree: "+builder.getTree().toStringTree());
         System.out.print("input:\n"+builder.getTree().toInputString());
 */
