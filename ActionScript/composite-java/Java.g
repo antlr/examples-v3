@@ -6,7 +6,6 @@
  *		java org.antlr.Tool Java.g
  */
 grammar Java;
-//options {k=2; backtrack=true; memoize=true;}
 options {language=ActionScript;backtrack=true; memoize=true;}
 
 import JavaDecl, JavaAnnotations, JavaExpr, JavaStat, JavaLexerRules;

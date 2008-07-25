@@ -739,7 +739,7 @@ assignmentOperator
     ;
 
 conditionalExpression
-    :   conditionalOrExpression ( '?' expression ':' expression )?
+    :   conditionalOrExpression ( '?' conditionalExpression ':' conditionalExpression )?
     ;
 
 conditionalOrExpression
