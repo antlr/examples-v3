@@ -531,7 +531,7 @@ ACTION
 fragment
 NESTED_ACTION :
 	'{'
-	(	options {greedy=false; k=3;}
+	(	options {greedy=false; k=2;}
 	:	NESTED_ACTION
 	|	SL_COMMENT
 	|	ML_COMMENT
