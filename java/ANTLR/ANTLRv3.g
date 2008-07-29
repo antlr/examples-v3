@@ -549,7 +549,7 @@ ACTION_CHAR_LITERAL
 
 fragment
 ACTION_STRING_LITERAL
-	:	'"' (ACTION_ESC|~('\\'|'"'))+ '"'
+	:	'"' (ACTION_ESC|~('\\'|'"'))* '"'
 	;
 
 fragment
