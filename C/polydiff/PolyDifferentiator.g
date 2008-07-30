@@ -56,7 +56,6 @@ poly
 
 			e2->set8(e2, "");
 			e2->addi(e2, ei-1);
-			printf("c2 = \%s, ei = \%d, e2= \%s\n", c2->chars, ei, e2->chars);
 
 		}
 							-> ^(MULT["*"] INT[c2->chars] ^('^' ID INT[e2->chars]))
