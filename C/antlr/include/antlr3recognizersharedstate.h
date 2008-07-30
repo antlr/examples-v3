@@ -165,6 +165,18 @@ typedef	struct ANTLR3_RECOGNIZER_SHARED_STATE_struct
      */
     pANTLR3_STACK		streams;
 
+	/// A stack of token/tree rewrite streams that are available for use
+	/// by a parser or tree parser that is using rewrites to generate
+	/// an AST. This saves each rule in the recongizer from having to 
+	/// allocate and deallocate rewtire streams on entry and exit. As
+	/// the parser recurses throgh the rules it will reach a steady state
+	/// of the maximum number of allocated streams, which instead of
+	/// deallocating them at rule exit, it will place on this stack for
+	/// reuse. The streams are then all finally freed when this stack
+	/// is freed.
+	///
+	pANTLR3_VECTOR		rStreams;
+
 }
 	ANTLR3_RECOGNIZER_SHARED_STATE;
 

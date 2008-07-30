@@ -4,6 +4,7 @@
 #include    <antlr3defs.h>
 #include    <antlr3collections.h>
 #include    <antlr3commontreeadaptor.h>
+#include	<antlr3baserecognizer.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,6 +66,10 @@ typedef struct ANTLR3_REWRITE_RULE_ELEMENT_STREAM_struct
 	/// If dirty, then next() always returns a dup.
 	///
 	ANTLR3_BOOLEAN				dirty;
+
+	// Pointer to the recognizer shared state to which this stream belongs
+	//
+	pANTLR3_BASE_RECOGNIZER		rec;
 
     //   Methods 
 

@@ -366,8 +366,16 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 /// Default definition of ANTLR3_MALLOC. You can override this before including
 /// antlr3.h if you wish to use your own implementation.
 ///
-#define	ANTLR3_MALLOC(request)					calloc  (1, (size_t)(request))
+#define	ANTLR3_MALLOC(request)					malloc  ((size_t)(request))
 #endif
+
+#ifndef ANTLR3_CALLOC
+/// Default definition of ANTLR3_CALLOC. You can override this before including
+/// antlr3.h if you wish to use your own implementation.
+///
+#define	ANTLR3_CALLOC(numEl, elSize)			calloc  (numEl, (size_t)(elSize))
+#endif
+
 #ifndef ANTLR3_REALLOC
 /// Default definition of ANTLR3_REALLOC. You can override this before including
 /// antlr3.h if you wish to use your own implementation.
@@ -396,7 +404,7 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 /// Default definition of ANTLR3_MEMMOVE. You can override this before including
 /// antlr3.h if you wish to use your own implementation.
 ///
-#define	ANTLR3_MEMMOVE(target, source, size)	memmove((void *)(target), (const void *)(source), (size_t)(size))
+#define	ANTLR3_MEMMOVE(target, source, size)	memcpy((void *)(target), (const void *)(source), (size_t)(size))
 #endif
 #ifndef ANTLR3_MEMSET
 /// Default definition of ANTLR3_MEMSET. You can override this before including
@@ -501,25 +509,25 @@ ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM	antlr3UnbufTreeNodeStreamNew		(pANTLR
 ANTLR3_API pANTLR3_TREE_NODE_STREAM			antlr3TreeNodeStreamNew				();
 
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
-	    antlr3RewriteRuleTOKENStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
+	    antlr3RewriteRuleTOKENStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description);
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
-	    antlr3RewriteRuleTOKENStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, void * oneElement);
+	    antlr3RewriteRuleTOKENStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description, void * oneElement);
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
-	    antlr3RewriteRuleTOKENStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
+	    antlr3RewriteRuleTOKENStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
 
 ANTLR3_API pANTLR3_REWRITE_RULE_NODE_STREAM 
-	    antlr3RewriteRuleNODEStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
+	    antlr3RewriteRuleNODEStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description);
 ANTLR3_API pANTLR3_REWRITE_RULE_NODE_STREAM 
-	    antlr3RewriteRuleNODEStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, void * oneElement);
+	    antlr3RewriteRuleNODEStreamNewAEE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description, void * oneElement);
 ANTLR3_API pANTLR3_REWRITE_RULE_NODE_STREAM 
-	    antlr3RewriteRuleNODEStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
+	    antlr3RewriteRuleNODEStreamNewAEV	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
 
 ANTLR3_API pANTLR3_REWRITE_RULE_SUBTREE_STREAM 
-	    antlr3RewriteRuleSubtreeStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description);
+	    antlr3RewriteRuleSubtreeStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description);
 ANTLR3_API pANTLR3_REWRITE_RULE_SUBTREE_STREAM 
-	    antlr3RewriteRuleSubtreeStreamNewAEE(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, void * oneElement);
+	    antlr3RewriteRuleSubtreeStreamNewAEE(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description, void * oneElement);
 ANTLR3_API pANTLR3_REWRITE_RULE_SUBTREE_STREAM 
-	    antlr3RewriteRuleSubtreeStreamNewAEV(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
+	    antlr3RewriteRuleSubtreeStreamNewAEV(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description, pANTLR3_VECTOR vector);
 
 ANTLR3_API pANTLR3_DEBUG_EVENT_LISTENER		antlr3DebugListenerNew				();
 

@@ -70,6 +70,7 @@ typedef	struct ANTLR3_BASE_RECOGNIZER_struct
 	///
 	pANTLR3_DEBUG_EVENT_LISTENER	debugger;
 
+
     /// Pointer to a function that matches the current input symbol
     /// against the supplied type. the function causes an error if a
     /// match is not found and the default implementation will also

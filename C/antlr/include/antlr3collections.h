@@ -223,8 +223,9 @@ typedef struct ANTLR3_VECTOR_struct
     void			(*del)					(struct ANTLR3_VECTOR_struct * vector, ANTLR3_UINT32 entry);
     void *			(*get)					(struct ANTLR3_VECTOR_struct * vector, ANTLR3_UINT32 entry);
     void *			(*remove)				(struct ANTLR3_VECTOR_struct * vector, ANTLR3_UINT32 entry);
-    ANTLR3_UINT32    (*add)					(struct ANTLR3_VECTOR_struct * vector, void * element, void (ANTLR3_CDECL *freeptr)(void *));
-    ANTLR3_UINT32    (*set)					(struct ANTLR3_VECTOR_struct * vector, ANTLR3_UINT32 entry, void * element, void (ANTLR3_CDECL *freeptr)(void *), ANTLR3_BOOLEAN freeExisting);
+	void			(*clear)				(struct ANTLR3_VECTOR_struct * vector);
+    ANTLR3_UINT32   (*add)					(struct ANTLR3_VECTOR_struct * vector, void * element, void (ANTLR3_CDECL *freeptr)(void *));
+    ANTLR3_UINT32   (*set)					(struct ANTLR3_VECTOR_struct * vector, ANTLR3_UINT32 entry, void * element, void (ANTLR3_CDECL *freeptr)(void *), ANTLR3_BOOLEAN freeExisting);
     ANTLR3_UINT32   (*size)					(struct ANTLR3_VECTOR_struct * vector);
 }
     ANTLR3_VECTOR;
