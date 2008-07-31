@@ -240,7 +240,7 @@ main	(int argc, char *argv[])
 		{
 			printf("Differentiated tree: \n%s\n\n", polyDiffAST.tree->toStringTree(polyDiffAST.tree)->chars);
 
-			//nodes   ->free  (nodes);
+			nodes   ->free  (nodes);
 			nodes	= antlr3CommonTreeNodeStreamNewTree(polyDiffAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
 
 			// Simplify
@@ -257,7 +257,7 @@ main	(int argc, char *argv[])
 			{
 				printf("Simplified tree: \n%s\n\n", simplAST.tree->toStringTree(simplAST.tree)->chars);
 
-				//nodes   ->free  (nodes);
+				nodes   ->free  (nodes);
 				nodes	= antlr3CommonTreeNodeStreamNewTree(simplAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
 
 				// Print
@@ -270,7 +270,7 @@ main	(int argc, char *argv[])
  			treePrint	->free	(treePrint);
 			treeSimp	->free	(treeSimp);
 			treeDiff	->free	(treeDiff);
-			//nodes		->free  (nodes);
+			nodes		->free  (nodes);
 		}
 	}
 

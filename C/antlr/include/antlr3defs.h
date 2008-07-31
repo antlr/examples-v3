@@ -493,6 +493,7 @@ ANTLR3_API pANTLR3_COMMON_TREE				antlr3CommonTreeNewFromToken		(pANTLR3_COMMON_
 ANTLR3_API pANTLR3_ARBORETUM				antlr3ArboretumNew					(pANTLR3_STRING_FACTORY factory);
 ANTLR3_API void								antlr3SetCTAPI						(pANTLR3_COMMON_TREE tree);
 ANTLR3_API pANTLR3_BASE_TREE				antlr3BaseTreeNew					(pANTLR3_BASE_TREE tree);
+ANTLR3_API void								antlr3FreeCTree						(void * tree);
 
 ANTLR3_API void								antlr3BaseTreeAdaptorInit			(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_DEBUG_EVENT_LISTENER debugger);
 
