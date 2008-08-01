@@ -254,7 +254,7 @@ main	(int argc, char *argv[])
 				fprintf(stderr, "The simplifier returned %d errors, tree walking aborted.\n", treeSimp->pTreeParser->rec->state->errorCount);
 				exit(5);
 			}
-			else
+			else 
 			{
 				printf("Simplified tree: \n%s\n\n", simplAST.tree->toStringTree(simplAST.tree)->chars);
 
@@ -270,6 +270,8 @@ main	(int argc, char *argv[])
  			treePrint	->free	(treePrint);
 			treeSimp	->free	(treeSimp);
 			treeDiff	->free	(treeDiff);
+			simpNodes	->free	(simpNodes);
+			diffNodes	->free	(diffNodes);
 			nodes		->free  (nodes);
 		}
 	}
