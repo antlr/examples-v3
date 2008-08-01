@@ -20,35 +20,30 @@ typedef struct ANTLR3_COMMON_TREE_struct
     /// this structure, it can be used to point to the start of the super
     /// structure, where additional data and function pointers can be stored.
     ///
-    void	* super;
+    void					* super;
 
     /// Start token index that encases this tree
     ///
-    ANTLR3_MARKER   startIndex;
+    ANTLR3_MARKER			  startIndex;
 
     /// End token that encases this tree
     ///
-    ANTLR3_MARKER   stopIndex;
+    ANTLR3_MARKER			  stopIndex;
 
     /// A single token, this is the payload for the tree
     ///
-    pANTLR3_COMMON_TOKEN    token;
+    pANTLR3_COMMON_TOKEN      token;
 
 	/// Points to the node that has this node as a child.
 	/// If this is NULL, then this is the root node.
 	///
-	pANTLR3_COMMON_TREE		parent;
+	pANTLR3_COMMON_TREE		  parent;
 
 	/// What index is this particular node in the child list it
 	/// belongs to?
 	///
-	ANTLR3_INT32			childIndex;
-
-    /// Indicates whether this token was created by the Arboretum or
-    ///  is a stand alone structure that we must free.
-    ///
-    ANTLR3_BOOLEAN			factoryMade;
-
+	ANTLR3_INT32			  childIndex;
+	
 	/// Pointer to the tree factory that manufactured this
 	/// token. This can be used by duplication methods and so on
 	/// to manufacture another auto-tracked common tree structure
@@ -79,7 +74,6 @@ typedef struct ANTLR3_COMMON_TREE_struct
     /// 
     ANTLR3_BASE_TREE	    baseTree;
      
- 
 }
     ANTLR3_COMMON_TREE;
 
@@ -94,17 +88,28 @@ typedef	struct ANTLR3_ARBORETUM_struct
 
     /// Current pool tokens we are allocating from
     ///
-    ANTLR3_INT32	    thisPool;
+    ANTLR3_INT32			thisPool;
 
     /// The next token to throw out from the pool, will cause a new pool allocation
     ///  if this exceeds the available tokenCount
     ///
-    ANTLR3_UINT32	    nextTree;
+    ANTLR3_UINT32			nextTree;
 
     /// Trick to initialize tokens and their API quickly, we set up this token when the
-    ///  factory is created, then just copy the memory it uses into the new token.
+    /// factory is created, then just copy the memory it uses into the new token.
     ///
     ANTLR3_COMMON_TREE	    unTruc;
+
+	/// Pointer to a vector factory that is used to create child list vectors
+	/// for any child nodes that need them. This means that we auto track the
+	/// vectors and auto free them when we close the factory. It also means
+	/// that all rewriting trees can use the same tree factory and the same
+	/// vector factory and we do not dup any nodes unless we must do so 
+	/// explicitly because of context such as an empty rewrite stream and
+	/// ->IMAGINARY[ID] so on. This makes memory tracking much simpler and 
+	/// tempts no errors.
+	///
+	pANTLR3_VECTOR_FACTORY   vFactory;
 
     /// Pointer to a function that returns a new tree
     ///

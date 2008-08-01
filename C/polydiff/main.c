@@ -109,6 +109,8 @@ main	(int argc, char *argv[])
     // eventually the wiki entry for the C target.
     //
     pANTLR3_COMMON_TREE_NODE_STREAM	nodes;
+    pANTLR3_COMMON_TREE_NODE_STREAM	diffNodes;
+    pANTLR3_COMMON_TREE_NODE_STREAM	simpNodes;
 
     // Finally, when the parser runs, it will produce an AST that can be traversed by the 
     // the tree parser
@@ -240,12 +242,11 @@ main	(int argc, char *argv[])
 		{
 			printf("Differentiated tree: \n%s\n\n", polyDiffAST.tree->toStringTree(polyDiffAST.tree)->chars);
 
-			nodes   ->free  (nodes);
-			nodes	= antlr3CommonTreeNodeStreamNewTree(polyDiffAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
+			diffNodes	= antlr3CommonTreeNodeStreamNewStream(nodes);
 
 			// Simplify
 			//
-			treeSimp = SimplifierNew(nodes);
+			treeSimp = SimplifierNew(diffNodes);
 			simplAST = treeSimp->poly(treeSimp);
 
 			if (treeSimp->pTreeParser->rec->state->errorCount > 0)
@@ -257,12 +258,11 @@ main	(int argc, char *argv[])
 			{
 				printf("Simplified tree: \n%s\n\n", simplAST.tree->toStringTree(simplAST.tree)->chars);
 
-				nodes   ->free  (nodes);
-				nodes	= antlr3CommonTreeNodeStreamNewTree(simplAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
+				simpNodes	= antlr3CommonTreeNodeStreamNewStream(diffNodes);
 
 				// Print
 				//
-				treePrint = PolyPrinterNew(nodes);
+				treePrint = PolyPrinterNew(simpNodes);
 				treePrint	->poly	(treePrint);
 			}
 			// It only remains to close down our open objects.

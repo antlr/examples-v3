@@ -271,6 +271,14 @@ typedef	struct ANTLR3_COMMON_TREE_NODE_STREAM_struct
 
     void				(*free)						(struct ANTLR3_COMMON_TREE_NODE_STREAM_struct * ctns);
 
+	/// Indicates whether this node stream was derived from a prior
+	/// node stream to be used by a rewriting tree parser for instance.
+	/// If this flag is set to ANTLR3_TRUE, then when this stream is
+	/// closed it will not free the root tree as this tree always
+	/// belongs to the origniating node stream.
+	///
+	ANTLR3_BOOLEAN				isRewriter;
+
 }
     ANTLR3_COMMON_TREE_NODE_STREAM;
 
