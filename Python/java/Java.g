@@ -241,7 +241,7 @@ variableDeclarator
 variableDeclaratorRest
 	:	('[' ']')+ ('=' variableInitializer)?
 	|	'=' variableInitializer
-	|   {pass}
+	|
 	;
 	
 constantDeclaratorsRest
