@@ -408,7 +408,7 @@ dictmaker : test COLON test (options {k=2;}:COMMA test COLON test)* (COMMA)?
           ;
 
 classdef: 'class' NAME (LPAREN testlist? RPAREN)? COLON suite
-        {print "found class def "+$NAME.text;}
+        {print "found class def "+$NAME.text}
         ;
 
 arglist : argument (COMMA argument)*
@@ -447,13 +447,13 @@ gen_if: 'if' test gen_iter?
 yield_expr : 'yield' testlist?
            ;
 
-LPAREN    : '(' {self.implicitLineJoiningLevel += 1;} ;
+LPAREN    : '(' {self.implicitLineJoiningLevel += 1} ;
 
-RPAREN    : ')' {self.implicitLineJoiningLevel -= 1;} ;
+RPAREN    : ')' {self.implicitLineJoiningLevel -= 1} ;
 
-LBRACK    : '[' {self.implicitLineJoiningLevel += 1;} ;
+LBRACK    : '[' {self.implicitLineJoiningLevel += 1} ;
 
-RBRACK    : ']' {self.implicitLineJoiningLevel -= 1;} ;
+RBRACK    : ']' {self.implicitLineJoiningLevel -= 1} ;
 
 COLON     : ':' ;
 
@@ -483,9 +483,9 @@ PERCENT    : '%' ;
 
 BACKQUOTE    : '`' ;
 
-LCURLY    : '{' {self.implicitLineJoiningLevel += 1;} ;
+LCURLY    : '{' {self.implicitLineJoiningLevel += 1} ;
 
-RCURLY    : '}' {self.implicitLineJoiningLevel -= 1;} ;
+RCURLY    : '}' {self.implicitLineJoiningLevel -= 1} ;
 
 CIRCUMFLEX    : '^' ;
 
@@ -611,8 +611,8 @@ ESC
  *  emit a newline.
  */
 CONTINUED_LINE
-    :    '\\' ('\r')? '\n' (' '|'\t')*  { $channel=HIDDEN; }
-         ( nl=NEWLINE {self.emit(ClassicToken(type=NEWLINE,text=nl.getText()))}
+    :    '\\' ('\r')? '\n' (' '|'\t')*  { $channel=HIDDEN }
+         ( nl=NEWLINE {self.emit(ClassicToken(type=NEWLINE, text=nl.getText()))}
          |
          )
     ;
@@ -626,11 +626,11 @@ CONTINUED_LINE
 NEWLINE
     :   (('\u000C')?('\r')? '\n' )+
         {if self.startPos==0 or self.implicitLineJoiningLevel>0:
-            $channel=HIDDEN;
+             $channel=HIDDEN
         }
     ;
 
-WS	:	{self.startPos>0}?=> (' '|'\t')+ {$channel=HIDDEN;}
+WS	:	{self.startPos>0}?=> (' '|'\t')+ {$channel=HIDDEN}
     ;
     
 /** Grab everything before a real symbol.  Then if newline, kill it
@@ -644,7 +644,7 @@ LEADING_WS
     spaces = 0
 }
     :   {self.startPos==0}?=>
-    	(   {self.implicitLineJoiningLevel>0}? ( ' ' | '\t' )+ {$channel=HIDDEN;}
+    	(   {self.implicitLineJoiningLevel>0}? ( ' ' | '\t' )+ {$channel=HIDDEN}
        	|	( 	' '  { spaces += 1 }
         	|	'\t' { 
                        spaces += 8
@@ -687,7 +687,7 @@ LEADING_WS
  */
 COMMENT
 @init {
-    $channel=HIDDEN;
+    $channel=HIDDEN
 }
     :	{self.startPos==0}?=> (' '|'\t')* '#' (~'\n')* '\n'+
     |	{self.startPos>0}?=> '#' (~'\n')* // let NEWLINE handle \n unless char pos==0 for '#'
