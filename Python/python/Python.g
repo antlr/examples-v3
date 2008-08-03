@@ -26,12 +26,14 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/** Python 2.3.3 Grammar
+/** Python 2.5 Grammar
  *
  *  Terence Parr and Loring Craymer
  *  February 2004
  *
  *  Converted to ANTLR v3 November 2005 by Terence Parr.
+ *
+ *  Updated to Python 2.5 by Aaron Maxwell, 22 July 2008
  *
  *  This grammar was derived automatically from the Python 2.3.3
  *  parser grammar to get a syntactically correct ANTLR grammar
@@ -52,14 +54,15 @@
  *
  *  I (Terence) tested this by running it on the jython-2.1/Lib
  *  directory of 40k lines of Python.
- *
- *  REQUIRES ANTLR v3
+ *  
  */
+
 grammar Python;
 
 options {
     language=Python;
 }
+
 
 tokens {
     INDENT;
@@ -73,412 +76,476 @@ tokens {
     #       4]
     self.implicitLineJoiningLevel = 0
     self.startPos = -1
-}
+        }
 
-single_input
-    : NEWLINE
-	| simple_stmt
-	| compound_stmt NEWLINE
-	;
+single_input : NEWLINE
+             | simple_stmt
+             | compound_stmt NEWLINE
+             ;
 
-file_input
-    :   (NEWLINE | stmt)*
-	;
+file_input : (NEWLINE | stmt)*
+           ;
 
-eval_input
-    :   (NEWLINE)* testlist (NEWLINE)*
-	;
+eval_input : (NEWLINE)* testlist (NEWLINE)*
+           ;
 
-funcdef
-    :   'def' NAME parameters COLON suite
-	{print "found method def "+$NAME.text}
-	;
+decorators: decorator+
+          ;
 
-parameters
-    :   LPAREN (varargslist)? RPAREN
-	;
-
-varargslist
-    :   defparameter (options {greedy=true;}:COMMA defparameter)*
-        (COMMA
-            ( STAR NAME (COMMA DOUBLESTAR NAME)?
-            | DOUBLESTAR NAME
-            )?
-        )?
-    |   STAR NAME (COMMA DOUBLESTAR NAME)?
-    |   DOUBLESTAR NAME
-    ;
-
-defparameter
-    :   fpdef (ASSIGN test)?
-    ;
-
-fpdef
-    :   NAME
-	|   LPAREN fplist RPAREN
-	;
-
-fplist
-    :   fpdef (options {greedy=true;}:COMMA fpdef)* (COMMA)?
-	;
-
-
-stmt: simple_stmt
-	| compound_stmt
-	;
-
-simple_stmt
-    :   small_stmt (options {greedy=true;}:SEMI small_stmt)* (SEMI)? NEWLINE
-	;
-
-small_stmt: expr_stmt
-	| print_stmt
-	| del_stmt
-	| pass_stmt
-	| flow_stmt
-	| import_stmt
-	| global_stmt
-	| exec_stmt
-	| assert_stmt
-	;
-
-expr_stmt
-	:	testlist
-		(	augassign testlist
-		|	(ASSIGN testlist)+
-		)?
-	;
-
-augassign
-    : PLUSEQUAL
-	| MINUSEQUAL
-	| STAREQUAL
-	| SLASHEQUAL
-	| PERCENTEQUAL
-	| AMPEREQUAL
-	| VBAREQUAL
-	| CIRCUMFLEXEQUAL
-	| LEFTSHIFTEQUAL
-	| RIGHTSHIFTEQUAL
-	| DOUBLESTAREQUAL
-	| DOUBLESLASHEQUAL
-	;
-
-print_stmt:
-        'print'
-        (   testlist
-        |   RIGHTSHIFT testlist
-        )?
-	;
-
-del_stmt: 'del' exprlist
-	;
-
-pass_stmt: 'pass'
-	;
-
-flow_stmt: break_stmt
-	| continue_stmt
-	| return_stmt
-	| raise_stmt
-	| yield_stmt
-	;
-
-break_stmt: 'break'
-	;
-
-continue_stmt: 'continue'
-	;
-
-return_stmt: 'return' (testlist)?
-	;
-
-yield_stmt: 'yield' testlist
-	;
-
-raise_stmt: 'raise' (test (COMMA test (COMMA test)?)?)?
-	;
-
-import_stmt
-    :   'import' dotted_as_name (COMMA dotted_as_name)*
-	|   'from' dotted_name 'import'
-        (STAR | import_as_name (COMMA import_as_name)*)
-	;
-
-import_as_name
-    :   NAME (NAME NAME)?
-	;
-
-dotted_as_name: dotted_name (NAME NAME)?
-	;
-
-dotted_name: NAME (DOT NAME)*
-	;
-
-global_stmt: 'global' NAME (COMMA NAME)*
-	;
-
-exec_stmt: 'exec' expr ('in' test (COMMA test)?)?
-	;
-
-assert_stmt: 'assert' test (COMMA test)?
-	;
-
-
-compound_stmt: if_stmt
-	| while_stmt
-	| for_stmt
-	| try_stmt
-	| funcdef
-	| classdef
-	;
-
-if_stmt: 'if' test COLON suite ('elif' test COLON suite)* ('else' COLON suite)?
-	;
-
-while_stmt: 'while' test COLON suite ('else' COLON suite)?
-	;
-
-for_stmt: 'for' exprlist 'in' testlist COLON suite ('else' COLON suite)?
-	;
-
-try_stmt
-    :   'try' COLON suite
-        (   (except_clause COLON suite)+ ('else' COLON suite)?
-        |   'finally' COLON suite
-        )
-	;
-
-except_clause: 'except' (test (COMMA test)?)?
-	;
-
-suite: simple_stmt
-	| NEWLINE INDENT (stmt)+ DEDENT
-	;
-
-
-test: and_test ('or' and_test)*
-	| lambdef
-	;
-
-and_test
-	: not_test ('and' not_test)*
-	;
-
-not_test
-	: 'not' not_test
-	| comparison
-	;
-
-comparison: expr (comp_op expr)*
-	;
-
-comp_op: LESS
-	|GREATER
-	|EQUAL
-	|GREATEREQUAL
-	|LESSEQUAL
-	|ALT_NOTEQUAL
-	|NOTEQUAL
-	|'in'
-	|'not' 'in'
-	|'is'
-	|'is' 'not'
-	;
-
-expr: xor_expr (VBAR xor_expr)*
-	;
-
-xor_expr: and_expr (CIRCUMFLEX and_expr)*
-	;
-
-and_expr: shift_expr (AMPER shift_expr)*
-	;
-
-shift_expr: arith_expr ((LEFTSHIFT|RIGHTSHIFT) arith_expr)*
-	;
-
-arith_expr: term ((PLUS|MINUS) term)*
-	;
-
-term: factor ((STAR | SLASH | PERCENT | DOUBLESLASH ) factor)*
-	;
-
-factor
-	: (PLUS|MINUS|TILDE) factor
-	| power
-	;
-
-power
-	:   atom (trailer)* (options {greedy=true;}:DOUBLESTAR factor)?
-	;
-
-atom: LPAREN (testlist)? RPAREN
-	| LBRACK (listmaker)? RBRACK
-	| LCURLY (dictmaker)? RCURLY
-	| BACKQUOTE testlist BACKQUOTE
-	| NAME
-	| INT
-    | LONGINT
-    | FLOAT
-    | COMPLEX
-	| (STRING)+
-	;
-
-listmaker: test ( list_for | (options {greedy=true;}:COMMA test)* ) (COMMA)?
-	;
-
-lambdef: 'lambda' (varargslist)? COLON test
-	;
-
-trailer: LPAREN (arglist)? RPAREN
-	| LBRACK subscriptlist RBRACK
-	| DOT NAME
-	;
-
-subscriptlist
-    :   subscript (options {greedy=true;}:COMMA subscript)* (COMMA)?
-	;
-
-subscript
-	: DOT DOT DOT
-    | test (COLON (test)? (sliceop)?)?
-    | COLON (test)? (sliceop)?
-    ;
-
-sliceop: COLON (test)?
-	;
-
-exprlist
-    :   expr (options {k=2;}:COMMA expr)* (COMMA)?
-	;
-
-testlist
-    :   test (options {k=2;}: COMMA test)* (COMMA)?
-    ;
-
-dictmaker
-    :   test COLON test
-        (options {k=2;}:COMMA test COLON test)* (COMMA)?
-    ;
-
-classdef: 'class' NAME (LPAREN testlist RPAREN)? COLON suite
-	{print "found class def "+$NAME.text;}
-	;
-
-arglist: argument (COMMA argument)*
-        ( COMMA
-          ( STAR test (COMMA DOUBLESTAR test)?
-          | DOUBLESTAR test
-          )?
-        )?
-    |   STAR test (COMMA DOUBLESTAR test)?
-    |   DOUBLESTAR test
-    ;
-
-argument : test (ASSIGN test)?
+decorator: AT dotted_attr (LPAREN arglist? RPAREN)? NEWLINE
          ;
 
-list_iter: list_for
-	| list_if
-	;
+dotted_attr
+    : NAME (DOT NAME)*
+    ;
 
-list_for: 'for' exprlist 'in' testlist (list_iter)?
-	;
+funcdef : decorators? 'def' NAME parameters COLON suite
+        {print "found method def "+$NAME.text}
+        ;
 
-list_if: 'if' test (list_iter)?
-	;
+parameters : LPAREN (varargslist)? RPAREN
+           ;
 
-LPAREN	: '(' {self.implicitLineJoiningLevel += 1} ;
+varargslist : defparameter (options {greedy=true;}:COMMA defparameter)*
+              (COMMA
+                  ( STAR NAME (COMMA DOUBLESTAR NAME)?
+                  | DOUBLESTAR NAME
+                  )?
+              )?
+            | STAR NAME (COMMA DOUBLESTAR NAME)?
+            | DOUBLESTAR NAME
+            ;
 
-RPAREN	: ')' {self.implicitLineJoiningLevel -= 1} ;
+defparameter : fpdef (ASSIGN test)?
+             ;
 
-LBRACK	: '[' {self.implicitLineJoiningLevel += 1} ;
+fpdef : NAME
+      | LPAREN fplist RPAREN
+      ;
 
-RBRACK	: ']' {self.implicitLineJoiningLevel -= 1} ;
+fplist : fpdef (options {greedy=true;}:COMMA fpdef)* (COMMA)?
+       ;
 
-COLON 	: ':' ;
+stmt : simple_stmt
+     | compound_stmt
+     ;
 
-COMMA	: ',' ;
+simple_stmt : small_stmt (options {greedy=true;}:SEMI small_stmt)* (SEMI)? NEWLINE
+            ;
 
-SEMI	: ';' ;
+small_stmt : expr_stmt
+           | print_stmt
+           | del_stmt
+           | pass_stmt
+           | flow_stmt
+           | import_stmt
+           | global_stmt
+           | exec_stmt
+           | assert_stmt
+           ;
 
-PLUS	: '+' ;
+expr_stmt : testlist
+            ( augassign yield_expr
+            | augassign testlist
+            | assigns
+            )?
+          ;
 
-MINUS	: '-' ;
+assigns
+    : assign_testlist+
+    | assign_yield+
+    ;
 
-STAR	: '*' ;
+assign_testlist
+       : ASSIGN testlist
+       ;
 
-SLASH	: '/' ;
+assign_yield
+    : ASSIGN yield_expr
+    ;
 
-VBAR	: '|' ;
+augassign : PLUSEQUAL
+          | MINUSEQUAL
+          | STAREQUAL
+          | SLASHEQUAL
+          | PERCENTEQUAL
+          | AMPEREQUAL
+          | VBAREQUAL
+          | CIRCUMFLEXEQUAL
+          | LEFTSHIFTEQUAL
+          | RIGHTSHIFTEQUAL
+          | DOUBLESTAREQUAL
+          | DOUBLESLASHEQUAL
+          ;
 
-AMPER	: '&' ;
+print_stmt : 'print' (printlist | RIGHTSHIFT printlist)?
+           ;
 
-LESS	: '<' ;
+printlist returns [newline]
+    : test (options {k=2;}: COMMA test)* (COMMA)?
+    ;
 
-GREATER	: '>' ;
 
-ASSIGN	: '=' ;
+del_stmt : 'del' exprlist
+         ;
 
-PERCENT	: '%' ;
+pass_stmt : 'pass'
+          ;
 
-BACKQUOTE	: '`' ;
+flow_stmt : break_stmt
+          | continue_stmt
+          | return_stmt
+          | raise_stmt
+          | yield_stmt
+          ;
 
-LCURLY	: '{' {self.implicitLineJoiningLevel += 1} ;
+break_stmt : 'break'
+           ;
 
-RCURLY	: '}' {self.implicitLineJoiningLevel -= 1} ;
+continue_stmt : 'continue'
+              ;
 
-CIRCUMFLEX	: '^' ;
+return_stmt : 'return' (testlist)?
+            ;
 
-TILDE	: '~' ;
+yield_stmt : yield_expr
+           ;
 
-EQUAL	: '==' ;
+raise_stmt: 'raise' (test (COMMA test (COMMA test)?)?)?
+          ;
 
-NOTEQUAL	: '!=' ;
+import_stmt : import_name
+            | import_from
+            ;
+
+import_name : 'import' dotted_as_names
+            ;
+
+import_from: 'from' (DOT* dotted_name | DOT+) 'import'
+              (STAR
+              | import_as_names
+              | LPAREN import_as_names RPAREN
+              )
+           ;
+
+import_as_names : import_as_name (COMMA import_as_name)* (COMMA)?
+                ;
+
+import_as_name : NAME ('as' NAME)?
+               ;
+
+dotted_as_name : dotted_name ('as' NAME)?
+               ;
+
+dotted_as_names : dotted_as_name (COMMA dotted_as_name)*
+                ;
+dotted_name : NAME (DOT NAME)*
+            ;
+
+global_stmt : 'global' NAME (COMMA NAME)*
+            ;
+
+exec_stmt : 'exec' expr ('in' test (COMMA test)?)?
+          ;
+
+assert_stmt : 'assert' test (COMMA test)?
+            ;
+
+compound_stmt : if_stmt
+              | while_stmt
+              | for_stmt
+              | try_stmt
+              | with_stmt
+              | funcdef
+              | classdef
+              ;
+
+if_stmt: 'if' test COLON suite elif_clause*  ('else' COLON suite)?
+       ;
+
+elif_clause : 'elif' test COLON suite
+            ;
+
+while_stmt : 'while' test COLON suite ('else' COLON suite)?
+           ;
+
+for_stmt : 'for' exprlist 'in' testlist COLON suite ('else' COLON suite)?
+         ;
+
+try_stmt : 'try' COLON suite
+           ( except_clause+ ('else' COLON suite)? ('finally' COLON suite)?
+           | 'finally' COLON suite
+           )
+         ;
+
+with_stmt: 'with' test (with_var)? COLON suite
+         ;
+
+with_var: ('as' | NAME) expr
+        ;
+
+except_clause : 'except' (test (COMMA test)?)? COLON suite
+              ;
+
+suite : simple_stmt
+      | NEWLINE INDENT (stmt)+ DEDENT
+      ;
+
+test: or_test
+    ( ('if' or_test 'else') => 'if' or_test 'else' test)?
+    | lambdef
+    ;
+
+or_test : and_test (OR and_test)*
+        ;
+
+and_test : not_test (AND not_test)*
+         ;
+
+not_test : NOT not_test
+         | comparison
+         ;
+
+comparison: expr (comp_op expr)*
+          ;
+
+comp_op : LESS
+        | GREATER
+        | EQUAL
+        | GREATEREQUAL
+        | LESSEQUAL
+        | ALT_NOTEQUAL
+        | NOTEQUAL
+        | 'in'
+        | NOT 'in'
+        | 'is'
+        | 'is' NOT
+        ;
+
+expr : xor_expr (VBAR xor_expr)*
+     ;
+
+xor_expr : and_expr (CIRCUMFLEX and_expr)*
+         ;
+
+and_expr : shift_expr (AMPER shift_expr)*
+         ;
+
+shift_expr : arith_expr ((LEFTSHIFT|RIGHTSHIFT) arith_expr)*
+           ;
+
+arith_expr: term ((PLUS|MINUS) term)*
+          ;
+
+term : factor ((STAR | SLASH | PERCENT | DOUBLESLASH ) factor)*
+     ;
+
+factor : PLUS factor
+       | MINUS factor
+       | TILDE factor
+       | power
+       ;
+
+power : atom (trailer)* (options {greedy=true;}:DOUBLESTAR factor)?
+      ;
+
+atom : LPAREN 
+       ( yield_expr
+       | testlist_gexp
+       )?
+       RPAREN
+     | LBRACK (listmaker)? RBRACK
+     | LCURLY (dictmaker)? RCURLY
+     | BACKQUOTE testlist BACKQUOTE
+     | NAME
+     | INT
+     | LONGINT
+     | FLOAT
+     | COMPLEX
+     | (STRING)+
+     ;
+
+listmaker : test 
+            ( list_for
+            | (options {greedy=true;}:COMMA test)*
+            ) (COMMA)?
+          ;
+
+testlist_gexp
+    : test ( (options {k=2;}: COMMA test)* (COMMA)?
+           | gen_for
+           )
+           
+    ;
+
+lambdef: 'lambda' (varargslist)? COLON test
+       ;
+
+trailer : LPAREN (arglist)? RPAREN
+        | LBRACK subscriptlist RBRACK
+        | DOT NAME
+        ;
+
+subscriptlist : subscript (options {greedy=true;}:COMMA subscript)* (COMMA)?
+              ;
+
+subscript : DOT DOT DOT
+          | test (COLON (test)? (sliceop)?)?
+          | COLON (test)? (sliceop)?
+          ;
+
+sliceop : COLON (test)?
+        ;
+
+exprlist : expr (options {k=2;}: COMMA expr)* (COMMA)?
+         ;
+
+testlist
+    : test (options {k=2;}: COMMA test)* (COMMA)?
+    ;
+
+dictmaker : test COLON test (options {k=2;}:COMMA test COLON test)* (COMMA)?
+          ;
+
+classdef: 'class' NAME (LPAREN testlist? RPAREN)? COLON suite
+        {print "found class def "+$NAME.text;}
+        ;
+
+arglist : argument (COMMA argument)*
+          ( COMMA
+            ( STAR test (COMMA DOUBLESTAR test)?
+            | DOUBLESTAR test
+            )?
+          )?
+        |   STAR test (COMMA DOUBLESTAR test)?
+        |   DOUBLESTAR test
+        ;
+
+argument : test ( (ASSIGN test) | gen_for)?
+         ;
+
+list_iter : list_for
+          | list_if
+          ;
+
+list_for : 'for' exprlist 'in' testlist (list_iter)?
+         ;
+
+list_if : 'if' test (list_iter)?
+        ;
+
+gen_iter: gen_for
+        | gen_if
+        ;
+
+gen_for: 'for' exprlist 'in' or_test gen_iter?
+       ;
+
+gen_if: 'if' test gen_iter?
+      ;
+
+yield_expr : 'yield' testlist?
+           ;
+
+LPAREN    : '(' {self.implicitLineJoiningLevel += 1;} ;
+
+RPAREN    : ')' {self.implicitLineJoiningLevel -= 1;} ;
+
+LBRACK    : '[' {self.implicitLineJoiningLevel += 1;} ;
+
+RBRACK    : ']' {self.implicitLineJoiningLevel -= 1;} ;
+
+COLON     : ':' ;
+
+COMMA    : ',' ;
+
+SEMI    : ';' ;
+
+PLUS    : '+' ;
+
+MINUS    : '-' ;
+
+STAR    : '*' ;
+
+SLASH    : '/' ;
+
+VBAR    : '|' ;
+
+AMPER    : '&' ;
+
+LESS    : '<' ;
+
+GREATER    : '>' ;
+
+ASSIGN    : '=' ;
+
+PERCENT    : '%' ;
+
+BACKQUOTE    : '`' ;
+
+LCURLY    : '{' {self.implicitLineJoiningLevel += 1;} ;
+
+RCURLY    : '}' {self.implicitLineJoiningLevel -= 1;} ;
+
+CIRCUMFLEX    : '^' ;
+
+TILDE    : '~' ;
+
+EQUAL    : '==' ;
+
+NOTEQUAL    : '!=' ;
 
 ALT_NOTEQUAL: '<>' ;
 
-LESSEQUAL	: '<=' ;
+LESSEQUAL    : '<=' ;
 
-LEFTSHIFT	: '<<' ;
+LEFTSHIFT    : '<<' ;
 
-GREATEREQUAL	: '>=' ;
+GREATEREQUAL    : '>=' ;
 
-RIGHTSHIFT	: '>>' ;
+RIGHTSHIFT    : '>>' ;
 
-PLUSEQUAL	: '+=' ;
+PLUSEQUAL    : '+=' ;
 
-MINUSEQUAL	: '-=' ;
+MINUSEQUAL    : '-=' ;
 
-DOUBLESTAR	: '**' ;
+DOUBLESTAR    : '**' ;
 
-STAREQUAL	: '*=' ;
+STAREQUAL    : '*=' ;
 
-DOUBLESLASH	: '//' ;
+DOUBLESLASH    : '//' ;
 
-SLASHEQUAL	: '/=' ;
+SLASHEQUAL    : '/=' ;
 
-VBAREQUAL	: '|=' ;
+VBAREQUAL    : '|=' ;
 
-PERCENTEQUAL	: '%=' ;
+PERCENTEQUAL    : '%=' ;
 
-AMPEREQUAL	: '&=' ;
+AMPEREQUAL    : '&=' ;
 
-CIRCUMFLEXEQUAL	: '^=' ;
+CIRCUMFLEXEQUAL    : '^=' ;
 
-LEFTSHIFTEQUAL	: '<<=' ;
+LEFTSHIFTEQUAL    : '<<=' ;
 
-RIGHTSHIFTEQUAL	: '>>=' ;
+RIGHTSHIFTEQUAL    : '>>=' ;
 
-DOUBLESTAREQUAL	: '**=' ;
+DOUBLESTAREQUAL    : '**=' ;
 
-DOUBLESLASHEQUAL	: '//=' ;
+DOUBLESLASHEQUAL    : '//=' ;
 
 DOT : '.' ;
 
+AT : '@' ;
+
+AND : 'and' ;
+
+OR : 'or' ;
+
+NOT : 'not' ;
+
 FLOAT
-	:	'.' DIGITS (Exponent)?
+    :   '.' DIGITS (Exponent)?
+    |   DIGITS '.' Exponent
     |   DIGITS ('.' (DIGITS (Exponent)?)? | Exponent)
     ;
 
@@ -488,12 +555,11 @@ LONGINT
 
 fragment
 Exponent
-	:	('e' | 'E') ( '+' | '-' )? DIGITS
-	;
+    :    ('e' | 'E') ( '+' | '-' )? DIGITS
+    ;
 
 INT :   // Hex
         '0' ('x' | 'X') ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+
-        ('l' | 'L')?
     |   // Octal
         '0' DIGITS*
     |   '1'..'9' DIGITS*
@@ -507,7 +573,7 @@ COMPLEX
 fragment
 DIGITS : ( '0' .. '9' )+ ;
 
-NAME:	( 'a' .. 'z' | 'A' .. 'Z' | '_')
+NAME:    ( 'a' .. 'z' | 'A' .. 'Z' | '_')
         ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
     ;
 
@@ -516,37 +582,57 @@ NAME:	( 'a' .. 'z' | 'A' .. 'Z' | '_')
  */
 STRING
     :   ('r'|'u'|'ur')?
-        (   '\'\'\'' (options {greedy=false;}:.)* '\'\'\''
-        |   '"""' (options {greedy=false;}:.)* '"""'
+        (   '\'\'\'' (options {greedy=false;}:TRIAPOS)* '\'\'\''
+        |   '"""' (options {greedy=false;}:TRIQUOTE)* '"""'
         |   '"' (ESC|~('\\'|'\n'|'"'))* '"'
         |   '\'' (ESC|~('\\'|'\n'|'\''))* '\''
         )
-	;
+    ;
+
+/** the two '"'? cause a warning -- is there a way to avoid that? */
+fragment
+TRIQUOTE
+    : '"'? '"'? (ESC|~('\\'|'"'))+
+    ;
+
+/** the two '\''? cause a warning -- is there a way to avoid that? */
+fragment
+TRIAPOS
+    : '\''? '\''? (ESC|~('\\'|'\''))+
+    ;
 
 fragment
 ESC
-	:	'\\' .
-	;
+    :    '\\' .
+    ;
 
-/** Consume a newline and any whitespace at start of next line */
+/** Consume a newline and any whitespace at start of next line
+ *  unless the next line contains only white space, in that case
+ *  emit a newline.
+ */
 CONTINUED_LINE
-	:	'\\' ('\r')? '\n' (' '|'\t')* { $channel=HIDDEN; }
-	;
+    :    '\\' ('\r')? '\n' (' '|'\t')*  { $channel=HIDDEN; }
+         ( nl=NEWLINE {self.emit(ClassicToken(type=NEWLINE,text=nl.getText()))}
+         |
+         )
+    ;
 
 /** Treat a sequence of blank lines as a single blank line.  If
  *  nested within a (..), {..}, or [..], then ignore newlines.
  *  If the first newline starts in column one, they are to be ignored.
+ *
+ *  Frank Wierzbicki added: Also ignore FORMFEEDS (\u000C).
  */
 NEWLINE
-    :   (('\r')? '\n' )+
+    :   (('\u000C')?('\r')? '\n' )+
         {if self.startPos==0 or self.implicitLineJoiningLevel>0:
             $channel=HIDDEN;
         }
     ;
 
 WS	:	{self.startPos>0}?=> (' '|'\t')+ {$channel=HIDDEN;}
-	;
-	
+    ;
+    
 /** Grab everything before a real symbol.  Then if newline, kill it
  *  as this is a blank line.  If whitespace followed by comment, kill it
  *  as it's a comment on a line by itself.
@@ -564,12 +650,12 @@ LEADING_WS
                        spaces += 8
                        spaces -= (spaces \% 8)
                      }
-       		)+
-        	{
+               )+
+            {
             # make a string of n spaces where n is column number - 1
             self.emit(ClassicToken(type=LEADING_WS, text=' '*spaces))
-        	}
-        	// kill trailing newline if present and then ignore
+            }
+            // kill trailing newline if present and then ignore
         	( ('\r')? '\n' 
                 {
                     if self._state.token is not None:
@@ -580,15 +666,6 @@ LEADING_WS
             )*
            // {token.setChannel(99); }
         )
-
-/*
-        |   // if comment, then only thing on a line; kill so we
-            // ignore totally also wack any following newlines as
-            // they cannot be terminating a statement
-            '#' (~'\n')* ('\n')+ 
-            {if (token!=null) token.setChannel(99); else $channel=HIDDEN;}
-        )?
-        */
     ;
 
 /** Comments not on line by themselves are turned into newlines.
@@ -603,10 +680,10 @@ LEADING_WS
     This rule is invoked directly by nextToken when the comment is in
     first column or when comment is on end of nonwhitespace line.
 
-	Only match \n here if we didn't start on left edge; let NEWLINE return that.
-	Kill if newlines if we live on a line by ourselves
-	
-	Consume any leading whitespace if it starts on left edge.
+    Only match \n here if we didn't start on left edge; let NEWLINE return that.
+    Kill if newlines if we live on a line by ourselves
+    
+    Consume any leading whitespace if it starts on left edge.
  */
 COMMENT
 @init {
@@ -615,3 +692,4 @@ COMMENT
     :	{self.startPos==0}?=> (' '|'\t')* '#' (~'\n')* '\n'+
     |	{self.startPos>0}?=> '#' (~'\n')* // let NEWLINE handle \n unless char pos==0 for '#'
     ;
+
