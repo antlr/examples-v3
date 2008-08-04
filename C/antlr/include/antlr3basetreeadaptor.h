@@ -41,7 +41,7 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
 	///
 	pANTLR3_DEBUG_EVENT_LISTENER	debugger;
 
-    pANTLR3_BASE_TREE	    (*nil)					(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor);
+    pANTLR3_BASE_TREE	    (*nilNode)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor);
 
 
     pANTLR3_BASE_TREE	    (*dupTree)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_BASE_TREE tree);
@@ -52,7 +52,7 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
     void					(*setParent)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_BASE_TREE child, pANTLR3_BASE_TREE parent);
 
 	pANTLR3_BASE_TREE		(*errorNode)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_TOKEN_STREAM tnstream, pANTLR3_COMMON_TOKEN startToken, pANTLR3_COMMON_TOKEN stopToken, pANTLR3_EXCEPTION e);
-	ANTLR3_BOOLEAN			(*isNil)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_BASE_TREE t);
+	ANTLR3_BOOLEAN			(*isNilNode)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_BASE_TREE t);
 
     pANTLR3_BASE_TREE	    (*becomeRoot)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_BASE_TREE newRoot, pANTLR3_BASE_TREE oldRoot);
 

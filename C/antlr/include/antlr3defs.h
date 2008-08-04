@@ -94,6 +94,9 @@
 extern "C" {
 #endif
 
+#ifndef __MINGW32__
+// Standard Windows types
+//
 typedef	INT32	ANTLR3_CHAR,	*pANTLR3_CHAR;
 typedef	UINT32	ANTLR3_UCHAR,	*pANTLR3_UCHAR;
 
@@ -106,6 +109,25 @@ typedef	UINT16	ANTLR3_UINT16,	*pANTLR3_UINT16;
 typedef	UINT32	ANTLR3_UINT32,	*pANTLR3_UINT32;
 typedef	UINT64	ANTLR3_UINT64,	*pANTLR3_UINT64;
 typedef UINT64  ANTLR3_BITWORD, *pANTLR3_BITWORD;
+#else
+// Mingw uses stdint.h and fails to define standard Microsoft typedefs
+// such as UINT16, hence we must use stdint.h for Mingw.
+//
+#include <stdint.h>
+typedef int32_t		    ANTLR3_CHAR,    *pANTLR3_CHAR;
+typedef uint32_t	    ANTLR3_UCHAR,   *pANTLR3_UCHAR;
+
+typedef int8_t		    ANTLR3_INT8,    *pANTLR3_INT8;
+typedef int16_t		    ANTLR3_INT16,   *pANTLR3_INT16;
+typedef int32_t		    ANTLR3_INT32,   *pANTLR3_INT32;
+typedef int64_t		    ANTLR3_INT64,   *pANTLR3_INT64;
+
+typedef uint8_t	    	ANTLR3_UINT8,   *pANTLR3_UINT8;
+typedef uint16_t      	ANTLR3_UINT16,  *pANTLR3_UINT16;
+typedef uint32_t	    ANTLR3_UINT32,  *pANTLR3_UINT32;
+typedef uint64_t	    ANTLR3_UINT64,  *pANTLR3_UINT64;
+typedef uint64_t	    ANTLR3_BITWORD, *pANTLR3_BITWORD;
+#endif
 
 typedef	UINT8	ANTLR3_BOOLEAN, *pANTLR3_BOOLEAN;
 

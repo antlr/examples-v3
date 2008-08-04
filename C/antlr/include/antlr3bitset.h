@@ -71,7 +71,7 @@ typedef	struct ANTLR3_BITSET_struct
     ANTLR3_BOOLEAN					(*isMember)	    (struct ANTLR3_BITSET_struct  * bitset, ANTLR3_UINT32 bit);
     ANTLR3_UINT32					(*numBits)	    (struct ANTLR3_BITSET_struct  * bitset);
     void							(*remove)	    (struct ANTLR3_BITSET_struct  * bitset, ANTLR3_UINT32 bit);
-    ANTLR3_BOOLEAN					(*isNil)	    (struct ANTLR3_BITSET_struct  * bitset);
+    ANTLR3_BOOLEAN					(*isNilNode)	    (struct ANTLR3_BITSET_struct  * bitset);
     pANTLR3_INT32					(*toIntList)    (struct ANTLR3_BITSET_struct  * bitset);
 
     void							(*free)			(struct ANTLR3_BITSET_struct  * bitset);

@@ -89,7 +89,7 @@
 
 
 // Changes for ANTLR3 - Jim Idle, January 2008.
-// builtin types defined for UNicode types changed to
+// builtin types defined for Unicode types changed to
 // aliases for the types that are system determined by
 // ANTLR at compile time.
 //
@@ -106,7 +106,6 @@
 typedef ANTLR3_UINT32	UTF32;	/* at least 32 bits */
 typedef ANTLR3_UINT16	UTF16;	/* at least 16 bits */
 typedef ANTLR3_UINT8	UTF8;	/* typically 8 bits */
-typedef ANTLR3_BOOLEAN	Boolean; /* 0 or 1 */
 
 /* Some fundamental constants */
 #define UNI_REPLACEMENT_CHAR (UTF32)0x0000FFFD
@@ -156,7 +155,7 @@ ConversionResult ConvertUTF32toUTF16 (
 		const UTF32** sourceStart, const UTF32* sourceEnd, 
 		UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
 
-Boolean isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd);
+ANTLR3_BOOLEAN isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd);
 
 #ifdef __cplusplus
 }
