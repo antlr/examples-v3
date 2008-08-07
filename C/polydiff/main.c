@@ -264,6 +264,7 @@ main	(int argc, char *argv[])
 				//
 				treePrint = PolyPrinterNew(simpNodes);
 				treePrint	->poly	(treePrint);
+				printf("\n\n");
 			}
 			// It only remains to close down our open objects.
 			//

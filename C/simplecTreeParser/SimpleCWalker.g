@@ -1,7 +1,7 @@
 tree grammar SimpleCWalker;
 options {
     tokenVocab	    = SimpleC;
-    ASTLabelType    = CommonTree;
+    ASTLabelType    = pANTLR3_BASE_TREE;
     language	    = C;
 }
 

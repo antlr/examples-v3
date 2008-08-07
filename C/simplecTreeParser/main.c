@@ -214,6 +214,7 @@ main	(int argc, char *argv[])
     }
     else
 	{
+		printf("Tree : %s\n", SimpleCAST.tree->toStringTree(SimpleCAST.tree)->chars);
 		nodes	= antlr3CommonTreeNodeStreamNewTree(SimpleCAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
 
 		// Tree parsers are given a common tree node stream (or your override)

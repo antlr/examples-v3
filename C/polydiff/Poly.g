@@ -3,6 +3,8 @@ options
 {
 	output=AST;
 	language = C;
+	ASTLabelType    = pANTLR3_BASE_TREE;
+
 }
 tokens { MULT; } // imaginary token
 

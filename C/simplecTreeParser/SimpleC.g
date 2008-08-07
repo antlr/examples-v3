@@ -1,8 +1,9 @@
 grammar SimpleC;
 options 
 {
-    output	= AST;
-    language	= C;
+    output			= AST;
+    language		= C;
+	ASTLabelType	= pANTLR3_BASE_TREE;
 }
 
 tokens 
@@ -67,8 +68,8 @@ cstat: forStat
     ;
 
 forStat
-    :   'for' '(' start=assignStat ';' expr ';' next=assignStat ')' block
-        -> ^('for' $start expr $next block)
+    :   'for' '(' start=assignStat ';' e=expr ';' next=assignStat ')' block
+        -> ^('for' $start $e $next block)
     ;
 
 assignStat

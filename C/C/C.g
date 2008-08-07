@@ -421,11 +421,14 @@ direct_declarator
 	// C++ compiler, it will happilly accept classes and so on for things like
 	// scopes. This class is defined entirely in the header file C.h, if "compile
 	// as C++ is set for CParser.c and CLexer.c" It is just a silly example
-	// of course.
+	// of course and I don't do anythign with this class, just create and delete it.
 	//
 	symbolpp		*mySymClass;
 
 	mySymClass = new symbolpp($IDENTIFIER.line, idText);
+
+	delete mySymClass;
+
 
 #endif
 
