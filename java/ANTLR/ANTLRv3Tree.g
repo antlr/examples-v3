@@ -81,7 +81,7 @@ optionValue
 
 rule
 	:	^( RULE ID modifier? (^(ARG ARG_ACTION))? (^(RET ARG_ACTION))?
-	       optionsSpec? ruleScopeSpec? ruleAction*
+	       throwsSpec? optionsSpec? ruleScopeSpec? ruleAction*
 	       altList
 	       exceptionGroup? EOR
 	     )
