@@ -156,7 +156,7 @@ scope {
 		':'	altList	';'
 		exceptionGroup?
 	    -> ^( RULE id {modifier!=null?adaptor.Create(modifier):null} ^(ARG $arg)? ^(RET $rt)?
-	    	  optionsSpec? ruleScopeSpec? ruleAction*
+	    	  throwsSpec? optionsSpec? ruleScopeSpec? ruleAction*
 	    	  altList
 	    	  exceptionGroup?
 	    	  EOR["EOR"]
@@ -183,10 +183,12 @@ ruleScopeSpec
 block
     :   lp='('
 		( (opts=optionsSpec)? ':' )?
-		a1=alternative rewrite ( '|' a2=alternative rewrite )*
+		altpair ( '|' altpair )*
         rp=')'
-        -> ^( BLOCK[$lp,"BLOCK"] optionsSpec? (alternative rewrite?)+ EOB[$rp,"EOB"] )
+        -> ^( BLOCK[$lp,"BLOCK"] optionsSpec? altpair+ EOB[$rp,"EOB"] )
     ;
+
+altpair : alternative rewrite ;
 
 altList
 @init {
@@ -195,8 +197,7 @@ altList
 	// it's really BLOCK[firstToken,"BLOCK"]; set line/col to previous ( or : token.
     CommonTree blkRoot = (CommonTree)adaptor.Create(BLOCK,input.LT(-1),"BLOCK");
 }
-    :   a1=alternative rewrite ( '|' a2=alternative rewrite )*
-		-> ^( {blkRoot} (alternative rewrite?)+ EOB["EOB"] )
+    :   altpair ( '|' altpair )* -> ^( {blkRoot} altpair+ EOB["EOB"] )
     ;
 
 alternative
@@ -533,7 +534,7 @@ ACTION
 fragment
 NESTED_ACTION :
 	'{'
-	(	options {greedy=false; k=3;}
+	(	options {greedy=false; k=2;}
 	:	NESTED_ACTION
 	|	SL_COMMENT
 	|	ML_COMMENT
@@ -551,7 +552,7 @@ ACTION_CHAR_LITERAL
 
 fragment
 ACTION_STRING_LITERAL
-	:	'"' (ACTION_ESC|~('\\'|'"'))+ '"'
+	:	'"' (ACTION_ESC|~('\\'|'"'))* '"'
 	;
 
 fragment

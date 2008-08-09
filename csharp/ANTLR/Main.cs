@@ -24,7 +24,7 @@ namespace Antlr.Examples.ANTLR
 				}
 				ICharStream input = new ANTLRFileStream(inputFileName);
 	
-			        /* BUILD AST
+			        // BUILD AST
 				ANTLRv3Lexer lex = new ANTLRv3Lexer(input);
 				CommonTokenStream tokens = new CommonTokenStream(lex);
 				ANTLRv3Parser g = new ANTLRv3Parser(tokens);
@@ -33,13 +33,13 @@ namespace Antlr.Examples.ANTLR
 				System.Console.Out.WriteLine(t.ToStringTree());
 
 				/*
-				// BUILD AST + PARSE TREES
+				// BUILD AST + PARSE TREES (needs ANTLR -debug option)
 				ANTLRv3Lexer lex = new ANTLRv3Lexer(input);
 				CommonTokenStream tokens = new CommonTokenStream(lex);
 				ParseTreeBuilder builder = new ParseTreeBuilder(inputName);
 				ANTLRv3Parser g = new ANTLRv3Parser(tokens, builder);
 				ANTLRv3Parser.grammarDef_return r = g.grammarDef();
-				CommonTree t = (CommonTree)r.Tree;
+				CommonTree t = (CommonTree)r.Tree; // not used here
 				System.Console.Out.WriteLine("parse tree: "+builder.Tree.ToStringTree());
 				System.Console.Out.Write("input:\n"+builder.Tree.ToInputString());
 				*/
