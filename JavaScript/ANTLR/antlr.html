@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<title>Antlr-Javascript:Examples/ANTLR</title>
+
+<!-- ANTLR includes -->
+<script type="text/javascript" src="../../lib/antlr3-all.js"></script>
+<script type="text/javascript" src="ANTLRv3Lexer.js"></script>
+<script type="text/javascript" src="ANTLRv3Parser.js"></script>
+<script type="text/javascript" src="ANTLRv3Tree.js"></script>
+
+<!-- Test Code -->
+<script type="text/javascript">
+	var sourceText = "[paste the input here]";
+
+	ANTLRv3Lexer.prototype.emitErrorMessage = function(msg) {print(msg);}
+	ANTLRv3Parser.prototype.emitErrorMessage = function(msg) {print(msg);}
+	ANTLRv3Tree.prototype.emitErrorMessage = function(msg) {print(msg);}
+		
+	function parse(text) {
+	    text = text.replace(/\r\n?/g,"\n");
+	    var input = new org.antlr.runtime.ANTLRStringStream(text);
+	  	var lexer = new ANTLRv3Lexer(input);
+	  /*  	
+	  	while(lexer.nextToken() != org.antlr.runtime.Token.EOF_TOKEN) {
+	  		print(">>>"+lexer.getText()+"<<<");
+	  	}
+		*/
+	  	
+	  	var tokens = new org.antlr.runtime.CommonTokenStream(lexer);
+		var parser = new ANTLRv3Parser(tokens);
+
+        var r = parser.grammarDef();
+
+		var t = r.getTree();
+		print(t.toStringTree());
+		
+		var nodes = new org.antlr.runtime.tree.CommonTreeNodeStream(t);
+		var walker = new ANTLRv3Tree(nodes);
+
+		walker.grammarDef();
+	}
+
+	var print = (function () {
+		var outputBox;
+		return function(text) {
+			text = text.replace(/[^\r]\n/g, "\r\n");
+			if(!outputBox) outputBox = document.getElementById("outputBox");
+			if(typeof text == "string") {
+				outputBox.appendChild(document.createTextNode(text + "\r\n"));
+			} else {
+				for(var i=0;i<text.length;i++) {
+					outputBox.appendChild(document.createTextNode(text[i] + "\r\n"));
+				}
+			}
+		};
+	})();
+	
+	function onLoad() {
+		if(!this.inputElement) this.inputElement = document.getElementById("inputBox");
+		inputElement.value = sourceText;
+		inputElement.select();
+	}
+</script>
+<style type="text/css">
+	#outputBox {
+		font-family:monospace;
+		font-size:12px;
+		white-space: pre;
+		overflow:scroll;
+		border: thin solid lightGrey;
+		height: 300px;
+		width:750px;
+	}
+</style>
+</head>
+<body onload="onLoad();">
+    <h1>ANTLR</h1>
+    <div style="float:left">    	<p style="font-size:8pt;">(All CR/LF's will be converted to &quot;\n&quot;)</p>
+		<textarea id="inputBox" cols="90" rows="10"></textarea><br/>
+		<input type="button" onclick="parse(inputElement.value);" value="Parse"/><br/>
+	    <p>Output/Error:</p>
+ 	    <div id="outputBox"></div>
+    </div>
+    <div style="float:right">
+    </div>
+</body>
+</html>

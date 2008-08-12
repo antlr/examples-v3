@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<title>Antlr-Javascript:Examples/calculator</title>
+
+<!-- ANTLR includes -->
+<script type="text/javascript" src="../../lib/antlr3-all.js"></script>
+<script type="text/javascript" src="CalculatorLexer.js"></script>
+<script type="text/javascript" src="CalculatorParser.js"></script>
+
+<!-- Test Code -->
+<script type="text/javascript">
+    var Calculator = {
+        log: (function() {
+            var outputBox;
+            return function(msg) {
+                if(!outputBox) {
+                    outputBox = document.getElementById("outputBox");
+                }
+                outputBox.innerHTML = outputBox.innerHTML + msg + "<br />";
+            }
+        })(),
+
+        logError: function(msg) {
+            Calculator.log('<span class="error">'+msg+'</span>');
+        },
+
+        parse: function(text) {
+            try {
+                var input = new org.antlr.runtime.ANTLRStringStream(text),
+                    lexer = new CalculatorLexer(input),
+                    tokens = new org.antlr.runtime.CommonTokenStream(lexer),
+                    parser = new CalculatorParser(tokens);
+                parser.memory = {};
+                parser.prog();
+            } catch (e) {
+                Calculator.logError(e.toString());
+            }
+        }
+    };
+
+    CalculatorLexer.prototype.emitErrorMessage = Calculator.logError;
+    CalculatorParser.prototype.emitErrorMessage = Calculator.logError;
+</script>
+
+<style type="text/css">
+    .error {
+        color: red;
+        font-weight: bold;
+    }
+	#outputBox {
+		font-family:monospace;
+		font-size:12px;
+		white-space: pre;
+		overflow:scroll;
+		border: thin solid lightGrey;
+		height: 300px;
+		width:750px;
+	}
+</style>
+</head>
+<body>
+    <h1>Calculator</h1>
+    <div style="float:left">
+       	<p style="font-size:8pt;">(All CR/LF's will be converted to &quot;\n&quot;)</p>
+        <textarea id="inputBox" cols="90" rows="10"></textarea><br/>
+        <input type="button" onclick="Calculator.parse(document.getElementById('inputBox').value);" value="Parse" /><br/>
+        <p>Output/Error:</p>
+        <div id="outputBox"></div>
+    </div>
+    <div style="float:right">
+    </div>
+</body>
+</html>

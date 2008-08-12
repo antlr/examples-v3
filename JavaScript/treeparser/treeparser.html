@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<title>Antlr-Javascript:Examples/treeparser</title>
+
+<!-- ANTLR includes -->
+<script type="text/javascript" src="../../lib/antlr3-all.js"></script>
+<script type="text/javascript" src="LangLexer.js"></script>
+<script type="text/javascript" src="LangParser.js"></script>
+<script type="text/javascript" src="LangDumpDecl.js"></script>
+
+<!-- Test Code -->
+<script type="text/javascript">
+	var sourceText = "int a;";
+	
+	LangLexer.prototype.emitErrorMessage = function(msg) {print(msg);}
+	LangParser.prototype.emitErrorMessage = function(msg) {print(msg);}
+	LangDumpDecl.prototype.emitErrorMessage = function(msg) {print(msg);}
+				
+	function parse(text) {
+	    text = text.replace(/\r\n?/g,"\n");
+	    var input = new org.antlr.runtime.ANTLRStringStream(text);
+	  	var lexer = new LangLexer(input);
+	    var tokens = new org.antlr.runtime.CommonTokenStream(lexer);
+		var parser = new LangParser(tokens);
+		var r = parser.start();
+		print("tree: "+r.getTree().toStringTree());
+		var nodes = new org.antlr.runtime.tree.CommonTreeNodeStream(r.getTree());
+		nodes.setTokenStream(tokens);
+		var walker = new LangDumpDecl(nodes);
+		walker.decl();
+	}
+
+	var print = (function () {
+		var outputBox;
+		return function(text) {
+			text = text.replace(/[^\r]\n/g, "\r\n");
+			if(!outputBox) outputBox = document.getElementById("outputBox");
+			if(typeof text == "string") {
+				outputBox.appendChild(document.createTextNode(text + "\r\n"));
+			} else {
+				for(var i=0;i<text.length;i++) {
+					outputBox.appendChild(document.createTextNode(text[i] + "\r\n"));
+				}
+			}
+		};
+	})();
+	
+	function onLoad() {
+		if(!this.inputElement) this.inputElement = document.getElementById("inputBox");
+		inputElement.value = sourceText;
+	}
+</script>
+<style type="text/css">
+	#outputBox {
+		font-family:monospace;
+		font-size:12px;
+		white-space: pre;
+		overflow:scroll;
+		border: thin solid lightGrey;
+		height: 300px;
+		width:750px;
+	}
+</style>
+</head>
+<body onload="onLoad();">
+    <h1>Tree Parser</h1>
+    <div style="float:left">    	<p style="font-size:8pt;">(All CR/LF's will be converted to &quot;\n&quot;)</p>
+		<textarea id="inputBox" cols="90" rows="10"></textarea><br/>
+		<input type="button" onclick="parse(inputElement.value);" value="Parse"/><br/>
+	    <p>Output/Error:</p>
+	    <div id="outputBox"></div>
+    </div>
+    <div style="float:right">
+    </div>
+</body>
+</html>

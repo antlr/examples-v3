@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<title>Antlr-Javascript:Examples/xmlLexer</title>
+
+<!-- ANTLR includes -->
+<script type="text/javascript" src="../../lib/antlr3-all.js"></script>
+<script type="text/javascript" src="XML.js"></script>
+
+<!-- Test Code -->
+<script type="text/javascript">
+
+	var sourceText = [
+		"<?xml version='1.0'?>",
+		"<!DOCTYPE component [",
+		"<!ELEMENT component (PCDATA|sub)*>",
+		"<!ATTLIST component",
+		"          attr CDATA #IMPLIED",
+		"          attr2 CDATA #IMPLIED",
+		">",
+		"<!ELMENT sub EMPTY>",
+		"",
+		"]>",
+		"<component attr=\"val'ue\" attr2='val\"ue'>",
+		"<!-- This is a comment -->",
+		"Text",
+		"<![CDATA[huhu]]>",
+		"öäüß",
+		"&amp;",
+		"&lt;",
+		"<?xtal cursor='11'?>",
+		"<sub/>",
+		"<sub></sub>",
+		"</component>"].join("\n");
+
+	XML.prototype.emitErrorMessage = function(msg) {print(msg);}
+	
+	function parse(text) {		
+		try {	
+		    var input = new org.antlr.runtime.ANTLRStringStream(text);
+		  	var lexer = new XML(input);
+		  	while (lexer.nextToken() != org.antlr.runtime.Token.EOF_TOKEN);
+		} catch (e) {
+			print(e.toString());
+		} finally {
+
+		}
+	}
+	
+	var print = (function () {
+		var outputBox;
+		return function(text) {
+			text = text.replace(/[^\r]\n/g, "\r\n");
+			if(!outputBox) outputBox = document.getElementById("outputBox");
+			if(typeof text == "string") {
+				outputBox.appendChild(document.createTextNode(text + "\r\n"));
+			} else {
+				for(var i=0;i<text.length;i++) {
+					outputBox.appendChild(document.createTextNode(text[i] + "\r\n"));
+				}
+			}
+		};
+	})();
+	
+	function onLoad() {
+		if(!this.inputElement) this.inputElement = document.getElementById("inputBox");
+		inputElement.value = sourceText;
+	}
+
+</script>
+<style type="text/css">
+	#outputBox {
+		font-family:monospace;
+		font-size:12px;
+		white-space: pre;
+		overflow:scroll;
+		border: thin solid lightGrey;
+		height: 300px;
+		width:750px;
+	}
+</style>
+</head>
+<body onload="onLoad();">
+    <h1>XML Lexer</h1>
+    <div style="float:left">    	<p style="font-size:8pt;">(All CR/LF's will be converted to &quot;\n&quot;)</p>
+		<textarea id="inputBox" cols="90" rows="10"></textarea><br/>
+		<input type="button" onclick="parse(inputElement.value);" value="Parse"/><br/>
+	    <p>Output/Error:</p>
+	    <div id="outputBox"></div>
+    </div>
+    <div style="float:right">
+    </div>
+</body>
+</html>
