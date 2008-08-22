@@ -234,6 +234,14 @@
 			<File
 				RelativePath=".\C.g"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="Antlr3ParserLexer"
+						Debug="true"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
