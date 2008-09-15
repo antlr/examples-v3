@@ -89,8 +89,6 @@
  *          'Class<Byte' in the cast expression as a less than expression, then failing 
  *          on the '>'.
  *      Changed createdName to use typeArguments instead of nonWildcardTypeArguments.
- *          Again, JLS doesn't seem to allow this, but java.lang.Class has an example of
- *          of this construct.
  *      Changed the 'this' alternative in primary to allow 'identifierSuffix' rather than
  *          just 'arguments'.  The case it couldn't handle was a call to an explicit
  *          generic method invocation (e.g. this.<E>doSomething()).  Using identifierSuffix
