@@ -10,11 +10,11 @@ options
 decl	: decls+
 		;
 
-decls : ^(DECL type declarator+)
+decls : ^(DECL type d=declarator)
 
        // label.start, label.start, label.text
        {
-			printf("int \%s\n", $declarator.text->chars);
+			printf("int \%s\n", $d.text->chars);
        }
      ;
 

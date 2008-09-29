@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="fuzzy"
 	ProjectGUID="{1D0E0FA7-381D-4BF1-BB28-B4098CC24D71}"
 	RootNamespace="fuzzy"
@@ -10,6 +10,7 @@
 	SccLocalPath="SAK"
 	SccProvider="SAK"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,10 +43,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Antlr3Parser"
-			/>
-			<Tool
-				Name="Antlr3TreeParser"
+				Name="Antlr3Lexer"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -54,7 +52,10 @@
 				Name="Antlr3ParserLexer"
 			/>
 			<Tool
-				Name="Antlr3Lexer"
+				Name="Antlr3Parser"
+			/>
+			<Tool
+				Name="Antlr3TreeParser"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -94,6 +95,8 @@
 				AdditionalLibraryDirectories="..\antlr\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -115,9 +118,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -133,10 +133,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Antlr3Parser"
-			/>
-			<Tool
-				Name="Antlr3TreeParser"
+				Name="Antlr3Lexer"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -145,7 +142,10 @@
 				Name="Antlr3ParserLexer"
 			/>
 			<Tool
-				Name="Antlr3Lexer"
+				Name="Antlr3Parser"
+			/>
+			<Tool
+				Name="Antlr3TreeParser"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -188,7 +188,9 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
+				OptimizeForWindows98="0"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -208,9 +210,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

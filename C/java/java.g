@@ -810,8 +810,9 @@ IntegerTypeSuffix : ('l'|'L') ;
 FloatingPointLiteral
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
     |   '.' ('0'..'9')+ Exponent? FloatTypeSuffix?
-    |   ('0'..'9')+ Exponent FloatTypeSuffix?
-    |   ('0'..'9')+ Exponent? FloatTypeSuffix
+    |   ('0'..'9')+ (	  Exponent FloatTypeSuffix?
+						| FloatTypeSuffix
+					)
 	;
 
 fragment
