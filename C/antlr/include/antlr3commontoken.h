@@ -55,6 +55,18 @@
 extern "C" {
 #endif
 
+// Indicates whether this token is carrying:
+//
+// State | Meaning
+// ------+--------------------------------------
+//     0 | Nothing (neither rewrite text, nor setText)
+//     1 | char * to user supplied rewrite text
+//     2 | pANTLR3_STRING because of setText or similar action
+//
+#define	ANTLR3_TEXT_NONE	0
+#define	ANTLR3_TEXT_CHARP	1
+#define	ANTLR3_TEXT_STRING	2
+
 /** The definition of an ANTLR3 common token structure, which all implementations
  * of a token stream should provide, installing any further structures in the
  * custom pointer element of this structure.
@@ -74,6 +86,11 @@ typedef	struct ANTLR3_COMMON_TOKEN_struct
      *  token factory is responsible for deleting it.
      */
     ANTLR3_BOOLEAN  factoryMade;
+
+	/// A string factory that we can use if we ever need the text of a token
+	/// and need to manufacture a pANTLR3_STRING
+	///
+	pANTLR3_STRING_FACTORY	strFactory;
 
     /** The line number in the input stream where this token was derived from
      */
@@ -110,10 +127,35 @@ typedef	struct ANTLR3_COMMON_TOKEN_struct
      */
     ANTLR3_MARKER   stop;
 
-    /** Some token types actually do carry around their associated text, hence
-     * (*getText)() will return this pointer if it is not NULL
-     */
-    pANTLR3_STRING   text;
+	/// Indicates whether this token is carrying:
+	///
+	/// State | Meaning
+	/// ------+--------------------------------------
+	///     0 | Nothing (neither rewrite text, nor setText)
+	///     1 | char * to user supplied rewrite text
+	///     2 | pANTLR3_STRING because of setText or similar action
+	///
+	/// Affects the union structure tokText below
+	/// (uses 32 bit so alignment is always good)
+	///
+	ANTLR3_UINT32	textState;
+
+	union
+	{
+		/// Pointer that is used when the token just has a pointer to
+		/// a char *, such as when a rewrite of an imaginary token supplies
+		/// a string in the grammar. No sense in constructing a pANTLR3_STRING just
+		/// for that, as mostly the text will not be accessed - if it is, then
+		/// we will build a pANTLR3_STRING for it a that point.
+		///
+		pANTLR3_UCHAR	chars;
+
+		/// Some token types actually do carry around their associated text, hence
+		/// (*getText)() will return this pointer if it is not NULL
+		///
+		pANTLR3_STRING	text;
+	}
+		tokText;
 
     /**  Because it is a bit more of a hassle to override an ANTLR3_COMMON_TOKEN
      *   as the standard structure for a token, a number of user programmable 

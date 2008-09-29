@@ -60,7 +60,9 @@ typedef ANTLR3_INT32		(*CDFA_SPECIAL_FUNC)   (void * , pANTLR3_BASE_RECOGNIZER ,
 
 #ifdef __cplusplus
 }
+#ifdef ANTLR3_WINDOWS
 #pragma warning	(pop)
+#endif
 #endif
 
 #endif

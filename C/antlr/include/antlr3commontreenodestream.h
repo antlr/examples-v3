@@ -259,8 +259,6 @@ typedef	struct ANTLR3_COMMON_TREE_NODE_STREAM_struct
 
     ANTLR3_BOOLEAN	    (*hasUniqueNavigationNodes)	(struct ANTLR3_COMMON_TREE_NODE_STREAM_struct * ctns);
 
-    pANTLR3_STRING	    (*toNodesOnlyString)		(struct ANTLR3_COMMON_TREE_NODE_STREAM_struct * ctns);
-
     ANTLR3_UINT32	    (*getLookaheadSize)			(struct ANTLR3_COMMON_TREE_NODE_STREAM_struct * ctns);
 
 	void				(*push)						(struct ANTLR3_COMMON_TREE_NODE_STREAM_struct * ctns, ANTLR3_INT32 index);

@@ -98,6 +98,10 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
 
 	void					(*setDebugEventListener)(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_DEBUG_EVENT_LISTENER debugger);
 
+	/// Produce a DOT (see graphviz freeware suite) from a base tree
+	///
+	pANTLR3_STRING			(*makeDot)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * theTree);
+
 	/// Replace from start to stop child index of parent with t, which might
 	/// be a list.  Number of children may be different
 	/// after this call.  
@@ -110,7 +114,7 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
     void					(*free)					(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor);
 
 }
-    ANTLR3_TREE_ADAPTOR;
+    ANTLR3_TREE_ADAPTOR, *pANTLR3_TREE_ADAPTOR;
 #ifdef __cplusplus
 }
 #endif

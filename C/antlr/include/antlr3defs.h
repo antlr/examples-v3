@@ -372,6 +372,11 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 
 #endif
 
+#ifdef ANTLR3_USE_64BIT
+#define ANTLR3_TRIE_DEPTH 63
+#else
+#define ANTLR3_TRIE_DEPTH 31
+#endif
 /* Pre declare the typedefs for all the interfaces, then 
  * they can be inter-dependant and we will let the linker
  * sort it out for us.
