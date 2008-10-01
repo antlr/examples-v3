@@ -522,7 +522,7 @@ NESTED_ARG_ACTION :
 	|	.
 	)*
 	']'
-	{setText(getText().substring(1, getText().length()-1));}
+	//{setText(getText().substring(1, getText().length()-1));}
 	;
 
 ACTION
