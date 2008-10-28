@@ -1,0 +1,219 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{16F3D51F-4B67-45FB-8122-F61377B04A84}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="ANTLR\ANTLRv3.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="C\CParse.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Java\JavaParse.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="DynamicScope\DynScope.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Fuzzy\Fuzzy.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="HoistedPredicates\Hoisted.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Import\Import.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="IslandGrammar\Island.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="LL-Star\LLStar.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="PolyDiff\PolyDiff.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Scopes\Scopes.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="SimpleCTreeParser\SimpleC.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="TreeParser\TreeParser.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Tweak\Tweak.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="XmlLexer\XmlLexer.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Python\Python.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="CompositeJava\JavaParse.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="ANTLRv3">
+			<MSBuild Projects="ANTLR\ANTLRv3.dproj"/>
+		</Target>
+		<Target Name="ANTLRv3:Clean">
+			<MSBuild Targets="Clean" Projects="ANTLR\ANTLRv3.dproj"/>
+		</Target>
+		<Target Name="ANTLRv3:Make">
+			<MSBuild Targets="Make" Projects="ANTLR\ANTLRv3.dproj"/>
+		</Target>
+		<Target Name="CParse">
+			<MSBuild Projects="C\CParse.dproj"/>
+		</Target>
+		<Target Name="CParse:Clean">
+			<MSBuild Targets="Clean" Projects="C\CParse.dproj"/>
+		</Target>
+		<Target Name="CParse:Make">
+			<MSBuild Targets="Make" Projects="C\CParse.dproj"/>
+		</Target>
+		<Target Name="JavaParse">
+			<MSBuild Projects="CompositeJava\JavaParse.dproj"/>
+		</Target>
+		<Target Name="JavaParse:Clean">
+			<MSBuild Targets="Clean" Projects="CompositeJava\JavaParse.dproj"/>
+		</Target>
+		<Target Name="JavaParse:Make">
+			<MSBuild Targets="Make" Projects="CompositeJava\JavaParse.dproj"/>
+		</Target>
+		<Target Name="DynScope">
+			<MSBuild Projects="DynamicScope\DynScope.dproj"/>
+		</Target>
+		<Target Name="DynScope:Clean">
+			<MSBuild Targets="Clean" Projects="DynamicScope\DynScope.dproj"/>
+		</Target>
+		<Target Name="DynScope:Make">
+			<MSBuild Targets="Make" Projects="DynamicScope\DynScope.dproj"/>
+		</Target>
+		<Target Name="Fuzzy">
+			<MSBuild Projects="Fuzzy\Fuzzy.dproj"/>
+		</Target>
+		<Target Name="Fuzzy:Clean">
+			<MSBuild Targets="Clean" Projects="Fuzzy\Fuzzy.dproj"/>
+		</Target>
+		<Target Name="Fuzzy:Make">
+			<MSBuild Targets="Make" Projects="Fuzzy\Fuzzy.dproj"/>
+		</Target>
+		<Target Name="Hoisted">
+			<MSBuild Projects="HoistedPredicates\Hoisted.dproj"/>
+		</Target>
+		<Target Name="Hoisted:Clean">
+			<MSBuild Targets="Clean" Projects="HoistedPredicates\Hoisted.dproj"/>
+		</Target>
+		<Target Name="Hoisted:Make">
+			<MSBuild Targets="Make" Projects="HoistedPredicates\Hoisted.dproj"/>
+		</Target>
+		<Target Name="Import">
+			<MSBuild Projects="Import\Import.dproj"/>
+		</Target>
+		<Target Name="Import:Clean">
+			<MSBuild Targets="Clean" Projects="Import\Import.dproj"/>
+		</Target>
+		<Target Name="Import:Make">
+			<MSBuild Targets="Make" Projects="Import\Import.dproj"/>
+		</Target>
+		<Target Name="Island">
+			<MSBuild Projects="IslandGrammar\Island.dproj"/>
+		</Target>
+		<Target Name="Island:Clean">
+			<MSBuild Targets="Clean" Projects="IslandGrammar\Island.dproj"/>
+		</Target>
+		<Target Name="Island:Make">
+			<MSBuild Targets="Make" Projects="IslandGrammar\Island.dproj"/>
+		</Target>
+		<Target Name="LLStar">
+			<MSBuild Projects="LL-Star\LLStar.dproj"/>
+		</Target>
+		<Target Name="LLStar:Clean">
+			<MSBuild Targets="Clean" Projects="LL-Star\LLStar.dproj"/>
+		</Target>
+		<Target Name="LLStar:Make">
+			<MSBuild Targets="Make" Projects="LL-Star\LLStar.dproj"/>
+		</Target>
+		<Target Name="PolyDiff">
+			<MSBuild Projects="PolyDiff\PolyDiff.dproj"/>
+		</Target>
+		<Target Name="PolyDiff:Clean">
+			<MSBuild Targets="Clean" Projects="PolyDiff\PolyDiff.dproj"/>
+		</Target>
+		<Target Name="PolyDiff:Make">
+			<MSBuild Targets="Make" Projects="PolyDiff\PolyDiff.dproj"/>
+		</Target>
+		<Target Name="Scopes">
+			<MSBuild Projects="Scopes\Scopes.dproj"/>
+		</Target>
+		<Target Name="Scopes:Clean">
+			<MSBuild Targets="Clean" Projects="Scopes\Scopes.dproj"/>
+		</Target>
+		<Target Name="Scopes:Make">
+			<MSBuild Targets="Make" Projects="Scopes\Scopes.dproj"/>
+		</Target>
+		<Target Name="SimpleC">
+			<MSBuild Projects="SimpleCTreeParser\SimpleC.dproj"/>
+		</Target>
+		<Target Name="SimpleC:Clean">
+			<MSBuild Targets="Clean" Projects="SimpleCTreeParser\SimpleC.dproj"/>
+		</Target>
+		<Target Name="SimpleC:Make">
+			<MSBuild Targets="Make" Projects="SimpleCTreeParser\SimpleC.dproj"/>
+		</Target>
+		<Target Name="TreeParser">
+			<MSBuild Projects="TreeParser\TreeParser.dproj"/>
+		</Target>
+		<Target Name="TreeParser:Clean">
+			<MSBuild Targets="Clean" Projects="TreeParser\TreeParser.dproj"/>
+		</Target>
+		<Target Name="TreeParser:Make">
+			<MSBuild Targets="Make" Projects="TreeParser\TreeParser.dproj"/>
+		</Target>
+		<Target Name="Tweak">
+			<MSBuild Projects="Tweak\Tweak.dproj"/>
+		</Target>
+		<Target Name="Tweak:Clean">
+			<MSBuild Targets="Clean" Projects="Tweak\Tweak.dproj"/>
+		</Target>
+		<Target Name="Tweak:Make">
+			<MSBuild Targets="Make" Projects="Tweak\Tweak.dproj"/>
+		</Target>
+		<Target Name="XmlLexer">
+			<MSBuild Projects="XmlLexer\XmlLexer.dproj"/>
+		</Target>
+		<Target Name="XmlLexer:Clean">
+			<MSBuild Targets="Clean" Projects="XmlLexer\XmlLexer.dproj"/>
+		</Target>
+		<Target Name="XmlLexer:Make">
+			<MSBuild Targets="Make" Projects="XmlLexer\XmlLexer.dproj"/>
+		</Target>
+		<Target Name="Python">
+			<MSBuild Projects="Python\Python.dproj"/>
+		</Target>
+		<Target Name="Python:Clean">
+			<MSBuild Targets="Clean" Projects="Python\Python.dproj"/>
+		</Target>
+		<Target Name="Python:Make">
+			<MSBuild Targets="Make" Projects="Python\Python.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="ANTLRv3;CParse;JavaParse;DynScope;Fuzzy;Hoisted;Import;Island;LLStar;PolyDiff;Scopes;SimpleC;TreeParser;Tweak;XmlLexer;Python;JavaParse"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="ANTLRv3:Clean;CParse:Clean;JavaParse:Clean;DynScope:Clean;Fuzzy:Clean;Hoisted:Clean;Import:Clean;Island:Clean;LLStar:Clean;PolyDiff:Clean;Scopes:Clean;SimpleC:Clean;TreeParser:Clean;Tweak:Clean;XmlLexer:Clean;Python:Clean;JavaParse:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="ANTLRv3:Make;CParse:Make;JavaParse:Make;DynScope:Make;Fuzzy:Make;Hoisted:Make;Import:Make;Island:Make;LLStar:Make;PolyDiff:Make;Scopes:Make;SimpleC:Make;TreeParser:Make;Tweak:Make;XmlLexer:Make;Python:Make;JavaParse:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>
