@@ -44,9 +44,10 @@
 	</target>
 	
 	<target name="run" depends="build">
+		<copy file="${build-common.basedir}/main-app.xml" toDir="${basedir}"/>
 		<touch file="actual"/>
 		<exec dir="${basedir}" executable="${FLEX_HOME}/bin/adl" error="actual">
-			<arg value="${basedir}/main.xml"/>
+			<arg value="${basedir}/main-app.xml"/>
 		</exec>
 	</target>
 
