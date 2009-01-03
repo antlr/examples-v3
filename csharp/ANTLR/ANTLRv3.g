@@ -524,7 +524,7 @@ NESTED_ARG_ACTION :
 	|	.
 	)*
 	']'
-	{Text = Text.Substring(1, Text.Length-1);}
+	//{Text = Text.Substring(1, Text.Length-1);}
 	;
 
 ACTION
