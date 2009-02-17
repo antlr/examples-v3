@@ -1,7 +1,7 @@
 public class Wrapper {
 public void foo() {
-int k;
 int i;
+int k;
   i = 3;
   k = i;
   i = k*4;
