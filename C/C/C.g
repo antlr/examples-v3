@@ -112,7 +112,27 @@ scope Symbols
 @members 
 {
 
+    void addTypeDef(pANTLR3_HASH_TABLE *types, pANTLR3_COMMON_TOKEN typeDef)
+    {
+	// By the time we are traversing tokens here, it
+	// does not matter if we play with the input stream. Hence
+	// rather than use text or getText() on a token and have the
+	// huge overhead of creating pANTLR3_STRINGS, then we just
+	// null terminate the string that the token is pointing to
+	// and use it directly as a key.
+	//
+	*((pANTLR3_UINT8)(typeDef->stop) + 1) = '\0';
 
+	// We only create a symbol hash table if we find any
+	// symbols to record at this scope level
+	//
+	if (*types == NULL)
+	{
+		*types =	antlr3HashTableNew(11); 
+	}
+	(*types)->put(*types, (void *)typeDef->start, (void *)(typeDef->start), NULL);
+
+    }
 
     // This is a function that is small enough to be kept in the
     // generated parser code (@lexer::members puts code in the lexer.
@@ -134,21 +154,30 @@ scope Symbols
     // were a function to be called by the lexer (in which case this would be in
     // @lexer::members.
     //
-    ANTLR3_BOOLEAN  isTypeName(pCParser ctx, pANTLR3_UINT8 name)
+    ANTLR3_BOOLEAN  isTypeName(pCParser ctx, pANTLR3_COMMON_TOKEN name)
     {
 	int	i;
 
+	// By the time we are traversing tokens here, it
+	// does not matter if we play with the input stream. Hence
+	// rather than use text or getText() on a token and have the
+	// huge overhead of creating pANTLR3_STRINGS, then we just
+	// null terminate the string that the token is pointing to
+	// and use it directly as a key.
+	//
+	*((pANTLR3_UINT8)(name->stop) + 1) = '\0';
+
 	for (i = (int)SCOPE_SIZE(Symbols)-1 ; i >= 0; i--)
 	{
-    	pANTLR3_HASH_TABLE  symtab;
-    	pANTLR3_STRING		symbol;
+	    pANTLR3_HASH_TABLE  symtab;
+	    pANTLR3_STRING		symbol;
 	    SCOPE_TYPE(Symbols)	symScope;   // Aids in declaring the scope pointers
 
-    	// Pick up the pointer to the scope structure at the current level
+	    // Pick up the pointer to the scope structure at the current level
 	    // We are descending from the inner most scope as that is how C type
 	    // scoping works.
 	    //
-    	symScope	= (SCOPE_TYPE(Symbols))SCOPE_INSTANCE(Symbols, i);
+	    symScope	= (SCOPE_TYPE(Symbols))SCOPE_INSTANCE(Symbols, i);
 
 	    // The pointer we have is an instance of the dynamic global scope
 	    // called Symbols. Within there, as declared above, we have a pointer
@@ -162,16 +191,20 @@ scope Symbols
 	    // when you return from this call, you want to test for a NULL pointer, which means
 	    // the entry was not found in the table.
 	    //
-    	symbol		= (pANTLR3_STRING)	(symtab->get(symtab, (void *)name));
-    
+	    symbol		= NULL;
+	    if (symtab != NULL)
+	    {
+	        symbol		= (pANTLR3_STRING)	(symtab->get(symtab, (void *)(name->start)));
+	    }
+
 	    // Did we find the symbol in the type lists?
 	    // This is generally used for semantic predicates, hence ANTLR3_TRUE or ANTLR3_FALSE
 	    // for the return
 	    //
-    	if (symbol != NULL)
-    	{
-    		return ANTLR3_TRUE;
-    	}
+	    if (symbol != NULL)
+	    {
+		    return ANTLR3_TRUE;
+	    }
 	}
 
 	// We did not find the requested symbol in any of the scopes
@@ -188,13 +221,20 @@ scope Symbols
     //
     void ANTLR3_CDECL freeTable(SCOPE_TYPE(Symbols) symtab)
     {
-		// If we supplied an entry in the table with a free pointer,
-		// then calling the table free function will call the free function
-		// for each entry as it deletes it from the table. In this case however
-		// we only stored things that were manufactured by internal factories, which
-		// will be released anyway when the parser/lexer/etc are freed.
-		//
+	// If we supplied an entry in the table with a free pointer,
+	// then calling the table free function will call the free function
+	// for each entry as it deletes it from the table. In this case however
+	// we only stored things that were manufactured by internal factories, which
+	// will be released anyway when the parser/lexer/etc are freed.
+	//
+	// As of release 3.1.2, we do not automatically have a new
+	// scope table, so we only free it if we found symbols at this
+	// scope level and therefore created the types map
+	//
+	if	(symtab->types != NULL)
+	{
 		symtab->types->free(symtab->types);
+	}
     }
 }
 
@@ -210,7 +250,7 @@ translation_unit
 		// to a rule, use the @declarations section and then initialize locals
 		// separately in this @init section.
 		//
-		$Symbols::types = antlr3HashTableNew(11);	// parameter is a rough hint for hash alg. as to size
+		$Symbols::types = NULL;	// Flag that we don't have the map yet (scopes are not memset to 0)
 
 		SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
@@ -248,7 +288,7 @@ function_definition
 
     @init 
     {
-      $Symbols::types = antlr3HashTableNew(11);
+      $Symbols::types = NULL; // Flag that we should create teh map if we find symbols to enter
       SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
     :	declaration_specifiers? declarator
@@ -313,7 +353,7 @@ type_specifier
     ;
 
 type_id
-    :   {isTypeName(ctx, LT(1)->getText(LT(1))->chars) }?	// Note how we reference using C directly
+    :   {isTypeName(ctx, LT(1)) }?	// Note how we reference using C directly
 	IDENTIFIER
 	{
 	    // In Java you can just use $xxx.text, which is of type String.
@@ -335,7 +375,7 @@ struct_or_union_specifier
     scope Symbols; // structs are scopes
     @init 
     {
-		$Symbols::types = antlr3HashTableNew(11);
+		$Symbols::types = NULL; // Will create this if find a symbol to record
 		SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
     : struct_or_union IDENTIFIER? '{' struct_declaration_list '}'
@@ -403,15 +443,11 @@ direct_declarator
 				{
 					pANTLR3_STRING idText;
 
-					// When adding an element to a pANTLR3_HASH_TABLE, the first argument
-					// is the hash table itself, the second is the entry key, the third is
-					// a (void *) pointer to a structure or element of your choice (cannot
-					// be NULL) and the 4th is a pointer to a function that knows how to free
-					// your entry structure (if this is needed, give NULL if not) when the table
-					// is destroyed, or the entry is deleted from the table.
+					// Found a type, so we can enter it in the symbol tables
+					// The called funciton will work out what the text is for the
+					// identifier.
 					//
-					idText = $IDENTIFIER.text;
-					$Symbols::types->put($Symbols::types, idText->chars, idText, NULL);
+					addTypeDef(&($Symbols::types), $IDENTIFIER);
 
 #ifdef __cplusplus
 	
@@ -425,7 +461,7 @@ direct_declarator
 	//
 	symbolpp		*mySymClass;
 
-	mySymClass = new symbolpp($IDENTIFIER.line, idText);
+	mySymClass = new symbolpp($IDENTIFIER.line, $IDENTIFIER.text);
 
 	delete mySymClass;
 
@@ -658,7 +694,7 @@ compound_statement
     scope Symbols; // blocks have a scope of symbols
     @init 
     {
-	$Symbols::types = antlr3HashTableNew(11);
+	$Symbols::types = NULL;  // Will be created if we create any symbols
 	SCOPE_TOP(Symbols)->free	= freeTable;	// This is called when the scope is popped
     }
     : '{' declaration* statement_list? '}'
