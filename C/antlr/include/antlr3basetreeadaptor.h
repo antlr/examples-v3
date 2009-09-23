@@ -5,6 +5,35 @@
 #ifndef	_ANTLR3_BASE_TREE_ADAPTOR_H
 #define	_ANTLR3_BASE_TREE_ADAPTOR_H
 
+// [The "BSD licence"]
+// Copyright (c) 2005-2009 Jim Idle, Temporal Wave LLC
+// http://www.temporal-wave.com
+// http://www.linkedin.com/in/jimidle
+//
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+// 3. The name of the author may not be used to endorse or promote products
+//    derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+// NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #include    <antlr3defs.h>
 #include    <antlr3collections.h>
 #include    <antlr3string.h>
@@ -50,6 +79,7 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
     void					(*addChild)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * t, void * child);
     void					(*addChildToken)		(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * t, pANTLR3_COMMON_TOKEN child);
     void					(*setParent)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * child, void * parent);
+    void *					(*getParent)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * child);
 
 	void *					(*errorNode)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_TOKEN_STREAM tnstream, pANTLR3_COMMON_TOKEN startToken, pANTLR3_COMMON_TOKEN stopToken, pANTLR3_EXCEPTION e);
 	ANTLR3_BOOLEAN			(*isNilNode)			(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * t);
@@ -58,9 +88,9 @@ typedef	struct ANTLR3_BASE_TREE_ADAPTOR_struct
 
     void *	   			 	(*rulePostProcessing)	(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * root);
 
-    void *	   			 	(*becomeRootToken)		(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_COMMON_TOKEN newRoot, void * oldRoot);
+    void *	   			 	(*becomeRootToken)		(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, void * newRoot, void * oldRoot);
 
-    void *	   		 		(*create)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adpator, pANTLR3_COMMON_TOKEN payload);
+    void *	   		 		(*create)				(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, pANTLR3_COMMON_TOKEN payload);
     void *	   		 		(*createTypeToken)		(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, ANTLR3_UINT32 tokenType, pANTLR3_COMMON_TOKEN fromToken);
     void *	   				(*createTypeTokenText)	(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, ANTLR3_UINT32 tokenType, pANTLR3_COMMON_TOKEN fromToken, pANTLR3_UINT8 text);
     void *	    			(*createTypeText)		(struct ANTLR3_BASE_TREE_ADAPTOR_struct * adaptor, ANTLR3_UINT32 tokenType, pANTLR3_UINT8 text);

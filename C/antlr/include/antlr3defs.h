@@ -4,6 +4,34 @@
 #ifndef	_ANTLR3DEFS_H
 #define	_ANTLR3DEFS_H
 
+// [The "BSD licence"]
+// Copyright (c) 2005-2009 Jim Idle, Temporal Wave LLC
+// http://www.temporal-wave.com
+// http://www.linkedin.com/in/jimidle
+//
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+// 3. The name of the author may not be used to endorse or promote products
+//    derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+// NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* Following are for generated code, they are not referenced internally!!!
  */
@@ -109,6 +137,8 @@ typedef	UINT16	ANTLR3_UINT16,	*pANTLR3_UINT16;
 typedef	UINT32	ANTLR3_UINT32,	*pANTLR3_UINT32;
 typedef	UINT64	ANTLR3_UINT64,	*pANTLR3_UINT64;
 typedef UINT64  ANTLR3_BITWORD, *pANTLR3_BITWORD;
+typedef	UINT8	ANTLR3_BOOLEAN, *pANTLR3_BOOLEAN;
+
 #else
 // Mingw uses stdint.h and fails to define standard Microsoft typedefs
 // such as UINT16, hence we must use stdint.h for Mingw.
@@ -127,9 +157,12 @@ typedef uint16_t      	ANTLR3_UINT16,  *pANTLR3_UINT16;
 typedef uint32_t	    ANTLR3_UINT32,  *pANTLR3_UINT32;
 typedef uint64_t	    ANTLR3_UINT64,  *pANTLR3_UINT64;
 typedef uint64_t	    ANTLR3_BITWORD, *pANTLR3_BITWORD;
+
+typedef	uint8_t			ANTLR3_BOOLEAN, *pANTLR3_BOOLEAN;
+
 #endif
 
-typedef	UINT8	ANTLR3_BOOLEAN, *pANTLR3_BOOLEAN;
+
 
 #define	ANTLR3_UINT64_LIT(lit)	    lit##ULL
 
@@ -427,11 +460,17 @@ typedef ANTLR3_UINT32				ANTLR3_INTKEY;
 ///
 #define	ANTLR3_STRDUP(instr)					(pANTLR3_UINT8)(strdup  ((const char *)(instr)))
 #endif
+#ifndef ANTLR3_MEMCPY
+/// Default definition of ANTLR3_MEMCPY. You can override this before including
+/// antlr3.h if you wish to use your own implementation.
+///
+#define	ANTLR3_MEMCPY(target, source, size)	memcpy((void *)(target), (const void *)(source), (size_t)(size))
+#endif
 #ifndef ANTLR3_MEMMOVE
 /// Default definition of ANTLR3_MEMMOVE. You can override this before including
 /// antlr3.h if you wish to use your own implementation.
 ///
-#define	ANTLR3_MEMMOVE(target, source, size)	memcpy((void *)(target), (const void *)(source), (size_t)(size))
+#define	ANTLR3_MEMMOVE(target, source, size)	memmove((void *)(target), (const void *)(source), (size_t)(size))
 #endif
 #ifndef ANTLR3_MEMSET
 /// Default definition of ANTLR3_MEMSET. You can override this before including
@@ -481,8 +520,9 @@ ANTLR3_API pANTLR3_LIST						antlr3ListNew						(ANTLR3_UINT32 sizeHint);
 ANTLR3_API pANTLR3_VECTOR_FACTORY			antlr3VectorFactoryNew				(ANTLR3_UINT32 sizeHint);
 ANTLR3_API pANTLR3_VECTOR					antlr3VectorNew						(ANTLR3_UINT32 sizeHint);
 ANTLR3_API pANTLR3_STACK					antlr3StackNew						(ANTLR3_UINT32 sizeHint);
-
+ANTLR3_API void                                         antlr3SetVectorApi  (pANTLR3_VECTOR vector, ANTLR3_UINT32 sizeHint);
 ANTLR3_API ANTLR3_UCHAR						antlr3c8toAntlrc					(ANTLR3_INT8 inc);
+ANTLR3_API pANTLR3_TOPO                         antlr3TopoNew();
 
 ANTLR3_API pANTLR3_EXCEPTION				antlr3ExceptionNew					(ANTLR3_UINT32 exception, void * name, void * message, ANTLR3_BOOLEAN freeMessage);
 
@@ -501,11 +541,11 @@ ANTLR3_API pANTLR3_COMMON_TOKEN				antlr3CommonTokenNew				(ANTLR3_UINT32 ttype)
 ANTLR3_API pANTLR3_TOKEN_FACTORY			antlr3TokenFactoryNew				(pANTLR3_INPUT_STREAM input);
 ANTLR3_API void								antlr3SetTokenAPI					(pANTLR3_COMMON_TOKEN token);
 
-ANTLR3_API pANTLR3_LEXER					antlr3LexerNewStream				(ANTLR3_UINT32 sizeHint, pANTLR3_INPUT_STREAM input, pANTLR3_RECOGNIZER_SHARED_STATE state);
-ANTLR3_API pANTLR3_LEXER					antlr3LexerNew						(ANTLR3_UINT32 sizeHint, pANTLR3_RECOGNIZER_SHARED_STATE state);
-ANTLR3_API pANTLR3_PARSER					antlr3ParserNewStreamDbg			(ANTLR3_UINT32 sizeHint, pANTLR3_TOKEN_STREAM tstream, pANTLR3_DEBUG_EVENT_LISTENER dbg, pANTLR3_RECOGNIZER_SHARED_STATE state);
-ANTLR3_API pANTLR3_PARSER					antlr3ParserNewStream				(ANTLR3_UINT32 sizeHint, pANTLR3_TOKEN_STREAM tstream, pANTLR3_RECOGNIZER_SHARED_STATE state);
-ANTLR3_API pANTLR3_PARSER					antlr3ParserNew						(ANTLR3_UINT32 sizeHint, pANTLR3_RECOGNIZER_SHARED_STATE state);
+ANTLR3_API pANTLR3_LEXER			antlr3LexerNewStream				(ANTLR3_UINT32 sizeHint, pANTLR3_INPUT_STREAM input, pANTLR3_RECOGNIZER_SHARED_STATE state);
+ANTLR3_API pANTLR3_LEXER			antlr3LexerNew						(ANTLR3_UINT32 sizeHint, pANTLR3_RECOGNIZER_SHARED_STATE state);
+ANTLR3_API pANTLR3_PARSER			antlr3ParserNewStreamDbg			(ANTLR3_UINT32 sizeHint, pANTLR3_TOKEN_STREAM tstream, pANTLR3_DEBUG_EVENT_LISTENER dbg, pANTLR3_RECOGNIZER_SHARED_STATE state);
+ANTLR3_API pANTLR3_PARSER			antlr3ParserNewStream				(ANTLR3_UINT32 sizeHint, pANTLR3_TOKEN_STREAM tstream, pANTLR3_RECOGNIZER_SHARED_STATE state);
+ANTLR3_API pANTLR3_PARSER                       antlr3ParserNew						(ANTLR3_UINT32 sizeHint, pANTLR3_RECOGNIZER_SHARED_STATE state);
 
 ANTLR3_API pANTLR3_COMMON_TOKEN_STREAM		antlr3CommonTokenStreamSourceNew	(ANTLR3_UINT32 hint, pANTLR3_TOKEN_SOURCE source);
 ANTLR3_API pANTLR3_COMMON_TOKEN_STREAM		antlr3CommonTokenStreamNew			(ANTLR3_UINT32 hint);
@@ -531,10 +571,11 @@ ANTLR3_API ANTLR3_INT32						antlr3dfapredict					(void * ctx, pANTLR3_BASE_RECO
 
 ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM  antlr3CommonTreeNodeStreamNewTree	(pANTLR3_BASE_TREE tree, ANTLR3_UINT32 hint);
 ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM  antlr3CommonTreeNodeStreamNew		(pANTLR3_STRING_FACTORY strFactory, ANTLR3_UINT32 hint);
-ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM	antlr3UnbufTreeNodeStreamNewTree	(pANTLR3_BASE_TREE tree, ANTLR3_UINT32 hint);
-ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM	antlr3UnbufTreeNodeStreamNew		(pANTLR3_STRING_FACTORY strFactory, ANTLR3_UINT32 hint);
-ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM	antlr3CommonTreeNodeStreamNewStream	(pANTLR3_COMMON_TREE_NODE_STREAM inStream);
-ANTLR3_API pANTLR3_TREE_NODE_STREAM			antlr3TreeNodeStreamNew				();
+ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM  antlr3UnbufTreeNodeStreamNewTree	(pANTLR3_BASE_TREE tree, ANTLR3_UINT32 hint);
+ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM  antlr3UnbufTreeNodeStreamNew		(pANTLR3_STRING_FACTORY strFactory, ANTLR3_UINT32 hint);
+ANTLR3_API pANTLR3_COMMON_TREE_NODE_STREAM  antlr3CommonTreeNodeStreamNewStream	(pANTLR3_COMMON_TREE_NODE_STREAM inStream);
+ANTLR3_API pANTLR3_TREE_NODE_STREAM         antlr3TreeNodeStreamNew				();
+ANTLR3_API void				fillBufferExt					(pANTLR3_COMMON_TOKEN_STREAM tokenStream);
 
 ANTLR3_API pANTLR3_REWRITE_RULE_TOKEN_STREAM 
 	    antlr3RewriteRuleTOKENStreamNewAE	(pANTLR3_BASE_TREE_ADAPTOR adaptor, pANTLR3_BASE_RECOGNIZER rec, pANTLR3_UINT8 description);
