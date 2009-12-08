@@ -29,5 +29,5 @@ END     : '*/' {emit(Token.EOF_TOKEN);}
           {System.out.println("exit javadoc");}
         ;
 
-WS      : (' '|'\t'|'\n')+
+WS      : (' '|'\t'|'\n')+ {$channel=HIDDEN;}
         ;

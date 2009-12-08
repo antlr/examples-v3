@@ -91,7 +91,6 @@ JAVADOC : '/**'
             System.out.println("enter javadoc");
             JavadocLexer j = new JavadocLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(j);
-            tokens.discardTokenType(JavadocLexer.WS);
             JavadocParser p = new JavadocParser(tokens);
             p.comment();
             // returns a JAVADOC token to the java parser but on a

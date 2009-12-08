@@ -27,6 +27,8 @@
 */
 
 import org.antlr.runtime.*;
+import org.antlr.runtime.BitSet;
+
 import java.util.*;
 
 /** Python does not explicitly provide begin and end nesting signals.
@@ -79,7 +81,7 @@ public class PythonTokenSource implements TokenSource {
 	int sp=-1; // grow upwards
 
 	/** The queue of tokens */
-	Vector tokens = new Vector();
+	List tokens = new ArrayList();
 
 	/** We pull real tokens from this lexer */
 	CommonTokenStream stream;
@@ -124,8 +126,8 @@ public class PythonTokenSource implements TokenSource {
 	public Token nextToken() {
 		// if something in queue, just remove and return it
 		if ( tokens.size()>0 ) {
-			Token t = (Token)tokens.firstElement();
-			tokens.removeElementAt(0);
+			Token t = (Token)tokens.get(0);
+			tokens.remove(0);
 			// System.out.println(t);
 			return t;
 		}
@@ -135,8 +137,7 @@ public class PythonTokenSource implements TokenSource {
 		return nextToken();
 	}
 
-	protected void insertImaginaryIndentDedentTokens()
-	{
+	protected void insertImaginaryIndentDedentTokens() {
 		Token t = stream.LT(1);
 		stream.consume();
 
@@ -147,24 +148,34 @@ public class PythonTokenSource implements TokenSource {
 				tokens.addAll(hiddenTokens);
 			}
 			lastTokenAddedIndex = t.getTokenIndex();
-			tokens.addElement(t);
+			tokens.add(t);
 			return;
 		}
 
+        // we know it's a newline
+
+        BitSet hidden = BitSet.of(PythonLexer.COMMENT,
+                                  PythonLexer.LEADING_WS,
+                                  PythonLexer.CONTINUED_LINE,
+                                  PythonLexer.NEWLINE);
+        hidden.add(PythonLexer.WS);
+
 		// save NEWLINE in the queue
 		//System.out.println("found newline: "+t+" stack is "+stackString());
-		List hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1);
+		List hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,
+                                             t.getTokenIndex()-1,
+                                             hidden);
 		if ( hiddenTokens!=null ) {
 			tokens.addAll(hiddenTokens);
 		}
 		lastTokenAddedIndex = t.getTokenIndex();
-		tokens.addElement(t);
+		tokens.add(t);
 
 		// grab first token of next line
 		t = stream.LT(1);
 		stream.consume();
 
-		hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1);
+		hiddenTokens = stream.getTokens(lastTokenAddedIndex+1,t.getTokenIndex()-1, hidden);
 		if ( hiddenTokens!=null ) {
 			tokens.addAll(hiddenTokens);
 		}
@@ -190,7 +201,7 @@ public class PythonTokenSource implements TokenSource {
 			Token indent = new ClassicToken(PythonParser.INDENT,"");
 			indent.setCharPositionInLine(t.getCharPositionInLine());
 			indent.setLine(t.getLine());
-			tokens.addElement(indent);
+			tokens.add(indent);
 		}
 		else if ( cpos < lastIndent ) { // they dedented
 			// how far back did we dedent?
@@ -201,12 +212,12 @@ public class PythonTokenSource implements TokenSource {
 				Token dedent = new ClassicToken(PythonParser.DEDENT,"");
 				dedent.setCharPositionInLine(t.getCharPositionInLine());
 				dedent.setLine(t.getLine());
-				tokens.addElement(dedent);
+				tokens.add(dedent);
 			}
 			sp = prevIndex; // pop those off indent level
 		}
 		if ( t.getType()!=PythonLexer.LEADING_WS ) { // discard WS
-			tokens.addElement(t);
+			tokens.add(t);
 		}
 	}
 
