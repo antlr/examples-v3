@@ -78,7 +78,6 @@ class Main {
 			}
 			lexer.setCharStream(new ANTLRFileStream(f));
 			CommonTokenStream tokens = new CommonTokenStream();
-//			tokens.discardOffChannelTokens(true);
 			tokens.setTokenSource(lexer);
 			long start = System.currentTimeMillis();
 			tokens.LT(1); // force load

@@ -80,7 +80,6 @@ class Main {
 */
 			lexer = new JavaLexer(new ANTLRFileStream(f));
 			CommonTokenStream tokens = new CommonTokenStream();
-//			tokens.discardOffChannelTokens(true);
 			tokens.setTokenSource(lexer);
 
 /*

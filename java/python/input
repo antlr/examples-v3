@@ -208,3 +208,4 @@ if __name__ == '__main__':
 	c.capturePythonOutput()
 	c.textpane.requestFocus()
 	c.newInput()
+
