@@ -12,7 +12,8 @@ namespace Antlr.Examples.Python
 			: base(lexer)
 		{
 		}
-		override public IToken NextToken()
+
+        override public IToken NextToken()
 		{
 			startPos = CharPositionInLine;
 			return base.NextToken();
@@ -29,7 +30,6 @@ namespace Antlr.Examples.Python
 				ICharStream input = new ANTLRFileStream(args[0]);
 				PythonLexer lexer = new MyLexer(input);
 				CommonTokenStream tokens = new CommonTokenStream(lexer);
-				tokens.DiscardOffChannelTokens(true);
 				PythonTokenSource indentedSource = new PythonTokenSource(tokens);
 				tokens = new CommonTokenStream(indentedSource);
 				//Console.Out.WriteLine("tokens="+tokens.GetTokens());

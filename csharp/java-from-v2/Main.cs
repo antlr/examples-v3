@@ -81,7 +81,9 @@ namespace Antlr.Examples.JavaParse
 			
 				// start parsing at the compilationUnit rule
 				parser.compilationUnit();
+
 				Console.Out.WriteLine("finished parsing OK");
+
 			}
 			catch (Exception e)
 			{
