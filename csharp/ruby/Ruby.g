@@ -193,5 +193,5 @@ DOUBLE_STRING
 NL  :   '\n'
     ;
 
-WS  :   (' '|'\t')+ {$channel=HIDDEN;}
+WS  :   (' '|'\t')+ {$channel=Hidden;}
     ;

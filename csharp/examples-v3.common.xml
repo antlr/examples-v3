@@ -9,7 +9,6 @@
 	<path id="antlr.classpath" >
 		<pathelement path="${path::combine(sharedlibs.dir,'antlr-v3.x.jar')}" />
 		<pathelement path="${path::combine(sharedlibs.dir,'stringtemplate-v3.x.jar')}" />
-		<pathelement path="${path::combine(sharedlibs.dir,'antlr-2.7.7.jar')}" />
 	</path>
 	<property name="src.dir"               value="${project.root.dir}" />
 	<property name="build.dir"             value="${examples.root.dir}/_build/${framework::get-target-framework()}" />
@@ -45,6 +44,7 @@
 					<path refid="antlr.classpath" />
 				</arg>
 				<arg line="org.antlr.Tool -o ${grammar.out.dir} ${filename}" />
+				<!--arg line="org.antlr.Tool -XdbgST -o ${grammar.out.dir} ${filename}" /-->
 			</exec>
 			</do>
 		</foreach>

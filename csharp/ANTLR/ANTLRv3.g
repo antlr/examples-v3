@@ -455,11 +455,11 @@ SL_COMMENT
  		|	~('\r'|'\n')*
 		)
 		'\r'? '\n'
-		{$channel=HIDDEN;}
+		{$channel=Hidden;}
 	;
 
 ML_COMMENT
-	:	'/*' {if (input.LA(1)=='*') $type=DOC_COMMENT; else $channel=HIDDEN;} .* '*/'
+	:	'/*' {if (input.LA(1)=='*') $type=DOC_COMMENT; else $channel=Hidden;} .* '*/'
 	;
 
 CHAR_LITERAL
@@ -593,7 +593,7 @@ WS	:	(	' '
 		|	'\t'
 		|	'\r'? '\n'
 		)+
-		{$channel=HIDDEN;}
+		{$channel=Hidden;}
 	;
 
 fragment

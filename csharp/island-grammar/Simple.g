@@ -72,7 +72,7 @@ expr    : ID
 
 ID      : ('a'..'z'|'A'..'Z')+ ;
 INT     : ('0'..'9')+ ;
-WS      : (' '|'\t'|'\n')+ {$channel=HIDDEN;}
+WS      : (' '|'\t'|'\n')+ {$channel=Hidden;}
         ;
 LCURLY  : '{' {nesting++;}
         ;
@@ -98,7 +98,6 @@ JAVADOC : '/**'
             Console.Out.WriteLine("enter javadoc");
             JavadocLexer j = new JavadocLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(j);
-            tokens.DiscardTokenType(JavadocLexer.WS);
             Antlr.Examples.IslandGrammar.JavadocParser p = new Antlr.Examples.IslandGrammar.JavadocParser(tokens);
             p.comment();
             // returns a JAVADOC token to the java parser but on a

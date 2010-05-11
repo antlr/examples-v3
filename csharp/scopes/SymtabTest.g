@@ -11,11 +11,19 @@ options {
 }
 
 scope Symbols {
-  IList names;
+  List<IToken> names;
 }
 
 @members {
 int level = 0;
+
+private string ListToSTring(List<IToken> list) {
+	List<string> names = new List<string>();
+	foreach(IToken token in list) {
+		names.Add(token.Text);
+	}
+	return String.Join(",", names.ToArray());
+}
 }
 
 prog:   globals (method)*
@@ -25,11 +33,11 @@ globals
 scope Symbols;
 @init {
     level++;
-    $Symbols::names = new ArrayList();
+    $Symbols::names = new List<IToken>();
 }
     :   (decl)*
         {
-        Console.Out.WriteLine("globals: " +  Antlr.Runtime.Collections.CollectionUtils.ListToString($Symbols::names));
+        Console.Out.WriteLine("globals: " +  ListToSTring($Symbols::names));
         level--;
         }
     ;
@@ -42,11 +50,11 @@ block
 scope Symbols;
 @init {
     level++;
-    $Symbols::names = new ArrayList();
+    $Symbols::names = new List<IToken>();
 }
     :   '{' (decl)* (stat)* '}'
         {
-        Console.Out.WriteLine("level "+level+" symbols: " + Antlr.Runtime.Collections.CollectionUtils.ListToString($Symbols::names));
+        Console.Out.WriteLine("level "+level+" symbols: " + ListToSTring($Symbols::names));
         level--;
         }
     ;
@@ -65,5 +73,5 @@ ID  :   ('a'..'z')+
 INT :   ('0'..'9')+
     ;
 
-WS  :   (' '|'\n'|'\r')+ {$channel=HIDDEN;}
+WS  :   (' '|'\n'|'\r')+ {$channel=Hidden;}
     ;

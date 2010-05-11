@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding='iso-8859-1' ?>
+﻿<?xml version="1.0" encoding='iso-8859-1' ?>
 <project
 	name="JavaParse" 
 	default="build"
@@ -32,7 +32,9 @@
 
 	<target name="init" depends="common.init">
 		<assemblyfileset id="project.references" basedir="${stnet.sharedlibs.dir}">
-			<include name="Antlr3.Runtime.dll" />
+			<include name="Antlr3-2.Runtime.DotNet20.dll" />
+			<include name="antlr.runtime.dll" />
+			<include name="StringTemplate.dll" />
 		</assemblyfileset>
 
 		<fileset id="project.grammars" basedir="${grammar.src.dir}" failonempty="true">

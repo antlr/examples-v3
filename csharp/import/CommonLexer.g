@@ -27,11 +27,11 @@ ESC :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
     ;
 
 COMMENT
-    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=Hidden;}
     ;
 
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=Hidden;}
     ;
 
-WS : (' '|'\t'|'\r'|'\n')+ {$channel=HIDDEN;} ;
+WS : (' '|'\t'|'\r'|'\n')+ {$channel=Hidden;} ;

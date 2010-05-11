@@ -75,8 +75,6 @@ namespace Antlr.Examples.JavaParse
 				// Create a scanner that reads from the input stream passed to us
 				JavaLexer lexer = new JavaLexer(new ANTLRFileStream(f));
 				tokens.TokenSource = lexer;
-
-                tokens.discardOffChannelTokens(true);
 			
 				// Create a parser that reads from the scanner
 				JavaParser parser = new JavaParser(tokens);

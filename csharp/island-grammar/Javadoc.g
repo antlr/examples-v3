@@ -22,7 +22,7 @@ SIMPLE  :   '{'
             Antlr.Examples.IslandGrammar.SimpleParser parser = new Antlr.Examples.IslandGrammar.SimpleParser(tokens);
             parser.statement();
             }
-            {$channel=HIDDEN;}
+            {$channel=Hidden;}
         ;
 
 /** When the javadoc parser sees end-of-comment it just says 'I'm done', which

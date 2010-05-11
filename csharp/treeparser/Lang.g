@@ -19,4 +19,4 @@ INTTYPE : 'int' ;
 FLOATTYPE : 'float' ;
 ID : 'a'..'z'+ ;
 INT : '0'..'9'+ ;
-WS : (' '|'\n') {$channel=HIDDEN;} ;
+WS : (' '|'\n') {$channel=Hidden;} ;

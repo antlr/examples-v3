@@ -46,5 +46,5 @@ ID  :   ('a'..'z'|'A'..'Z')+ ;
 
 INT :   '0'..'9'+ ;
 
-WS  :   (' '|'\t'|'\n')+ {$channel=HIDDEN;}
+WS  :   (' '|'\t'|'\n')+ {$channel=Hidden;}
     ;

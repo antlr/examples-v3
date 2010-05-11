@@ -6,8 +6,8 @@ options {
 }
 
 scope slist {
-    IList locals; // must be defined one per semicolon
-    IList stats;
+    IList<StringTemplate> locals; // must be defined one per semicolon
+    IList<StringTemplate> stats;
 }
 
 /*
@@ -22,12 +22,12 @@ scope slist {
 
 program
 scope {
-  IList globals;
-  IList functions;
+  IList<StringTemplate> globals;
+  IList<StringTemplate> functions;
 }
 @init {
-  $program::globals = new ArrayList();
-  $program::functions = new ArrayList();
+  $program::globals = new List<StringTemplate>();
+  $program::functions = new List<StringTemplate>();
 }
     :   declaration+
         -> program(globals={$program::globals},functions={$program::functions})
@@ -58,8 +58,8 @@ scope {
 }
 scope slist;
 @init {
-  $slist::locals = new ArrayList();
-  $slist::stats = new ArrayList();
+  $slist::locals = new List<StringTemplate>();
+  $slist::stats = new List<StringTemplate>();
 }
     :   type ID {$function::name=$ID.text;}
         '(' ( p+=formalParameter ( ',' p+=formalParameter )* )? ')'
@@ -91,8 +91,8 @@ block
 stat
 scope slist;
 @init {
-  $slist::locals = new ArrayList();
-  $slist::stats = new ArrayList();
+  $slist::locals = new List<StringTemplate>();
+  $slist::stats = new List<StringTemplate>();
 }
     : forStat -> {$forStat.st}
     | expr ';' -> statement(expr={$expr.st})
@@ -104,8 +104,8 @@ scope slist;
 forStat
 scope slist;
 @init {
-  $slist::locals = new ArrayList();
-  $slist::stats = new ArrayList();
+  $slist::locals = new List<StringTemplate>();
+  $slist::stats = new List<StringTemplate>();
 }
     :   'for' '(' e1=assignStat ';' e2=expr ';' e3=assignStat ')' block
         -> forLoop(e1={$e1.st},e2={$e2.st},e3={$e3.st},
@@ -145,5 +145,5 @@ ID  :   ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
 INT	:	('0'..'9')+
 	;
 
-WS  :   (' ' | '\t' | '\r' | '\n')+ {$channel=HIDDEN;}
+WS  :   (' ' | '\t' | '\r' | '\n')+ {$channel=Hidden;}
     ;    
