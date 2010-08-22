@@ -75,6 +75,7 @@ namespace Antlr.Examples.Python
 	 Terence Parr and Loring Craymer
 	 February 2004
 	 */
+
 	public class PythonTokenSource : ITokenSource
 	{
 		public const int MAX_INDENTS = 100;
@@ -82,6 +83,7 @@ namespace Antlr.Examples.Python
 
 		/** The stack of indent levels (column numbers) */
 		int[] indentStack = new int[MAX_INDENTS];
+
 		/** stack pointer */
 		int sp = -1; // grow upwards
 
@@ -90,7 +92,6 @@ namespace Antlr.Examples.Python
 
 		/** We pull real tokens from this lexer */
 		CommonTokenStream stream;
-
 		int lastTokenAddedIndex = -1;
 
 		public PythonTokenSource(PythonLexer lexer)
@@ -130,6 +131,7 @@ namespace Antlr.Examples.Python
 		 EOF to have char pos 0 even though with UNIX it's hard to get EOF
 		 at a non left edge.
 		 */
+
 		public IToken NextToken()
 		{
 			// if something in queue, just remove and return it
@@ -142,7 +144,6 @@ namespace Antlr.Examples.Python
 			}
 
 			InsertImaginaryIndentDedentTokens();
-
 			return NextToken();
 		}
 
@@ -165,10 +166,19 @@ namespace Antlr.Examples.Python
 				return;
 			}
 
-			// save NEWLINE in the queue
+            // we know it's a newline
+
+            BitSet hidden = BitSet.Of(PythonLexer.COMMENT,
+                                      PythonLexer.LEADING_WS,
+                                      PythonLexer.CONTINUED_LINE,
+                                      PythonLexer.NEWLINE);
+            hidden.Add(PythonLexer.WS);
+
+            // save NEWLINE in the queue
 			//System.out.println("found newline: "+t+" stack is "+StackString());
-			hiddenTokens = stream.GetTokens(lastTokenAddedIndex + 1, t.TokenIndex - 1);
-			if (hiddenTokens != null)
+			hiddenTokens = stream.GetTokens(lastTokenAddedIndex + 1, t.TokenIndex - 1, hidden);
+
+            if (hiddenTokens != null)
 			{
 				tokens.AddRange(hiddenTokens);
 			}
@@ -178,17 +188,18 @@ namespace Antlr.Examples.Python
 			// grab first token of next line
 			t = stream.LT(1);
 			stream.Consume();
+			hiddenTokens = stream.GetTokens(lastTokenAddedIndex + 1, t.TokenIndex - 1, hidden);
 
-			hiddenTokens = stream.GetTokens(lastTokenAddedIndex + 1, t.TokenIndex - 1);
-			if (hiddenTokens != null)
+            if (hiddenTokens != null)
 			{
 				tokens.AddRange(hiddenTokens);
 			}
-			lastTokenAddedIndex = t.TokenIndex;
+    		lastTokenAddedIndex = t.TokenIndex;
 
 			// compute cpos as the char pos of next non-WS token in line
 			int cpos = t.CharPositionInLine; // column dictates indent/dedent
-			if (t.Type == Token.EOF)
+
+            if (t.Type == Token.EOF)
 			{
 				cpos = -1; // pretend EOF always happens at left edge
 			}
@@ -202,7 +213,8 @@ namespace Antlr.Examples.Python
 			// compare to last indent level
 			int lastIndent = Peek();
 			//System.out.println("cpos, lastIndent = "+cpos+", "+lastIndent);
-			if (cpos > lastIndent)
+
+            if (cpos > lastIndent)
 			{ // they indented; track and gen INDENT
 				Push(cpos);
 				//System.out.println("Push("+cpos+"): "+StackString());
@@ -283,7 +295,6 @@ namespace Antlr.Examples.Python
 			}
 			return buf.ToString();
 		}
-
 	}
 }
 

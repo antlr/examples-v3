@@ -35,5 +35,5 @@ END     : '*/' {state.token = Token.EOF_TOKEN;}
           {Console.Out.WriteLine("exit javadoc");}
         ;
 
-WS      : (' '|'\t'|'\n')+
+WS      : (' '|'\t'|'\n')+ {$channel=Hidden;}
         ;
