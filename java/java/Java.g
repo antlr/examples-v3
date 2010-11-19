@@ -1010,7 +1010,7 @@ JavaIDDigit
        '\u1040'..'\u1049'
    ;
 
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n')+ {$channel=HIDDEN;}
     ;
 
 COMMENT
