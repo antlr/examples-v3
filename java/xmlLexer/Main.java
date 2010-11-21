@@ -7,7 +7,11 @@ public class Main {
 	try {
 	    CharStream input = new ANTLRFileStream(args[0]);
 	    XMLLexer lexer = new XMLLexer(input);
-	    while (lexer.nextToken() != Token.EOF_TOKEN);
+		Token t = lexer.nextToken();
+	    while (t.getType() != Token.EOF) {
+			//System.out.println(t);
+			t = lexer.nextToken();
+		};
 	} catch(Throwable t) {
 	    System.out.println("exception: "+t);
 	    t.printStackTrace();
