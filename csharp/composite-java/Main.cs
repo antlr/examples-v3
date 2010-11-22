@@ -79,7 +79,7 @@ namespace Antlr.Examples.JavaParse
 
 		private class CountDecisions : BlankDebugEventListener {
 			public int NumDecisions = 0;
-			public override void EnterDecision(int decisionNumber) {
+			public override void EnterDecision(int decisionNumber, bool couldBacktrack) {
 				NumDecisions++;
 			}
 		}

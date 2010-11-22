@@ -199,7 +199,7 @@ namespace Antlr.Examples.Python
 			// compute cpos as the char pos of next non-WS token in line
 			int cpos = t.CharPositionInLine; // column dictates indent/dedent
 
-            if (t.Type == Token.EOF)
+            if (t.Type == TokenTypes.EndOfFile)
 			{
 				cpos = -1; // pretend EOF always happens at left edge
 			}

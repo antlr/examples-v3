@@ -20,7 +20,7 @@ namespace Antlr.Examples.XmlLexer
 					}
 					ICharStream input = new ANTLRFileStream(inputFileName);
 					XML lexer = new XML(input);
-					while (lexer.NextToken() != Token.EOF_TOKEN) ;
+					while (lexer.NextToken() != Tokens.EndOfFile) ;
 				}
 				catch (Exception ex)
 				{
