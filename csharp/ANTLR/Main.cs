@@ -16,7 +16,7 @@ namespace Antlr.Examples.ANTLR
 	{
 		public static void Main(string[] args)
 		{
-			if (args.Length > 1) {
+			if (args.Length != 0) {
 				string inputFileName = args[0];
 				if (!Path.IsPathRooted(inputFileName))
 				{
