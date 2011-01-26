@@ -6,6 +6,7 @@ options {
     ASTLabelType=CommonTree;
 }
 
+public
 program
     :   declaration+
     ;

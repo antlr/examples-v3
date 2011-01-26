@@ -11,6 +11,7 @@ options {
     #pragma warning disable 0219
 }
 
+public
 poly:    ^('+' poly poly)
     |    ^(MULT INT ID)         -> INT
     |    ^(MULT c=INT ^('^' ID e=INT))

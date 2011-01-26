@@ -85,6 +85,7 @@ single_input
 	| compound_stmt NEWLINE
 	;
 
+public
 file_input
     :   (NEWLINE | stmt)*
 	;

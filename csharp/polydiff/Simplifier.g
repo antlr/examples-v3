@@ -17,6 +17,7 @@ options {
  *  perfect.  We'd need to run the tree into this until nothing
  *  changed to make it correct.
  */
+public
 poly:    ^('+' a=INT b=INT)     -> INT["" + ($a.int + $b.int)]
 
     |    ^('+' ^('+' a=INT p=poly) b=INT)

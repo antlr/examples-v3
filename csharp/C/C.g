@@ -73,6 +73,7 @@ bool isTypeName(string name)
 }
 }
 
+public
 translation_unit
 scope Symbols; // entire file is a scope
 @init {

@@ -20,6 +20,7 @@ scope slist {
 @header {
 }
 
+public
 program
 scope {
   IList<StringTemplate> globals;

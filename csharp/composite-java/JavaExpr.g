@@ -1,25 +1,31 @@
 parser grammar JavaExpr;
 
+public
 parExpression
     :   '(' expression ')'
     ;
     
+public
 expressionList
     :   expression (',' expression)*
     ;
 
+public
 statementExpression
     :   expression
     ;
     
+public
 constantExpression
     :   expression
     ;
     
+public
 expression
     :   conditionalExpression (assignmentOperator expression)?
     ;
     
+public
 assignmentOperator
     :   '='
     |   '+='
@@ -49,42 +55,52 @@ assignmentOperator
           $t2.CharPositionInLine + 1 == $t3.CharPositionInLine }?
     ;
 
+public
 conditionalExpression
     :   conditionalOrExpression ( '?' expression ':' expression )?
     ;
 
+public
 conditionalOrExpression
     :   conditionalAndExpression ( '||' conditionalAndExpression )*
     ;
 
+public
 conditionalAndExpression
     :   inclusiveOrExpression ( '&&' inclusiveOrExpression )*
     ;
 
+public
 inclusiveOrExpression
     :   exclusiveOrExpression ( '|' exclusiveOrExpression )*
     ;
 
+public
 exclusiveOrExpression
     :   andExpression ( '^' andExpression )*
     ;
 
+public
 andExpression
     :   equalityExpression ( '&' equalityExpression )*
     ;
 
+public
 equalityExpression
     :   instanceOfExpression ( ('==' | '!=') instanceOfExpression )*
     ;
 
+public
 instanceOfExpression
     :   relationalExpression ('instanceof' type)?
     ;
 
+public
 relationalExpression
     :   shiftExpression ( relationalOp shiftExpression )*
     ;
     
+public
 relationalOp
     :   ('<' '=')=> t1='<' t2='=' 
         { $t1.Line == $t2.Line && 
@@ -96,10 +112,12 @@ relationalOp
     |   '>' 
     ;
 
+public
 shiftExpression
     :   additiveExpression ( shiftOp additiveExpression )*
     ;
 
+public
 shiftOp
     :   ('<' '<')=> t1='<' t2='<' 
         { $t1.Line == $t2.Line && 
@@ -114,15 +132,17 @@ shiftOp
           $t1.CharPositionInLine + 1 == $t2.CharPositionInLine }?
     ;
 
-
+public
 additiveExpression
     :   multiplicativeExpression ( ('+' | '-') multiplicativeExpression )*
     ;
 
+public
 multiplicativeExpression
     :   unaryExpression ( ( '*' | '/' | '%' ) unaryExpression )*
     ;
     
+public
 unaryExpression
     :   '+' unaryExpression
     |   '-' unaryExpression
@@ -131,6 +151,7 @@ unaryExpression
     |   unaryExpressionNotPlusMinus
     ;
 
+public
 unaryExpressionNotPlusMinus
     :   '~' unaryExpression
     |   '!' unaryExpression
@@ -138,11 +159,13 @@ unaryExpressionNotPlusMinus
     |   primary selector* ('++'|'--')?
     ;
 
+public
 castExpression
     :  '(' primitiveType ')' unaryExpression
     |  '(' (type | expression) ')' unaryExpressionNotPlusMinus
     ;
 
+public
 primary
     :   parExpression
     |   'this' ('.' Identifier)* identifierSuffix?
@@ -154,6 +177,7 @@ primary
     |   'void' '.' 'class'
     ;
 
+public
 identifierSuffix
     :   ('[' ']')+ '.' 'class'
     |   ('[' expression ']')+ // can also be matched by selector, but do here
@@ -165,20 +189,24 @@ identifierSuffix
     |   '.' 'new' innerCreator
     ;
 
+public
 creator
     :   nonWildcardTypeArguments createdName classCreatorRest
     |   createdName (arrayCreatorRest | classCreatorRest)
     ;
 
+public
 createdName
     :   classOrInterfaceType
     |   primitiveType
     ;
     
+public
 innerCreator
     :   nonWildcardTypeArguments? Identifier classCreatorRest
     ;
 
+public
 arrayCreatorRest
     :   '['
         (   ']' ('[' ']')* arrayInitializer
@@ -186,18 +214,22 @@ arrayCreatorRest
         )
     ;
 
+public
 classCreatorRest
     :   arguments classBody?
     ;
     
+public
 explicitGenericInvocation
     :   nonWildcardTypeArguments Identifier arguments
     ;
     
+public
 nonWildcardTypeArguments
     :   '<' typeList '>'
     ;
     
+public
 selector
     :   '.' Identifier arguments?
     |   '.' 'this'
@@ -206,15 +238,18 @@ selector
     |   '[' expression ']'
     ;
     
+public
 superSuffix
     :   arguments
     |   '.' Identifier arguments?
     ;
 
+public
 arguments
     :   '(' expressionList? ')'
     ;
     
+public
 literal 
     :   integerLiteral
     |   FloatingPointLiteral
@@ -224,14 +259,15 @@ literal
     |   'null'
     ;
 
+public
 integerLiteral
     :   HexLiteral
     |   OctalLiteral
     |   DecimalLiteral
     ;
 
+public
 booleanLiteral
     :   'true'
     |   'false'
     ;
-

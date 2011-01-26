@@ -6,6 +6,7 @@ options {
 
 @namespace		{Antlr.Examples.IslandGrammar}
 
+public
 comment : ( author )* ;
 
 author  : '@author' ID {Console.Out.WriteLine("author "+$ID.Text);} ;

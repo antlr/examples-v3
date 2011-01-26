@@ -50,7 +50,7 @@ namespace Antlr.Examples.CMinus
 					CommonTokenStream tokens = new CommonTokenStream(lexer);
 					CMinusParser parser = new CMinusParser(tokens);
 					parser.TemplateLib = templates;
-					RuleReturnScope r = parser.program();
+                    CMinusParser.program_return r = parser.program();
 					Console.Out.WriteLine(r.Template.ToString());
 				}
 				else

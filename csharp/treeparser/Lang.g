@@ -7,6 +7,7 @@ options {
 
 tokens {DECL;} // an imaginary node
 
+public
 start : decl ;
 
 decl : type ID ';' -> ^(DECL type ID)

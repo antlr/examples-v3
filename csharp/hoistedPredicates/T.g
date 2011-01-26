@@ -19,6 +19,7 @@ options {
 bool enableEnum = false;
 }
 
+public
 stat: identifier    {Console.Out.WriteLine("enum is an ID");}
     | enumAsKeyword {Console.Out.WriteLine("enum is a keyword");}
     ;

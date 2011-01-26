@@ -27,6 +27,7 @@ public static readonly CommonToken IGNORE_TOKEN = new CommonToken(null,0,99,0,0)
 
 // Compilation Unit: In Java, this is a single file.  This is the start
 //   rule for this parser
+public
 compilationUnit
 	:	// A compilation unit starts with an optional package definition
 		(	packageDefinition

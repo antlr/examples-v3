@@ -42,6 +42,6 @@ namespace Antlr.Examples.PolyDiff
         nodes.TokenStream = tokens;
         PolyPrinter printer = new PolyPrinter(nodes);
 		PolyPrinter.poly_return r4 = printer.poly();
-		Console.Out.WriteLine(r4.ST);
+		Console.Out.WriteLine(r4.Template);
 	}	}
 }

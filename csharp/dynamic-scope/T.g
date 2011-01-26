@@ -4,6 +4,7 @@ options {
 	language=CSharp2;
 }
 
+public
 program : method ;
 
 method

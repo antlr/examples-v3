@@ -8,10 +8,13 @@ protected bool assertIsKeyword = true;
 }
 
 
+public
 HexLiteral : '0' ('x'|'X') HexDigit+ IntegerTypeSuffix? ;
 
+public
 DecimalLiteral : ('0' | '1'..'9' '0'..'9'*) IntegerTypeSuffix? ;
 
+public
 OctalLiteral : '0' ('0'..'7')+ IntegerTypeSuffix? ;
 
 fragment
@@ -20,6 +23,7 @@ HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
 fragment
 IntegerTypeSuffix : ('l'|'L') ;
 
+public
 FloatingPointLiteral
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
     |   '.' ('0'..'9')+ Exponent? FloatTypeSuffix?
@@ -33,10 +37,12 @@ Exponent : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 fragment
 FloatTypeSuffix : ('f'|'F'|'d'|'D') ;
 
+public
 CharacterLiteral
     :   '\'' ( EscapeSequence | ~('\''|'\\') ) '\''
     ;
 
+public
 StringLiteral
     :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
     ;
@@ -60,13 +66,16 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
+public
 ENUM:   'enum' {if (!enumIsKeyword) $type=Identifier;}
     ;
     
+public
 ASSERT
     :   'assert' {if (!assertIsKeyword) $type=Identifier;}
     ;
     
+public
 Identifier 
     :   Letter (Letter|JavaIDDigit)*
     ;
@@ -110,13 +119,16 @@ JavaIDDigit
        '\u1040'..'\u1049'
    ;
 
+public
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=Hidden;}
     ;
 
+public
 COMMENT
     :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=Hidden;}
     ;
 
+public
 LINE_COMMENT
     : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=Hidden;}
     ;

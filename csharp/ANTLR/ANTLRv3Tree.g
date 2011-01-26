@@ -36,6 +36,7 @@ options {
 	ASTLabelType = CommonTree;
 }
 
+public
 grammarDef
     :   ^( grammarType ID DOC_COMMENT? optionsSpec? tokensSpec? attrScope* action* rule+ )
     ;

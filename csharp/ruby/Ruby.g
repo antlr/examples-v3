@@ -12,6 +12,7 @@ options {
 	backtrack=true;
 }
 
+public
 program
     :   compoundstmt
     |   classdef

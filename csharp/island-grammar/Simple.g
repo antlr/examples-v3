@@ -45,6 +45,7 @@ public static int nesting = 0;
  *  I go off to recognize javadoc comments, the lookahead for the Simple
  *  parser is not messed up in any way.
  */
+public
 program : (variable)*
           (method)+
         ;
@@ -60,6 +61,7 @@ block   : '{'
           '}'
         ;
 
+public
 statement
         : ID '=' expr ';' {Console.Out.WriteLine("assignment to "+$ID.Text);}
         | 'return' expr ';'

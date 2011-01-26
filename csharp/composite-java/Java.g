@@ -18,6 +18,7 @@ import JavaDecl, JavaAnnotations, JavaExpr, JavaStat, JavaLexerRules;
 // starting point for parsing a java file
 /* The annotations are separated out to make parsing faster, but must be associated with
    a packageDeclaration or a typeDeclaration (and not an empty one). */
+public
 compilationUnit
     :   annotations
         (   packageDeclaration importDeclaration* typeDeclaration*

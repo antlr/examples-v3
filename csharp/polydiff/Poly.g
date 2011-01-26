@@ -10,6 +10,7 @@ tokens { MULT; } // imaginary token
     #pragma warning disable 0219
 }
 
+public
 poly: term ('+'^ term)*
     ;
 

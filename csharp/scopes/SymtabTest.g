@@ -26,6 +26,7 @@ private string ListToSTring(List<IToken> list) {
 }
 }
 
+public
 prog:   globals (method)*
     ;
 

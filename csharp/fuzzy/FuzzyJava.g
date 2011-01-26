@@ -4,6 +4,7 @@ options {
 	language=CSharp2;
 }
 
+public
 IMPORT
 	:	'import' WS name=QIDStar WS? ';'
 	;

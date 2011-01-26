@@ -5,6 +5,7 @@ options
     language=CSharp2; 
 }
 
+public
 program
     :   declaration+
     ;

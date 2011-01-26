@@ -81,6 +81,7 @@ tokens {
 	int gtype;
 }
 
+public
 grammarDef
     :   DOC_COMMENT?
     	(	'lexer'  {gtype=LEXER_GRAMMAR;}    // pure lexer

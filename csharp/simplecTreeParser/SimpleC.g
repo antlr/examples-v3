@@ -14,6 +14,7 @@ tokens {
     BLOCK;
 }
 
+public
 program
     :   declaration+
     ;

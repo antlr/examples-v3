@@ -6,6 +6,7 @@ options {
 // pull in all rules even if not referenced so comments etc... work
 import CommonLexer; 
 
+public
 file : 'program' ID ';' {Console.Out.WriteLine("found program "+$ID.Text);}
        decl+
      ;
