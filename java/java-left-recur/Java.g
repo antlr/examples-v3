@@ -715,9 +715,9 @@ expression
     |   'this' 
     |   'super'
     |   literal
-    |   type '.' 'class'  // put before Identifier alt; backtracking chooses it otherwise
     |   Identifier
     |   expression '.' Identifier
+	|   expression '.' 'class' // should be type.class but causes backtracking
     |   expression '.' 'this'
     |   expression '.' 'super' '(' expressionList? ')'
     |   expression '.' 'super' '.' Identifier arguments?
