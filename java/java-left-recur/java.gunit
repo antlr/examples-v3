@@ -1,0 +1,11 @@
+// sample gunit tests
+gunit Java;
+
+expression:
+	"3+4"	OK
+	"3+"	FAIL
+
+localVariableDeclarationStatement:
+	"int x;"	OK
+	"int x,y;"	OK
+
