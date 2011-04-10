@@ -26,7 +26,7 @@ class Main {
 				System.err.println("Usage: java Main <directory or file name>");
 			}
 			long stop = System.currentTimeMillis();
-			System.out.println("Parsed in " + (stop - start) + "ms.");
+			//System.out.println("Parsed in " + (stop - start) + "ms.");
 
 			System.out.println("finished parsing OK");
 			if ( profile ) {
