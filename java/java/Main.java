@@ -26,7 +26,8 @@ class Main {
 				System.err.println("Usage: java Main <directory or file name>");
 			}
 			long stop = System.currentTimeMillis();
-			//System.out.println("Parsed in " + (stop - start) + "ms.");
+			System.out.println("Lexed in " +lexerTime+ "ms.");
+			System.out.println("Overall parse in " + (stop - start) + "ms.");
 
 			System.out.println("finished parsing OK");
 			if ( profile ) {
@@ -79,26 +80,19 @@ class Main {
 			}
 			lexer.setCharStream(new ANTLRFileStream(f));
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			tokens.fill();
 			long start = System.currentTimeMillis();
-			tokens.LT(1); // force load
+			tokens.fill(); // force load
 			long stop = System.currentTimeMillis();
 			lexerTime += stop-start;
 
-			/*
-			long t1 = System.currentTimeMillis();
-			tokens.LT(1);
-			long t2 = System.currentTimeMillis();
-			System.out.println("lexing time: "+(t2-t1)+"ms");
-			*/
 			//System.out.println(tokens);
 
 			// Create a parser that reads from the scanner
 			JavaParser parser = null;
-			parser = new JavaParser(tokens);
+		//	parser = new JavaParser(tokens);
 
 			// start parsing at the compilationUnit rule
-			parser.compilationUnit();
+		//	parser.compilationUnit();
 			//System.err.println("finished "+f);
 		}
 		catch (Exception e) {
